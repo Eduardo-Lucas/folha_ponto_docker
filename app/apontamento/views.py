@@ -26,15 +26,19 @@ def folha_ponto(request):
     diferenca = timedelta(0)
     for ponto in pontos:
         dia = ponto.entrada.date()
+        print("DIA", dia)
         if ponto.entrada.date() == dia:
             diferenca += ponto.saida - ponto.entrada
-        else:
+            print("DIFERENCA", diferenca)
+        else:    
+            dict_ponto = {"dia": dia, "diferenca": diferenca}
+            pontos_sumarizados.append(dict_ponto)
             diferenca = timedelta(0)
-            pontos_sumarizados.append(dia, diferenca)
-
 
     nome = usuario.username
-    context = {"pontos_sumarizados": pontos_sumarizados, "nome": nome}
+    context = {"pontos_sumarizados": pontos_sumarizados, 
+               "pontos": pontos, 
+               "nome": nome}
 
 
     return render(
