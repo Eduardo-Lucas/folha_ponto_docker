@@ -37,6 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # apps
+    "core",
+    "apontamento",
+    "cliente",
+    "contato",
+    "feriado",
+    "user",
+    # third party libraries
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "django_bootstrap5",
+    "smart_selects",
+    "import_export",
+    "fontawesomefree",
 ]
 
 MIDDLEWARE = [
