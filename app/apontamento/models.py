@@ -11,7 +11,7 @@ class Ponto(models.Model):
     segundo = models.BooleanField(default=False)
     atraso = models.BooleanField(default=False)
     saida = models.DateTimeField(null=True, blank=True)
-    usuario_id = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    usuario= models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     fechado = models.BooleanField(default=False)
     cliente_id = models.IntegerField(null=True, blank=True)
     tiporeceita_id = models.IntegerField(null=True, blank=True)

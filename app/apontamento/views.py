@@ -26,7 +26,6 @@ def folha_ponto(request):
     diferenca = timedelta(0)
     for ponto in pontos:
         dia = ponto.entrada.date()
-        print("DIA", dia)
         if ponto.entrada.date() == dia:
             diferenca += ponto.saida - ponto.entrada
             print("DIFERENCA", diferenca)

@@ -12,6 +12,6 @@ class PontoService:
                 saida__lte=data_final,
             )
         )
-        query = Ponto.objects.filter(data_query, usuario_id=usuario_id)
+        query = Ponto.objects.filter(data_query, usuario=usuario_id)
 
         return query
