@@ -5,8 +5,11 @@ from apontamento.services import PontoService
 from apontamento.forms import FolhaPontoForm
 from apontamento.models import Ponto
 
-from datetime import datetime, timedelta
-from django.db.models import Avg, Count, Min, Sum
+from datetime import datetime, timedelta, timezone
+import pytz
+
+from folha_ponto import settings
+
 
 @login_required
 def apontamento_list(request, login_url="users:login"):
@@ -18,21 +21,23 @@ def folha_ponto(request):
     service = PontoService()
     pontos = service.ponto_list(
         usuario.id,
-        data_inicial=datetime(2023, 9, 1, 0, 0, 0).date(),
-        data_final=datetime(2023, 9, 2, 0, 0, 0).date(),
+        data_inicial=pytz.timezone(settings.TIME_ZONE).localize(datetime(2023, 9, 1, 0, 0, 0)),
+        data_final  =pytz.timezone(settings.TIME_ZONE).localize(datetime(2023, 9, 22, 0, 0, 0)),
     )
 
     pontos_sumarizados = []
-    diferenca = timedelta(0)
+    horas_trabalhadas = timedelta(0)
     for ponto in pontos:
         dia = ponto.entrada.date()
         if ponto.entrada.date() == dia:
-            diferenca += ponto.saida - ponto.entrada
-            print("DIFERENCA", diferenca)
+            horas_trabalhadas += ponto.difference
+            dia = ponto.entrada.date()
         else:    
-            dict_ponto = {"dia": dia, "diferenca": diferenca}
+            print("DIA", dia, "HORAS TRABALHADAS", horas_trabalhadas)
+            dict_ponto = {"dia": dia, "horas_trabalhadas": horas_trabalhadas}
             pontos_sumarizados.append(dict_ponto)
-            diferenca = timedelta(0)
+            horas_trabalhadas = timedelta(0)
+
 
     nome = usuario.username
     context = {"pontos_sumarizados": pontos_sumarizados, 
