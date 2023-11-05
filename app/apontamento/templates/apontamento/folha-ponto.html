@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-
+{% load timedelta_filters %}
 {% block title %} Folha de Ponto | {{object.title}}
 
 {% endblock title %}
 
-{% load static %}
+
 
 {% block content %}
 
@@ -14,14 +14,15 @@
         <h1>Pontos</h1>
     </div>
 </div>
-<div class="container">
-    <h1>Pontos</h1>
 
-    {{pontos}}
-</div>
 <div class="container">
     <h1>Pontos Sumarizados</h1>
-    {{ pontos_sumarizados}}
+    {% for ponto in pontos_sumarizados %}
+    {{ ponto.dia|date:"d/m/Y"}} - {{ ponto.horas_trabalhadas|format_timedelta }}<br>
+    {% endfor %}
+    <h2>Total de Horas Trabalhadas</h2>
+    {{ total_horas_trabalhadas|format_timedelta }}
 </div>
+
 
 {% endblock %}

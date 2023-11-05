@@ -5,10 +5,7 @@ from apontamento.services import PontoService
 from apontamento.forms import FolhaPontoForm
 from apontamento.models import Ponto
 
-from datetime import datetime, timedelta, timezone
-import pytz
-
-from folha_ponto import settings
+from datetime import datetime, timedelta
 
 
 @login_required
@@ -22,8 +19,8 @@ def folha_ponto(request):
     usuario = User.objects.filter(username="sara").first()
     service = PontoService()
 
-    data_inicial=pytz.timezone(settings.TIME_ZONE).localize(datetime(2023, 9, 1, 0, 0, 0)).strftime("%Y-%m-%d")
-    data_final  =pytz.timezone(settings.TIME_ZONE).localize(datetime(2023, 9, 3, 0, 0, 0)).strftime("%Y-%m-%d")
+    data_inicial=datetime(2023, 9, 1, 0, 0, 0)
+    data_final  =datetime(2023, 9, 23, 0, 0, 0)
 
     pontos = service.ponto_list(
         usuario.id,
@@ -34,22 +31,30 @@ def folha_ponto(request):
     pontos_sumarizados = []
     horas_trabalhadas = timedelta(0)
     total_horas_trabalhadas = timedelta(0)  # total hours worked across all days
-    dia = data_inicial
+    dia = data_inicial.date()  # start with the first day in the query
     for ponto in pontos:
-        if ponto.entrada.date() != dia:
+        print(ponto.entrada.date(), dia)
+        if ponto.entrada.date() != dia:  # if the day has changed since the last time we added a sum for a
+            
             pontos_sumarizados.append(
                 {
                     "dia": dia,
-                    "horas_trabalhadas": horas_trabalhadas,
+                    "horas_trabalhadas": horas_trabalhadas
                 }
             )
             total_horas_trabalhadas += horas_trabalhadas  # add the hours worked for the day to the total
             horas_trabalhadas = timedelta(0)
             dia = ponto.entrada.date()
         horas_trabalhadas += ponto.difference
+
     total_horas_trabalhadas += horas_trabalhadas  # add the hours worked for the last day to the total
-    
-    context = {"pontos_sumarizados": pontos_sumarizados, "total_horas_trabalhadas": total_horas_trabalhadas}
+
+
+    context = {"pontos": pontos, 
+               "pontos_sumarizados": pontos_sumarizados, 
+               "horas_trabalhadas": horas_trabalhadas,
+               "total_horas_trabalhadas": total_horas_trabalhadas,
+               }
 
     return render(
         request,
