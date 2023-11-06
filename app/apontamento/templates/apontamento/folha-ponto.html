@@ -8,21 +8,50 @@
 
 {% block content %}
 
+{% if pontos_sumarizados %}
+<h5>Resultado da Consulta</h5>
+<table class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Data</th>
+                <th scope="col">Atrasado</th>
+                <th scope="col" class="text-end">Trabalhadas</th>
+                <th scope="col" class="text-end">Credor</th>
+                <th scope="col" class="text-end">Devedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ponto in pontos_sumarizados %}
+            <tr>
+                <td scope="row" class="text-center"><i class="fas fa-edit" style="color:blue"></i></td>
+                <td scope="row">{{ ponto.dia|date:"d/m/Y"}}</td>
+                <td scope="row">Não</td>
+                <td scope="row" class="text-end">{{ ponto.horas_trabalhadas|format_timedelta }}</td>
+                <td scope="row" class="text-end">{{ponto.credor|format_timedelta}}</td>
+                <td scope="row" class="text-end">{{ponto.devedor|format_timedelta}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col" class="text-end">{{ total_horas_trabalhadas|format_timedelta }}</th>
+                <th scope="col" class="text-end">{{total_credor|format_timedelta}}</th>
+                <th scope="col" class="text-end">{{total_devedor|format_timedelta}}</th>
+            </tr>
+        </tfoot>
+    </table>
+</table>
+{% else %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
 
-<div class="container px-4 px-lg-5 mt-5">
-    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <h1>Pontos</h1>
-    </div>
-</div>
-
-<div class="container">
-    <h1>Pontos Sumarizados</h1>
-    {% for ponto in pontos_sumarizados %}
-    {{ ponto.dia|date:"d/m/Y"}} - {{ ponto.horas_trabalhadas|format_timedelta }}<br>
-    {% endfor %}
-    <h2>Total de Horas Trabalhadas</h2>
-    {{ total_horas_trabalhadas|format_timedelta }}
-</div>
-
-
+{% endif %}
 {% endblock %}

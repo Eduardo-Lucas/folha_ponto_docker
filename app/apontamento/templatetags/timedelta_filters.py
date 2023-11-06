@@ -9,4 +9,6 @@ def format_timedelta(value):
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60
     seconds = total_seconds % 60
-    return f"{hours}:{minutes}:{seconds}"
+
+    #return f"{hours}:{minutes}:{seconds}"
+    return "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds)
