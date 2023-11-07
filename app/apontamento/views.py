@@ -44,15 +44,20 @@ def folha_ponto(request):
             dia = data_inicial  # start with the first day in the query
 
             for ponto in pontos:
-                print(ponto.entrada.date(), dia)
                 if ponto.entrada.date() != dia:  # if the day has changed since the last time we added a sum for a
-                    credor_devedor = (horas_obrigatorias - horas_trabalhadas)
-                    if credor_devedor > timedelta(0):
-                        credor = timedelta(0)
-                        devedor = abs(credor_devedor)
-                    else:
-                        credor = abs(credor_devedor)
+                    
+                    if ponto.entrada.weekday() >= 5: # it's a weekend
+                        credor = horas_trabalhadas
                         devedor = timedelta(0)
+                    else:
+                        credor_devedor = (horas_obrigatorias - horas_trabalhadas)
+                        
+                        if credor_devedor > timedelta(0):
+                            credor = timedelta(0)
+                            devedor = abs(credor_devedor)
+                        else:
+                            credor = abs(credor_devedor)
+                            devedor = timedelta(0)
 
                     pontos_sumarizados.append(
                         {
@@ -84,5 +89,7 @@ def folha_ponto(request):
     
     else:
         form = FolhaPontoForm()
-        return render(request, "apontamento/folha-ponto.html", {"form": form})
+        context = {form: form}
+
+    return render(request, "apontamento/folha-ponto.html", {"form": form})
     

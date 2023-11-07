@@ -8,7 +8,13 @@
 
 {% block content %}
 
-{% if pontos_sumarizados %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+
 <h5>Resultado da Consulta</h5>
 <table class="table-responsive">
     <table class="table table-striped table-bordered table-hover">
@@ -46,12 +52,5 @@
         </tfoot>
     </table>
 </table>
-{% else %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
 
-{% endif %}
 {% endblock %}
