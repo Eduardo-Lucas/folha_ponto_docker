@@ -37,21 +37,31 @@ def folha_ponto(request):
             pontos_sumarizados = []
             horas_trabalhadas = timedelta(0)
             total_horas_trabalhadas = timedelta(0)  # total hours worked across all days
-            
+
             horas_obrigatorias = timedelta(hours=8)  # hours worked per day
             total_credor = timedelta(0)
             total_devedor = timedelta(0)
             dia = data_inicial  # start with the first day in the query
+            atrasado = 'Não'
 
             for ponto in pontos:
-                if ponto.entrada.date() != dia:  # if the day has changed since the last time we added a sum for a
+
+                if ponto.primeiro:
+                    if ponto.entrada.time() > datetime.strptime("09:15:00", "%H:%M:%S").time():
+                        atrasado = 'Sim'
+                    else:
+                        atrasado = 'Não'
+                else:
+                    atrasado = 'Não'
                     
+                # if the day has changed since the last time we added a sum for a day
+                if ponto.entrada.date() != dia:
                     if ponto.entrada.weekday() >= 5: # it's a weekend
                         credor = horas_trabalhadas
                         devedor = timedelta(0)
                     else:
-                        credor_devedor = (horas_obrigatorias - horas_trabalhadas)
-                        
+                        credor_devedor = horas_obrigatorias - horas_trabalhadas
+
                         if credor_devedor > timedelta(0):
                             credor = timedelta(0)
                             devedor = abs(credor_devedor)
@@ -63,6 +73,7 @@ def folha_ponto(request):
                         {
                             "dia": dia,
                             "horas_trabalhadas": horas_trabalhadas,
+                            "atrasado": atrasado,
                             "credor": credor,
                             "devedor": devedor,
                         }

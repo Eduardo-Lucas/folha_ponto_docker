@@ -31,5 +31,5 @@ class Ponto(models.Model):
         return 0
         
     def __str__(self) -> str:
-        return f"{self.usuario_id} {self.entrada} {self.saida} {self.difference}"
+        return f"{self.usuario} {self.entrada} {self.saida} {self.difference}"
 

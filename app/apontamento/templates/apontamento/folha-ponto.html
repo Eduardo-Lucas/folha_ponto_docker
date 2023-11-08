@@ -33,7 +33,7 @@
             <tr>
                 <td scope="row" class="text-center"><i class="fas fa-edit" style="color:blue"></i></td>
                 <td scope="row">{{ ponto.dia|date:"d/m/Y"}}</td>
-                <td scope="row">Não</td>
+                <td scope="row">{{ ponto.atrasado }}</td>
                 <td scope="row" class="text-end">{{ ponto.horas_trabalhadas|format_timedelta }}</td>
                 <td scope="row" class="text-end">{{ponto.credor|format_timedelta}}</td>
                 <td scope="row" class="text-end">{{ponto.devedor|format_timedelta}}</td>
