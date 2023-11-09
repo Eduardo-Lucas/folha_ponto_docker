@@ -9,24 +9,28 @@ from datetime import datetime, timedelta
 
 
 @login_required
-def apontamento_list(request, login_url="users:login"):
+def apontamento_list(request):
+    """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
 
 
 def folha_ponto(request):
+    """Folha de ponto"""
     if request.method == "POST":
         form = FolhaPontoForm(request.POST)
         if form.is_valid():
             usuario = User.objects.filter(username="sara").first()
             service = PontoService()
-            
-            # get sum  of differences group by date #
-            #       
-            usuario = User.objects.filter(username="sara").first()
-            service = PontoService()
 
+            # get sum  of differences group by date #
+            
             data_inicial=form.cleaned_data["entrada"]
             data_final  =form.cleaned_data["saida"]
+            usuario = form.cleaned_data["usuario"]
+            
+            usuario = User.objects.filter(username=usuario).first()
+            
+            service = PontoService()
 
             pontos = service.ponto_list(
                 usuario.id,
@@ -85,22 +89,33 @@ def folha_ponto(request):
                     dia = ponto.entrada.date()
                 horas_trabalhadas += ponto.difference
 
-            total_horas_trabalhadas += horas_trabalhadas  # add the hours worked for the last day to the total
+            total_horas_trabalhadas += horas_trabalhadas
+            # add the hours worked for the last day to the total
 
 
-            context = {"pontos": pontos, 
-                    "pontos_sumarizados": pontos_sumarizados, 
-                    "horas_trabalhadas": horas_trabalhadas,
-                    "total_credor": total_credor,
-                    "total_devedor": total_devedor,
-                    "total_horas_trabalhadas": total_horas_trabalhadas,
-                    }
-            return render(request, "apontamento/folha-ponto.html", context)
+            context = {
+                "form": form,
+                "pontos": pontos,
+                "pontos_sumarizados": pontos_sumarizados, 
+                "horas_trabalhadas": horas_trabalhadas,
+                "total_credor": total_credor,
+                "total_devedor": total_devedor,
+                "total_horas_trabalhadas": total_horas_trabalhadas,
+            }
+            
 
     
     else:
         form = FolhaPontoForm()
-        context = {form: form}
+        context = {
+                "form": form,
+                "pontos": "",
+                "pontos_sumarizados": "", 
+                "horas_trabalhadas": "",
+                "total_credor": "",
+                "total_devedor": "",
+                "total_horas_trabalhadas": "",
+            }
 
-    return render(request, "apontamento/folha-ponto.html", {"form": form})
+    return render(request, "apontamento/folha-ponto.html", context)
     
