@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from datetime import timedelta 
 
 class Ponto(models.Model):
     id = models.IntegerField(
@@ -28,7 +28,7 @@ class Ponto(models.Model):
     def difference(self):
         if self.saida is not None:
             return self.saida - self.entrada
-        return 0
+        return timedelta(0)
         
     def __str__(self) -> str:
         return f"{self.usuario} {self.entrada} {self.saida} {self.difference}"

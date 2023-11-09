@@ -84,7 +84,7 @@ def folha_ponto(request):
                     )
                     total_horas_trabalhadas += horas_trabalhadas  # add the hours worked for the day to the total
                     total_credor += credor
-                    total_devedor += devedor 
+                    total_devedor += devedor
                     horas_trabalhadas = timedelta(0)
                     dia = ponto.entrada.date()
                 horas_trabalhadas += ponto.difference
