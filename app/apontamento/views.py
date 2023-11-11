@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -5,8 +6,9 @@ from apontamento.services import PontoService
 from apontamento.forms import FolhaPontoForm
 from apontamento.models import Ponto
 
-from datetime import datetime, timedelta
+from django.views.generic import ListView
 
+from django.utils import timezone
 
 @login_required
 def apontamento_list(request):
@@ -118,4 +120,19 @@ def folha_ponto(request):
             }
 
     return render(request, "apontamento/folha-ponto.html", context)
+
+
+class AppointmentListView(ListView):
+    """
+    List all the appointments for a specific date.
+    """
+    model = Ponto
+    template_name = 'apontamento/appointment_list.html'
+    form_class = FolhaPontoForm
+    context_object_name = 'pontos'
+
+    def get_queryset(self):
+        date = timezone.datetime(2023, 9, 1).date()
+        user=9
+        return Ponto.objects.for_day(date, user)
     

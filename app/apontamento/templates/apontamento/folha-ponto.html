@@ -1,57 +1,86 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load timedelta_filters %}
-{% block title %} Folha de Ponto | {{object.title}}
 
-{% endblock title %}
-
-
+{% block title %} Folha de Ponto | {{object.title}} {% endblock title %}
 
 {% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+
+<h1>Folha Ponto</h1>
+<div class="container">
+    <form method="post" class="row gx-3 gy-2 align-items-center">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">{{form.entrada|as_crispy_field}}</div>
+            <div class="col-md-4">{{form.saida|as_crispy_field}}</div>
+            <div class="col-md-4">{{form.usuario|as_crispy_field}}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-search"></i> Consulta
+                </button>
+            </div>
+
+            <div class="col-lg-4">
+                <button type="button" class="btn btn-warning">
+                    <i class="fa-solid fa-file-excel"></i> Exportar
+                </button>
+            </div>
+
+            <div class="col-lg-4">
+                <button type="button" class="btn btn-primary">
+                    <i class="fa-solid fa-arrows-rotate"></i> Limpar
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
 
 {% if pontos_sumarizados %}
-<h5>Resultado da Consulta</h5>
-<table class="table-responsive">
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">Data</th>
-                <th scope="col">Atrasado</th>
-                <th scope="col" class="text-end">Trabalhadas</th>
-                <th scope="col" class="text-end">Credor</th>
-                <th scope="col" class="text-end">Devedor</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ponto in pontos_sumarizados %}
-            <tr>
-                <td scope="row" class="text-center"><i class="fas fa-edit" style="color:blue"></i></td>
-                <td scope="row">{{ ponto.dia|date:"d/m/Y"}}</td>
-                <td scope="row">{{ ponto.atrasado }}</td>
-                <td scope="row" class="text-end">{{ ponto.horas_trabalhadas|format_timedelta }}</td>
-                <td scope="row" class="text-end">{{ponto.credor|format_timedelta}}</td>
-                <td scope="row" class="text-end">{{ponto.devedor|format_timedelta}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col" class="text-end">{{ total_horas_trabalhadas|format_timedelta }}</th>
-                <th scope="col" class="text-end">{{total_credor|format_timedelta}}</th>
-                <th scope="col" class="text-end">{{total_devedor|format_timedelta}}</th>
-            </tr>
-        </tfoot>
+<div class="container border border-dark">
+    <h5>Resultado da Consulta</h5>
+    <table class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Atrasado</th>
+                    <th scope="col" class="text-end">Trabalhadas</th>
+                    <th scope="col" class="text-end">Credor</th>
+                    <th scope="col" class="text-end">Devedor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ponto in pontos_sumarizados %}
+                <tr>
+                    <td scope="row" class="text-center"><i class="fas fa-edit" style="color:blue"></i></td>
+                    <td scope="row">{{ ponto.dia|date:"d/m/Y"}}</td>
+                    <td scope="row">{{ ponto.atrasado }}</td>
+                    <td scope="row" class="text-end">{{ ponto.horas_trabalhadas|format_timedelta }}</td>
+                    <td scope="row" class="text-end">{{ponto.credor|format_timedelta}}</td>
+                    <td scope="row" class="text-end">{{ponto.devedor|format_timedelta}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col" class="text-end">{{ total_horas_trabalhadas|format_timedelta }}</th>
+                    <th scope="col" class="text-end">{{total_credor|format_timedelta}}</th>
+                    <th scope="col" class="text-end">{{total_devedor|format_timedelta}}</th>
+                </tr>
+            </tfoot>
+        </table>
     </table>
-</table>
+</div>
 {% endif %}
 
 {% endblock %}

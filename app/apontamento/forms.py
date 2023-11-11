@@ -8,6 +8,6 @@ class DateInput(forms.DateInput):
 
 
 class FolhaPontoForm(forms.Form):
-    entrada = forms.DateField(widget=DateInput, label="Início", required=False)
-    saida = forms.DateField(widget=DateInput, label="Fim", required=False)
-    usuario = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
+    entrada = forms.DateField(widget=DateInput, label="Início", required=True)
+    saida = forms.DateField(widget=DateInput, label="Fim", required=True)
+    usuario = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
