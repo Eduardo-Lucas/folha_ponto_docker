@@ -1,10 +1,42 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime, time, timedelta, timezone 
+from datetime import datetime, time, timedelta, timezone
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
+from cliente.models import Cliente
 
+class TipoReceita(models.Model):
+    RECIBO_CHOICES = (
+        (True, 'Sim'),
+        (False, 'Não'),
+    )
+    STATUS_CHOICES = (
+        (True, 'Ativo'),
+        (False, 'Inativo'),
+    )
+    id = models.IntegerField(primary_key=True)
+    descricao = models.CharField(max_length=100)
+    recibo = models.BooleanField(
+        choices=RECIBO_CHOICES,
+        default=False,
+    )
+    status = models.BooleanField(
+        choices=STATUS_CHOICES,
+        default=True,
+    )
+
+    class Meta:
+        """
+        Metadata for the TipoReceita model.
+        """
+        ordering = ("descricao",)
+        db_table = "tiporeceitas"
+        verbose_name = "Tipo de Receita"
+        verbose_name_plural = "Tipos de Receitas"
+
+    def __str__(self):
+        return str(self.descricao)
 
 class PontoManager(models.Manager):
     """
@@ -41,8 +73,14 @@ class Ponto(models.Model):
     saida = models.DateTimeField(null=True, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     fechado = models.BooleanField(default=False)
-    cliente_id = models.IntegerField(null=True, blank=True)
-    tiporeceita_id = models.IntegerField(null=True, blank=True)
+    cliente_id = models.ForeignKey(Cliente,
+                                   on_delete=models.CASCADE,
+                                   null=True,
+                                   blank=True)
+    tipo_receita = models.ForeignKey(TipoReceita,
+                                     on_delete=models.CASCADE,
+                                     null=True,
+                                     blank=True)
     atrasoautorizado = models.BooleanField(default=False)
 
     objects = PontoManager()
@@ -51,7 +89,7 @@ class Ponto(models.Model):
         """
         Metadata for the Ponto model.
         """
-        ordering = ("entrada",)
+        ordering = ("entrada", )
         db_table = "pontos"
         verbose_name = "Ponto"
         verbose_name_plural = "Pontos"
@@ -70,3 +108,12 @@ class Ponto(models.Model):
         Returns a string representation of the Ponto object.
         """
         return f"{self.usuario} {self.entrada} {self.saida} {self.difference}"
+
+    @property
+    def cliente(self):
+        """
+        Returns the client for the Ponto object.
+        """
+        if self.cliente_id is not None:
+            return self.cliente_id
+        return '-'

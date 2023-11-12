@@ -52,7 +52,7 @@ class Cliente(models.Model):
     contato_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.codigosistema.zfill(4)}:{self.nomerazao}"
+        return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
 
     class Meta:
         ordering = ("nomerazao",)
