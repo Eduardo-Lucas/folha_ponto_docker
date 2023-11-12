@@ -2,11 +2,12 @@ from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.urls import reverse, reverse_lazy
 from apontamento.services import PontoService
 from apontamento.forms import FolhaPontoForm
 from apontamento.models import Ponto
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 
 
 
@@ -18,6 +19,7 @@ def apontamento_list(request):
 
 def folha_ponto(request):
     """Folha de ponto"""
+    context = {}
     if request.method == "POST":
         form = FolhaPontoForm(request.POST)
         if form.is_valid():
@@ -42,8 +44,7 @@ def folha_ponto(request):
 
             pontos_sumarizados = []
             horas_trabalhadas = timedelta(0)
-            total_horas_trabalhadas = timedelta(
-                0)  # total hours worked across all days
+            total_horas_trabalhadas = timedelta(0)  # total hours worked across all days
 
             horas_obrigatorias = timedelta(hours=8)  # hours worked per day
             total_credor = timedelta(0)
@@ -126,10 +127,32 @@ class AppointmentListView(ListView):
     """
     model = Ponto
     template_name = 'apontamento/appointment_list.html'
-    form_class = FolhaPontoForm
     context_object_name = 'pontos'
 
     def get_queryset(self):
         day = self.kwargs['day']
-        user=self.kwargs['user_id']
-        return Ponto.objects.for_day(day, user)
+        usuario=self.kwargs['user_id']
+        return Ponto.objects.for_day(day, usuario)
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentListView, self).get_context_data(**kwargs)
+        context['day'] = self.kwargs['day']
+        context['user'] = User.objects.get(id=self.kwargs['user_id'])
+        context['previous_page'] = self.request.META.get('HTTP_REFERER')
+        return context
+    
+
+class AppointmentDeleteView(DeleteView):
+    """Delete an appointment."""
+    model = Ponto
+
+    def get_success_url(self):
+        return reverse(
+            'apontamento:appointment_list', 
+            kwargs={'day': self.kwargs['day'],
+                    'user_id': self.kwargs['user_id']
+                    }
+        )
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)

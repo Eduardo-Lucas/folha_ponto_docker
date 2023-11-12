@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Confirmação</h1>
+<div class="container">
+    <div class="row">
+        <p>Tem certeza que quer apagar o registro dos horários: "{{ object.entrada|time:'H:i' }}" -
+            "{{ object.saida|time:'H:i' }}"
+            do dia
+            "{{object.entrada|date:'d/m/Y' }}"?</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, apaga</button>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'apontamento:folha-ponto' %}" class="btn btn-primary">Não,
+                volta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
