@@ -26,7 +26,7 @@
             </div>
 
             <div class="col-lg-4">
-                <button type="button" class="btn btn-warning">
+                <button type="button" class="btn btn-warning" {% if not pontos_sumarizados %}disabled{% endif %}>
                     <i class="fa-solid fa-file-excel"></i> Exportar
                 </button>
             </div>
