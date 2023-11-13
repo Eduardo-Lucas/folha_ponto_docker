@@ -17,8 +17,10 @@
         <div class="row text-center">
 
             <div class="col-md-6">
-                <a href="{{ previous_page }}" class="btn btn-warning float-end">
-                    <i class="fa-solid fa-arrow-left"></i> Voltar para o Resumo</a>
+                <button type="button" class="btn btn-warning" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar para o Resumo
+                </button>
             </div>
         </div>
     </div>
@@ -58,5 +60,10 @@
             {% endfor %}
         </tbody>
     </table>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </div>
 {% endblock%}
