@@ -12,13 +12,13 @@ class FolhaPontoForm(forms.Form):
     saida = forms.DateField(widget=DateInput, label="Fim", required=True)
     usuario = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        entrada = cleaned_data.get('entrada')
-        saida = cleaned_data.get('saida')
 
-        if entrada and saida:
-            if entrada > saida:
-                raise ValidationError("Data inicial cannot be greater than data final")
-
-        return cleaned_data
+    
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Ponto
+        fields = ('entrada', 'saida', 'usuario')
+        widgets = {
+            'entrada': DateInput(),
+            'saida': DateInput(),
+        }

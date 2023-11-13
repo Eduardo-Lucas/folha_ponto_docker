@@ -68,6 +68,15 @@
     </header>-->
   <!-- Section-->
   <div class="container mt-5 border border-dark">
+    
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
   </div>

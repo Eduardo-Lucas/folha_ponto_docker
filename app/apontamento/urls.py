@@ -13,6 +13,8 @@ urlpatterns = [
     path('appointment-list/<date:day>/<int:user_id>/',
              AppointmentListView.as_view(),
              name='appointment_list'),
-    path('appointment-delete/<int:pk>/', AppointmentDeleteView.as_view(), name='appointment_delete'),
+    path('appointment-delete/<int:pk>/',
+         AppointmentDeleteView.as_view(),
+         name='appointment_delete'),
 
 ]

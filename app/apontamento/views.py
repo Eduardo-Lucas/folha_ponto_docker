@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from apontamento.services import PontoService
-from apontamento.forms import FolhaPontoForm
+from apontamento.forms import AppointmentForm, FolhaPontoForm
 from apontamento.models import Ponto
 
-from django.views.generic import ListView, DeleteView
-
+from django.views.generic import ListView, DeleteView, CreateView
+from django.contrib import messages
 
 
 @login_required
@@ -31,6 +31,10 @@ def folha_ponto(request):
             data_inicial = form.cleaned_data["entrada"]
             data_final = form.cleaned_data["saida"]
             usuario = form.cleaned_data["usuario"]
+
+            if data_inicial > data_final:
+                messages.error(request, "Data inicial não pode ser maior que data final")
+                return render(request, "apontamento/folha-ponto.html", context)
 
             usuario = User.objects.filter(username=usuario).first()
 
@@ -105,7 +109,7 @@ def folha_ponto(request):
                 "total_devedor": total_devedor,
                 "total_horas_trabalhadas": total_horas_trabalhadas,
             }
-
+            return render(request, "apontamento/folha-ponto.html", context)
     else:
         form = FolhaPontoForm()
         context = {
@@ -117,8 +121,7 @@ def folha_ponto(request):
             "total_devedor": "",
             "total_horas_trabalhadas": "",
         }
-
-    return render(request, "apontamento/folha-ponto.html", context)
+        return render(request, "apontamento/folha-ponto.html", context)
 
 
 class AppointmentListView(ListView):
@@ -156,3 +159,30 @@ class AppointmentDeleteView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+
+class AppointmentCreateView(CreateView):
+    """Create a new appointment."""
+    model = Ponto
+    form_class = AppointmentForm
+
+    def get_success_url(self):
+        return reverse(
+            'apontamento:appointment_list', 
+            kwargs={'day': self.kwargs['day'],
+                    'user_id': self.kwargs['user_id']
+                    }
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super(AppointmentCreateView, self).get_form_kwargs()
+        kwargs['day'] = self.kwargs['day']
+        kwargs['user_id'] = self.kwargs['user_id']
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentCreateView, self).get_context_data(**kwargs)
+        context['day'] = self.kwargs['day']
+        context['user'] = User.objects.get(id=self.kwargs['user_id'])
+        context['previous_page'] = self.request.META.get('HTTP_REFERER')
+        return context
