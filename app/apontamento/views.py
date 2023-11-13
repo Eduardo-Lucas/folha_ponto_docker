@@ -34,8 +34,7 @@ def folha_ponto(request):
 
             if data_inicial > data_final:
                 messages.error(request, "Data inicial não pode ser maior que data final")
-                return render(request, "apontamento/folha-ponto.html", context)
-
+                
             usuario = User.objects.filter(username=usuario).first()
 
             service = PontoService()
