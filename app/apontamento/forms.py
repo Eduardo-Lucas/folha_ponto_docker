@@ -30,4 +30,19 @@ class AppointmentForm(forms.ModelForm):
         # You can now use self.day and self.user_id in your form
 
 
+class AppointmentUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ponto
+        fields = ('entrada', 'saida', 'usuario')
+        widgets = {
+            'entrada': DateInput(),
+            'saida': DateInput(),
+        }
+
+    def __init__(self, *args, day=None, user_id=None, **kwargs):
+        super(AppointmentUpdateForm, self).__init__(*args, **kwargs)
+        self.day = day
+        self.user_id = user_id if user_id is not None else User.objects.filter(username=['usuario']).first().id
+        # You can now use self.day and self.user_id in your form
+
         

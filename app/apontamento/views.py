@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse, reverse_lazy
 from apontamento.services import PontoService
-from apontamento.forms import AppointmentForm, FolhaPontoForm
+from apontamento.forms import AppointmentForm, AppointmentUpdateForm, FolhaPontoForm
 from apontamento.models import Ponto
 
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
@@ -204,8 +204,8 @@ class AppointmentUpdateView(UpdateView):
     get_context_data(): Adds variables to the context data that is passed to the template.
     """
     model = Ponto  # replace with your model name
-    form_class = AppointmentForm
-    template_name = 'apontamento/appointment_form.html'  # replace with your template name
+    form_class = AppointmentUpdateForm
+    template_name = 'apontamento/appointment_update.html'  # replace with your template name
 
     def get_success_url(self):
         return reverse(

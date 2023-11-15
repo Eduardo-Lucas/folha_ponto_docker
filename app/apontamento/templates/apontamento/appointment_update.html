@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="container border border-dark">
+    <h5>Ponto</h5>
+    <h6><strong>Dados do Ponto</strong></h6>
+    <hr>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row ">
+            <div class="col-md-3">
+                {{form.entrada|as_crispy_field}}
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-3">
+                {{form.saida|as_crispy_field}}
+            </div>
+        </div>
+
+
+
+        <div class="row border border-dark">
+            <div class="col-md-8 mt-1 mb-1">
+                <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fas fa-database"></i>
+                    Gravar
+                </button>
+            </div>
+            <div class="col-md-4 mt-1 mb-1">
+                <a href="{% url 'apontamento:folha-ponto' %}" class="btn btn-secondary btn-block btn-lg">
+                    <i class="fas fa-stream"></i> Volta para o Resumo
+                </a>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}
