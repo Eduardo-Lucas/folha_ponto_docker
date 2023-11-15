@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AppointmentListView, AppointmentDeleteView, apontamento_list, folha_ponto
+from .views import AppointmentListView, AppointmentDeleteView, AppointmentUpdateView, apontamento_list, folha_ponto
 from django.urls import register_converter
 from .converters.custom_date_converter import DateConverter
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('appointment-delete/<int:pk>/',
          AppointmentDeleteView.as_view(),
          name='appointment_delete'),
+    path('appointment-update/<date:day>/<int:user_id>/<int:pk>/', AppointmentUpdateView.as_view(), name='appointment_update'),
 
 ]

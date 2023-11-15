@@ -45,7 +45,9 @@
                     <i class="fas fa-search" style="color:blue"></i>
                 </td>
                 <td>
-                    <i class="fas fa-edit" style="color:blue"></i>
+                    <a href="{% url 'apontamento:appointment_update' day user.id ponto.id %}">
+                        <i class="fas fa-edit" style="color:blue"></i>
+                    </a>
                 </td>
                 <td>
                     <a href="{% url 'apontamento:appointment_delete' ponto.id %}">

@@ -7,7 +7,7 @@ from apontamento.services import PontoService
 from apontamento.forms import AppointmentForm, FolhaPontoForm
 from apontamento.models import Ponto
 
-from django.views.generic import ListView, DeleteView, CreateView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 from django.contrib import messages
 
 
@@ -181,6 +181,48 @@ class AppointmentCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AppointmentCreateView, self).get_context_data(**kwargs)
+        context['day'] = self.kwargs['day']
+        context['user'] = User.objects.get(id=self.kwargs['user_id'])
+        context['previous_page'] = self.request.META.get('HTTP_REFERER')
+        return context
+    
+
+class AppointmentUpdateView(UpdateView):
+    """
+    This view is responsible for handling the update operation for an Appointment instance.
+    It uses Django's built-in UpdateView which provides a form on the template for the specified model
+    and handles the update operation.
+
+    Attributes:
+    model: The model that this view will update an instance of.
+    form_class: The name of the form class to be used for updating the model instance.
+    template_name: The name of the template to be used in this view.
+
+    Methods:
+    get_success_url(): Returns the URL to redirect to after a successful update.
+    get_form_kwargs(): Returns the keyword arguments for instantiating the form.
+    get_context_data(): Adds variables to the context data that is passed to the template.
+    """
+    model = Ponto  # replace with your model name
+    form_class = AppointmentForm
+    template_name = 'apontamento/appointment_form.html'  # replace with your template name
+
+    def get_success_url(self):
+        return reverse(
+            'apontamento:appointment_list', 
+            kwargs={'day': self.kwargs['day'],
+                    'user_id': self.kwargs['user_id']
+                    }
+        )
+
+    def get_form_kwargs(self):
+        kwargs = super(AppointmentUpdateView, self).get_form_kwargs()
+        kwargs['day'] = self.kwargs['day']
+        kwargs['user_id'] = self.kwargs['user_id']
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentUpdateView, self).get_context_data(**kwargs)
         context['day'] = self.kwargs['day']
         context['user'] = User.objects.get(id=self.kwargs['user_id'])
         context['previous_page'] = self.request.META.get('HTTP_REFERER')

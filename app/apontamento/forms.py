@@ -22,3 +22,12 @@ class AppointmentForm(forms.ModelForm):
             'entrada': DateInput(),
             'saida': DateInput(),
         }
+
+    def __init__(self, *args, day=None, user_id=None, **kwargs):
+        super(AppointmentForm, self).__init__(*args, **kwargs)
+        self.day = day
+        self.user_id = user_id if user_id is not None else User.objects.filter(username=['usuario']).first().id
+        # You can now use self.day and self.user_id in your form
+
+
+        
