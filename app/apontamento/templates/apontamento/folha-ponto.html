@@ -18,20 +18,20 @@
             <div class="col-md-4">{{form.usuario|as_crispy_field}}</div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-4">
+        <div class="row mb-3 text-center">
+            <div class="col-md-2">
                 <button type="submit" class="btn btn-primary">
                     <i class="fa-solid fa-search"></i> Consulta
                 </button>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-md-2">
                 <button type="button" class="btn btn-warning" {% if not pontos_sumarizados %}disabled{% endif %}>
                     <i class="fa-solid fa-file-excel"></i> Exportar
                 </button>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-md-2">
                 <a href="{% url 'apontamento:folha-ponto' %}" class="btn btn-primary">
                     <i class="fa-solid fa-arrows-rotate"></i> Limpar
                 </a>
