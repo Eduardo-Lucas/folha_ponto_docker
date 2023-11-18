@@ -11,7 +11,7 @@ from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 from django.contrib import messages
 
 
-@login_required
+
 def apontamento_list(request):
     """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
@@ -214,12 +214,14 @@ class AppointmentUpdateView(UpdateView):
                     'user_id': self.kwargs['user_id']
                     }
         )
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
-    def get_form_kwargs(self):
-        kwargs = super(AppointmentUpdateView, self).get_form_kwargs()
-        kwargs['day'] = self.kwargs['day']
-        kwargs['user_id'] = self.kwargs['user_id']
-        return kwargs
+    # def get_form_kwargs(self):
+    #     kwargs = super(AppointmentUpdateView, self).get_form_kwargs()
+    #     kwargs['day'] = self.kwargs['day']
+    #     kwargs['user_id'] = self.kwargs['user_id']
+    #     return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(AppointmentUpdateView, self).get_context_data(**kwargs)

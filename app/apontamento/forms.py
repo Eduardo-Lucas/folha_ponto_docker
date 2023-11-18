@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 class DateInput(forms.DateInput):
     input_type = "date"
 
+class DateTimeInput(forms.DateTimeInput):
+    input_type = "datetime-local"
 
 class FolhaPontoForm(forms.Form):
     entrada = forms.DateField(widget=DateInput, label="Início", required=True)
@@ -17,10 +19,10 @@ class FolhaPontoForm(forms.Form):
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Ponto
-        fields = ('entrada', 'saida', 'usuario')
+        fields = ('entrada', 'primeiro', 'segundo', 'atraso', 'saida', 'usuario', 'fechado', 'cliente_id', 'tipo_receita', 'atrasoautorizado')
         widgets = {
-            'entrada': DateInput(),
-            'saida': DateInput(),
+            'entrada': DateTimeInput(),
+            'saida': DateTimeInput(),
         }
 
     def __init__(self, *args, day=None, user_id=None, **kwargs):
@@ -35,14 +37,14 @@ class AppointmentUpdateForm(forms.ModelForm):
         model = Ponto
         fields = ('entrada', 'saida', 'usuario')
         widgets = {
-            'entrada': DateInput(),
-            'saida': DateInput(),
+            'entrada': DateTimeInput(),
+            'saida': DateTimeInput(),
         }
 
     def __init__(self, *args, day=None, user_id=None, **kwargs):
         super(AppointmentUpdateForm, self).__init__(*args, **kwargs)
         self.day = day
-        self.user_id = user_id if user_id is not None else User.objects.filter(username=['usuario']).first().id
+        # self.user_id = user_id if user_id is not None else User.objects.filter(username=['usuario']).first().id
         # You can now use self.day and self.user_id in your form
 
         

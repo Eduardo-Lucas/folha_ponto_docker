@@ -8,22 +8,17 @@
     <hr>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <form>
+            <div class="row ">
+                <div class="col-md-4">
+                    {{form.entrada|as_crispy_field}}
+                </div>
 
-        <div class="row ">
-            <div class="col-md-3">
-                {{form.entrada|as_crispy_field}}
+                <div class="col-md-4">
+                    {{form.saida|as_crispy_field}}
+                </div>
             </div>
-
-        </div>
-
-
-        <div class="row">
-
-            <div class="col-md-3">
-                {{form.saida|as_crispy_field}}
-            </div>
-        </div>
-
+        </form>
 
 
         <div class="row border border-dark">
