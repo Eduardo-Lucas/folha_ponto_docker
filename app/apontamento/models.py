@@ -4,6 +4,7 @@ from datetime import datetime, time, timedelta, timezone
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 from cliente.models import Cliente
 
 class TipoReceita(models.Model):
@@ -117,3 +118,6 @@ class Ponto(models.Model):
         if self.cliente_id is not None:
             return self.cliente_id
         return '-'
+
+    def get_absolute_url(self):
+        return reverse('apontamento:appointment_detail', args=[self.id])

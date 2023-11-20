@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h5>Ponto</h5>
+    <h5><strong>Edição do Ponto do dia {{ponto.entrada|date:"d/m/Y"}}</strong></h5>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <form>
+            <div class="row ">
+                <div class="col-md-4">
+                    {{form.entrada|as_crispy_field}}
+                </div>
+
+                <div class="col-md-4">
+                    {{form.saida|as_crispy_field}}
+                </div>
+            </div>
+        </form>
+
+
+        <div class="row border border-dark">
+            <div class="col-md-2 mt-3 mb-3">
+                <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-database"></i>
+                    Gravar
+                </button>
+            </div>
+            <div class="col-md-2 mt-3">
+                <button type="button" class="btn btn-warning btn-lg" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</div>
+
+{% endblock %}

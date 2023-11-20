@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Any
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ from apontamento.services import PontoService
 from apontamento.forms import AppointmentForm, AppointmentUpdateForm, FolhaPontoForm
 from apontamento.models import Ponto
 
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
 from django.contrib import messages
 
 
@@ -192,40 +193,28 @@ class AppointmentUpdateView(UpdateView):
     This view is responsible for handling the update operation for an Appointment instance.
     It uses Django's built-in UpdateView which provides a form on the template for the specified model
     and handles the update operation.
+    """
+    model = Ponto
+    fields = ["entrada", "saida", ]
+    template_name = 'apontamento/appointment_update.html'
+    
+    def form_valid(self, form):
+        messages.info(self.request, "Appointment updated successfully")
+        return super().form_valid(form)
+
+class AppointmentDetailView(DetailView):
+    """
+    This view is responsible for handling the detail view for an Appointment instance.
+    It uses Django's built-in DetailView which provides a form on the template for the specified model
+    and handles the detail view.
 
     Attributes:
-    model: The model that this view will update an instance of.
-    form_class: The name of the form class to be used for updating the model instance.
+    model: The model that this view will display an instance of.
     template_name: The name of the template to be used in this view.
 
     Methods:
-    get_success_url(): Returns the URL to redirect to after a successful update.
-    get_form_kwargs(): Returns the keyword arguments for instantiating the form.
     get_context_data(): Adds variables to the context data that is passed to the template.
     """
-    model = Ponto  # replace with your model name
-    form_class = AppointmentUpdateForm
-    template_name = 'apontamento/appointment_update.html'  # replace with your template name
-
-    def get_success_url(self):
-        return reverse(
-            'apontamento:appointment_list', 
-            kwargs={'day': self.kwargs['day'],
-                    'user_id': self.kwargs['user_id']
-                    }
-        )
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-
-    # def get_form_kwargs(self):
-    #     kwargs = super(AppointmentUpdateView, self).get_form_kwargs()
-    #     kwargs['day'] = self.kwargs['day']
-    #     kwargs['user_id'] = self.kwargs['user_id']
-    #     return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(AppointmentUpdateView, self).get_context_data(**kwargs)
-        context['day'] = self.kwargs['day']
-        context['user'] = User.objects.get(id=self.kwargs['user_id'])
-        context['previous_page'] = self.request.META.get('HTTP_REFERER')
-        return context
+    model = Ponto
+    template_name = 'apontamento/appointment_detail.html'
+    context_object_name = 'ponto'

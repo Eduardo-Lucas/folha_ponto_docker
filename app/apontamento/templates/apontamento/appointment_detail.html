@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="container border border-dark">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>Detalhe do Ponto</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h5>Usuário: {{ponto.usuario|capfirst}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <h5>Data Entrada: {{ponto.entrada|date:"d/m/Y"}}</h5>
+        </div>
+        <div class="col-md-6 ">
+            <h5>Hora Entrada: {{ponto.entrada|time:"H:i"}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h5>Data Saida : {{ponto.saida|date:"d/m/Y"}}</h5>
+        </div>
+        <div class="col-md-6 ">
+            <h5>Hora Saida: {{ponto.saida|time:"H:i"}}</h5>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-md-12 border border-dark">
+            <button type="button" class="btn btn-warning" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para o Resumo
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

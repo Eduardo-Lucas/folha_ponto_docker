@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load timedelta_filters %}
+{% load static %}
 {% block content %}
 <div class="container border border-dark">
     <div class="row">
@@ -8,15 +9,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 border">
+        <div class="col-md-6 ">
             <h4>Usuário: {{user.username|capfirst}}</h4>
         </div>
-        <div class="col-md-4 border">
+        <div class="col-md-4 ">
             <h4>Data: {{day|date:"d/m/Y"}}</h4>
         </div>
         <div class="row text-center">
 
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <button type="button" class="btn btn-warning" onclick="goBack()">
                     <i class="fas fa-arrow-left"></i>
                     Voltar para o Resumo
