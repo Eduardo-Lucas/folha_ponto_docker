@@ -195,7 +195,7 @@ class AppointmentUpdateView(UpdateView):
     and handles the update operation.
     """
     model = Ponto
-    fields = ["entrada", "saida", ]
+    fields = ["entrada", "saida", "atraso", "atrasoautorizado", "tipo_receita", "cliente_id", ]
     template_name = 'apontamento/appointment_update.html'
     
     def form_valid(self, form):

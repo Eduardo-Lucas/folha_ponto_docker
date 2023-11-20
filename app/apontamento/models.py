@@ -70,7 +70,7 @@ class Ponto(models.Model):
     entrada = models.DateTimeField()
     primeiro = models.BooleanField(default=False)
     segundo = models.BooleanField(default=False)
-    atraso = models.BooleanField(default=False)
+    atraso = models.BooleanField(default=False, verbose_name="Atraso")
     saida = models.DateTimeField(null=True, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     fechado = models.BooleanField(default=False)
@@ -82,7 +82,7 @@ class Ponto(models.Model):
                                      on_delete=models.CASCADE,
                                      null=True,
                                      blank=True)
-    atrasoautorizado = models.BooleanField(default=False)
+    atrasoautorizado = models.BooleanField(default=False, verbose_name="Atraso Autorizado")
 
     objects = PontoManager()
 
