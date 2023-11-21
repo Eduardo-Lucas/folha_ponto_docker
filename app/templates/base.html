@@ -43,12 +43,16 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'core:home' %}">Home</a>
           </li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'apontamento:folha_ponto' %}">Folha</a></li>
+          <li class="nav-item">
+            <a href="{% url 'apontamento:folha_ponto' %}" class="btn btn-outline">Resumo</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
+          </li>
           {% if request.user.is_authenticated %}
           <a href="{% url 'user:logout' %}" class="btn btn-outline">Logout</a>
           {% else %}
           <a href="{% url 'user:login' %}" class="btn btn-outline">Login</a>
-
           {% endif %}
           </li>
         </ul>

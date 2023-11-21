@@ -1,10 +1,11 @@
 from django.urls import path
 from .views import (
-    AppointmentListView, 
-    AppointmentDeleteView, 
+    AppointmentListView,
+    AppointmentDeleteView,
     AppointmentUpdateView,
-    AppointmentDetailView, 
-    apontamento_list, 
+    AppointmentDetailView,
+    AppointmentCreateView,
+    apontamento_list,
     folha_ponto
 )
 from django.urls import register_converter
@@ -25,5 +26,6 @@ urlpatterns = [
          name='appointment_delete'),
     path('appointment-update/<int:pk>/', AppointmentUpdateView.as_view(), name='appointment_update'),
     path('appointment-detail/<int:pk>/', AppointmentDetailView.as_view(), name='appointment_detail'),
+    path('appointment-create/', AppointmentCreateView.as_view(), name='appointment_create'),
 
 ]

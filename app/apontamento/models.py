@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, time, timedelta, timezone
@@ -76,6 +77,7 @@ class Ponto(models.Model):
     fechado = models.BooleanField(default=False)
     cliente_id = models.ForeignKey(Cliente,
                                    on_delete=models.CASCADE,
+                                   verbose_name="Cliente",
                                    null=True,
                                    blank=True)
     tipo_receita = models.ForeignKey(TipoReceita,
@@ -120,4 +122,48 @@ class Ponto(models.Model):
         return '-'
 
     def get_absolute_url(self):
+        """ Returns the url to access a particular instance of the model."""
         return reverse('apontamento:appointment_detail', args=[self.id])
+
+    def save(self, *args, **kwargs):
+        """
+        Overrides the save method for the Ponto model.
+        """
+        if self.saida is not None:
+            self.fechado = True
+
+        # Check if there is data for that day
+        # If not, update the field entrada, otherwise update the field saida
+        if not Ponto.objects.filter(
+            entrada__date=self.entrada.date()
+        ).exists():
+            self.entrada = datetime.now()
+        else:
+            self.saida = datetime.now()
+
+        # Check if it is the first time the user is punching in
+        # If so, set the field primeiro to True
+        if not Ponto.objects.filter(
+            entrada__date=self.entrada.date(), usuario=self.usuario
+        ).exists():
+            self.primeiro = True
+
+        # Check if it is the second time the user is punching in
+        # If so, set the field segundo to True
+        elif Ponto.objects.filter(
+            entrada__date=self.entrada.date(), usuario=self.usuario
+        ).count() == 1:
+            self.segundo = True
+            self.saida = datetime.now()
+
+        # Check if the user is punching in for the third time or greater
+        # If so, create a new record updating the field entrada
+        elif Ponto.objects.filter(
+            entrada__date=self.entrada.date(), usuario=self.usuario
+        ).count() == 2:
+            Ponto.objects.create(
+                entrada=datetime.now(),
+                usuario=self.usuario
+            )
+
+        super().save(*args, **kwargs)

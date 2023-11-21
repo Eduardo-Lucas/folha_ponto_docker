@@ -164,30 +164,19 @@ class AppointmentDeleteView(DeleteView):
 class AppointmentCreateView(CreateView):
     """Create a new appointment."""
     model = Ponto
-    form_class = AppointmentForm
+    fields = ["entrada", "saida", "tipo_receita", "cliente_id", ]
+    template_name = 'apontamento/appointment_form.html'
 
-    def get_success_url(self):
-        return reverse(
-            'apontamento:appointment_list', 
-            kwargs={'day': self.kwargs['day'],
-                    'user_id': self.kwargs['user_id']
-                    }
-        )
+    def form_valid(self, form):
+        messages.info(self.request, "Appointment created successfully")
+        return super().form_valid(form)
 
-    def get_form_kwargs(self):
-        kwargs = super(AppointmentCreateView, self).get_form_kwargs()
-        kwargs['day'] = self.kwargs['day']
-        kwargs['user_id'] = self.kwargs['user_id']
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super(AppointmentCreateView, self).get_context_data(**kwargs)
-        context['day'] = self.kwargs['day']
-        context['user'] = User.objects.get(id=self.kwargs['user_id'])
-        context['previous_page'] = self.request.META.get('HTTP_REFERER')
-        return context
     
-
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['current_time'] = datetime.now()
+        context['usuario'] = self.request.user
+        return context
 class AppointmentUpdateView(UpdateView):
     """
     This view is responsible for handling the update operation for an Appointment instance.
