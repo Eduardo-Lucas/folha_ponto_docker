@@ -50,4 +50,10 @@ class AppointmentUpdateForm(forms.ModelForm):
             'entrada': DateTimeInput(),
             'saida': DateTimeInput(),   
         }
-        
+
+class AppointmentCreateForm(forms.ModelForm):
+    """Form for creating a new appointment."""
+    class Meta:
+        """Meta definition for Appointmentform."""
+        model = Ponto
+        fields = ('tipo_receita', 'cliente_id',  )

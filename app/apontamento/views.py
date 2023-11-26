@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
 from typing import Any
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from apontamento.services import PontoService
-from apontamento.forms import AppointmentForm, AppointmentUpdateForm, FolhaPontoForm
+from apontamento.forms import FolhaPontoForm, AppointmentCreateForm
 from apontamento.models import Ponto
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
 from django.contrib import messages
-
+from django.db.models import Max
 
 
 def apontamento_list(request):
@@ -35,7 +34,7 @@ def folha_ponto(request):
 
             if data_inicial > data_final:
                 messages.error(request, "Data inicial não pode ser maior que data final")
-                
+
             usuario = User.objects.filter(username=usuario).first()
 
             service = PontoService()
@@ -143,7 +142,7 @@ class AppointmentListView(ListView):
         context['user'] = User.objects.get(id=self.kwargs['user_id'])
         context['previous_page'] = self.request.META.get('HTTP_REFERER')
         return context
-    
+
 
 class AppointmentDeleteView(DeleteView):
     """Delete an appointment."""
@@ -151,7 +150,7 @@ class AppointmentDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse(
-            'apontamento:appointment_list', 
+            'apontamento:appointment_list',
             kwargs={'day': self.kwargs['day'],
                     'user_id': self.kwargs['user_id']
                     }
@@ -161,22 +160,58 @@ class AppointmentDeleteView(DeleteView):
         return self.post(request, *args, **kwargs)
 
 
-class AppointmentCreateView(CreateView):
+class AppointmentCreateView(LoginRequiredMixin, CreateView):
     """Create a new appointment."""
     model = Ponto
-    fields = ["entrada", "saida", "tipo_receita", "cliente_id", ]
+    form_class = AppointmentCreateForm
     template_name = 'apontamento/appointment_form.html'
 
-    def form_valid(self, form):
-        messages.info(self.request, "Appointment created successfully")
-        return super().form_valid(form)
 
-    
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['current_time'] = datetime.now()
         context['usuario'] = self.request.user
         return context
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.usuario = self.request.user
+
+        # Check if there is data for that day
+        # If not, update the field entrada, otherwise update the field saida
+        if not Ponto.objects.filter(
+            entrada__date=datetime.now().date()
+        ).exists():
+            instance.entrada = datetime.now()
+        else:
+            instance.saida = datetime.now()
+
+        if instance.saida is not None:
+            instance.fechado = True
+
+        # Check if it is the first time the user is punching in
+        # If so, set the field primeiro to True
+        if not Ponto.objects.filter(
+            entrada__date=datetime.now().date(), usuario=instance.usuario
+        ).exists():
+            instance.primeiro = True
+
+        # Check if it is the second time the user is punching in
+        # If so, set the field segundo to True
+        elif Ponto.objects.filter(
+            entrada__date=datetime.now().date(), usuario=instance.usuario
+        ).count() == 1:
+            instance.segundo = True
+            instance.saida = datetime.now()
+
+        instance.id = Ponto.objects.aggregate(Max('id'))['id__max'] + 1
+
+        instance.save()
+        messages.info(self.request, "Appointment created successfully")
+        return super().form_valid(form)
+
+
+
 class AppointmentUpdateView(UpdateView):
     """
     This view is responsible for handling the update operation for an Appointment instance.
@@ -186,7 +221,7 @@ class AppointmentUpdateView(UpdateView):
     model = Ponto
     fields = ["entrada", "saida", "atraso", "atrasoautorizado", "tipo_receita", "cliente_id", ]
     template_name = 'apontamento/appointment_update.html'
-    
+
     def form_valid(self, form):
         messages.info(self.request, "Appointment updated successfully")
         return super().form_valid(form)
