@@ -5,6 +5,13 @@ from django.contrib import messages
 
 from .forms import LoginForm
 
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+
 
 def sign_in(request):
     if request.method == "GET":
@@ -29,4 +36,5 @@ def sign_in(request):
 
 def logout_view(request):
     logout(request)
+    messages.success(request,'You have been logged out.')
     return redirect("user:login")

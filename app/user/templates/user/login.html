@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <form method="POST" novalidate>
   {% csrf_token %}
-  <h2>Login</h2>
-  {{form.as_p}}
-  <input type="submit" value="Login" />
+  <h1 class="text-center"> <img src="{% static 'assets/bv.ico' %}" height="150px" width="150px" alt="logo"> </h1>
+  <h2 class="text-center">Login</h2>
+  <div class="text-center">
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary btn-lg mb-3" style="width: 100%; margin: auto;" value="Login" />
+  </div>
+  <div>
+    <p class="text-center">Esqueci a Senha<a href="{% url 'user:password-reset'%}">Alterar Senha</a></p>
+  </div>
 </form>
 
-{% endblock content%}
+{% endblock %}

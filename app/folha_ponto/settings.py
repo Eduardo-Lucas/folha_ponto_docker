@@ -157,3 +157,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "user:login"
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_PORT = 25
+EMAIL_USE_TLS = True
+# FIXME: Change this to client email
+EMAIL_HOST_USER = 'eduardolucas40@gmail.com'
+EMAIL_HOST_PASSWORD = 'Bizagi2019#'
