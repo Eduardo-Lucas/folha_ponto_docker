@@ -53,9 +53,16 @@
             <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
           </li>
           {% if request.user.is_authenticated %}
-          <a href="{% url 'user:logout' %}" class="btn btn-outline">Logout</a>
+          <li>
+            <a href="{% url 'user:change_password' %}" class="btn btn-outline">Troca Senha</a>
+          </li>
+          <li>
+            <a href="{% url 'user:logout' %}" class="btn btn-outline">Logout</a>
+          </li>
           {% else %}
-          <a href="{% url 'user:login' %}" class="btn btn-outline">Login</a>
+          <li>
+            <a href="{% url 'user:login' %}" class="btn btn-outline">Login</a>
+          </li>
           {% endif %}
           </li>
         </ul>
