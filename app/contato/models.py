@@ -3,7 +3,7 @@ from django.db import models
 
 class Contato(models.Model):
     id = models.IntegerField(primary_key=True)
-    cpf = models.CharField(null=True, blank=True, verbose_name="CPF")
+    cpf = models.CharField(max_length=14, null=True, blank=True, verbose_name="CPF")
     nome = models.CharField(max_length=100)
     observation = models.CharField(max_length=100, blank=True, null=True)
     situacaoentidade = models.IntegerField(null=True, blank=True)
