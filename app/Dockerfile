@@ -16,3 +16,5 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 
+# add entrypoint
+ENTRYPOINT ["python", “manage.py”, “runserver”, ‘0.0.0.0:10000’]
