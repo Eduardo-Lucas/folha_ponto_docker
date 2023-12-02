@@ -17,4 +17,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # add entrypoint
-ENTRYPOINT ["python", “manage.py”, “runserver”, ‘0.0.0.0:10000’]
+ENTRYPOINT ["gunicorn", "folha_ponto.wsgi:application", "--bind", "0.0.0.0:10000"]
