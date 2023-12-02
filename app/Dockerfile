@@ -16,5 +16,8 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 
-# add entrypoint
-ENTRYPOINT ["gunicorn", "folha_ponto.wsgi:application", "--bind", "0.0.0.0:10000"]
+# copy entrypoint.sh
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+
+# run entrypoint.sh
+ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
