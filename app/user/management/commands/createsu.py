@@ -1,3 +1,4 @@
+import csv
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
@@ -5,9 +6,8 @@ from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     help = 'Creates superusers.'
 
-
-
     def handle(self, *args, **options):
+        # Create superusers
         users = ['bruno', 'eduardo']
         for user in users:
             if not User.objects.filter(username=user).exists():
