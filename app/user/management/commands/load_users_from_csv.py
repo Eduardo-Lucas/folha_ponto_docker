@@ -10,7 +10,7 @@ class Command(BaseCommand):
         parser.add_argument('Usuario.csv', type=str)
 
     def handle(self, *args, **options):
-        with open(options['Usuario.csv'], newline='', encoding='utf-8') as csvfile:
+        with open(options['user/fixtures/Usuario.csv'], newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 if not User.objects.filter(username=row['username']).exists():
