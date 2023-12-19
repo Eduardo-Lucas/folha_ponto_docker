@@ -1,0 +1,17 @@
+id,descricao,recibo,status
+2,Certificação Digital,Sim,Ativo
+1,Contábil,Sim,Ativo
+3,Domésticos,Sim,Ativo
+4,Endereço Fiscal,Sim,Ativo
+5,Fiscal,Sim,Ativo
+6,Fiscal Simples,Sim,Ativo
+7,IRPF,Sim,Ativo
+8,IRPJ Inativa,Sim,Ativo
+11,Parcelamentos,Sim,Ativo
+15,Regularizações,Sim,Ativo
+16,Serv. Ext. Contabil,Sim,Ativo
+17,Serv. Ext. Fiscal,Sim,Ativo
+18,Serv. Ext. Folha,Sim,Ativo
+19,Serv. Ext. Social,Sim,Ativo
+21,Social,Sim,Ativo
+22,Vinculação Ecac,Sim,Ativo

@@ -10,22 +10,24 @@ from cliente.models import Cliente
 
 class TipoReceita(models.Model):
     RECIBO_CHOICES = (
-        (True, 'Sim'),
-        (False, 'Não'),
+        ('Sim', 'Sim'),
+        ('Não', 'Não'),
     )
     STATUS_CHOICES = (
-        (True, 'Ativo'),
-        (False, 'Inativo'),
+        ('Ativo', 'Ativo'),
+        ('Inativo', 'Inativo'),
     )
     id = models.IntegerField(primary_key=True)
     descricao = models.CharField(max_length=100)
-    recibo = models.BooleanField(
+    recibo = models.CharField(
         choices=RECIBO_CHOICES,
-        default=False,
+        default='Sim',
+        max_length=3,
     )
-    status = models.BooleanField(
+    status = models.CharField(
         choices=STATUS_CHOICES,
-        default=True,
+        default='Ativo',
+        max_length=10,
     )
 
     class Meta:

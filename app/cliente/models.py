@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Cliente(models.Model):
+    '''Model definition for Cliente.'''
     id = models.IntegerField(primary_key=True)
     tipodocumento = models.IntegerField(
         null=True,
@@ -37,8 +38,8 @@ class Cliente(models.Model):
     )
     codigosistema = models.CharField(null=True, blank=True, max_length=10)
     situacaoentidade = models.IntegerField(null=True, blank=True)
-    codigoterceiro = models.DecimalField(
-        null=True, blank=True, max_digits=10, decimal_places=1
+    codigoterceiro = models.CharField(
+        null=True, blank=True, max_length=10,
     )
     controlarvencimentocertificado = models.BooleanField()
     emiteboleto = models.BooleanField()
@@ -55,6 +56,7 @@ class Cliente(models.Model):
         return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
 
     class Meta:
+        '''Meta definition for Cliente.'''
         ordering = ("nomerazao",)
         db_table = "clientes"
         verbose_name = "Cliente"

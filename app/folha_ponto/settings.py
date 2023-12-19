@@ -183,3 +183,10 @@ EMAIL_USE_TLS = True
 # FIXME: Change this to client email
 EMAIL_HOST_USER = 'eduardolucas40@gmail.com'
 EMAIL_HOST_PASSWORD = 'Bizagi2019#'
+
+
+# Increase maximum request size
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 20  # Example: 20MB
+
+# Increase maximum file size for file uploads
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 20  # Example: 20MB

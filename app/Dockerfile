@@ -11,6 +11,10 @@ ENV PYTHONUNBUFFERED 1
 # install dependencies
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
+COPY ./Usuario.csv .
+COPY ./TipoReceita.csv .
+COPY ./Cliente.csv .
+COPY ./Pontos-2023.csv .
 RUN pip install -r requirements.txt
 
 # copy project
