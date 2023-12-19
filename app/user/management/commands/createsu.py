@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Create superusers
-        users = ['bruno', 'eduardo']
+        users = ['eduardo']
         for user in users:
             if not User.objects.filter(username=user).exists():
                 User.objects.create_superuser(
