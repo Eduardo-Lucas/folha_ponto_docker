@@ -25,15 +25,22 @@ def load_data_from_csv():
         else:
             saida = None
 
-        try:
-            cliente = Cliente.objects.get(id=row['cliente_id'])
-        except Cliente.DoesNotExist:
+        if row['cliente_id']:
+            try:
+                cliente = Cliente.objects.get(id=row['cliente_id'])
+            except Cliente.DoesNotExist:
+                cliente = None
+        else:
             cliente = None
 
-        try:
-            tipo_receita=TipoReceita.objects.get(id=row['tipo_receita_id'])
-        except TipoReceita.DoesNotExist:
+        if row['tipo_receita_id']:
+            try:
+                tipo_receita = TipoReceita.objects.get(id=row['tipo_receita_id'])
+            except TipoReceita.DoesNotExist:
+                tipo_receita = None
+        else:
             tipo_receita = None
+
 
         ponto = Ponto(id=row['id'],
                       entrada=datetime.strptime(row['entrada'].split('.')[0], '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.UTC),
