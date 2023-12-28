@@ -5,6 +5,10 @@ from apontamento.models import Ponto, TipoReceita
 from cliente.models import Cliente
 from django.core.management.base import BaseCommand
 import pandas as pd
+from cliente.models import Cliente
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.conf import settings
 
 class Command(BaseCommand):
     '''Load Ponto from a CSV file.'''
@@ -17,44 +21,39 @@ def load_data_from_csv():
     """ Load data from csv file."""
     df = pd.read_csv('Pontos-2023.csv')
 
-    pontos = []
+    # pontos = []
+    current_tz = str(pytz.timezone(settings.TIME_ZONE))
     for index, row in df.iterrows():
+        cliente = Cliente.objects.get(id=row['cliente_id']) if row['cliente_id'] and str(row['cliente_id']).isdigit() else None
+
+        # Split the line into multiple lines for better readability
+        # tipo_receita = (
+        #     TipoReceita.objects.get(id=pd.to_numeric(row['tiporeceita_id']))
+        #     if row['tiporeceita_id']
+        #     else None
+        # )
+        tipo_receita = None
 
         if pd.notnull(row['saida']):
-            saida = pd.to_datetime(row['saida']).tz_localize('UTC')
+            saida = pd.to_datetime(str(row['saida']).split()[0]).tz_localize(current_tz)
         else:
             saida = None
 
-        if row['cliente_id']:
-            try:
-                cliente = Cliente.objects.get(id=row['cliente_id'])
-            except Cliente.DoesNotExist:
-                cliente = None
-        else:
-            cliente = None
+        ponto = Ponto(
+            id=row['id'],
+            entrada=pd.to_datetime(str(row['entrada']).split()[0]).tz_localize(current_tz),
+            primeiro=row['primeiro'],
+            segundo=row['segundo'],
+            atraso=row['atraso'],
+            saida=saida,
+            usuario=User.objects.get(id=row['usuario_id']) if row['usuario_id'] else None,
+            fechado=row['fechado'],
+            cliente_id=cliente,
+            tipo_receita=tipo_receita,
+            atrasoautorizado=row['atrasoautorizado']
+        )
+        ponto.save()
+        # pontos.append(ponto)
 
-        if row['tipo_receita_id']:
-            try:
-                tipo_receita = TipoReceita.objects.get(id=row['tipo_receita_id'])
-            except TipoReceita.DoesNotExist:
-                tipo_receita = None
-        else:
-            tipo_receita = None
-
-
-        ponto = Ponto(id=row['id'],
-                      entrada=datetime.strptime(row['entrada'].split('.')[0], '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.UTC),
-                      primeiro=row['primeiro'],
-                      segundo=row['segundo'],
-                      atraso=row['atraso'],
-                      saida=saida,
-                      usuario=row['usuario'],
-                      fechado=row['fechado'],
-                      cliente_id=cliente,
-                      tipo_receita=tipo_receita,
-                      atrasoautorizado=row['atrasoautorizado']
-                    )
-        pontos.append(ponto)
-
-    Ponto.objects.bulk_create(pontos)
+    # Ponto.objects.bulk_create(pontos)
     print("Pontos-2023 have been successfully uploaded using pandas.")

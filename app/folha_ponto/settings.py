@@ -36,6 +36,7 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "bv-contabilidade.onrende
 
 INSTALLED_APPS = [
     "jazzmin",
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,6 +70,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://bv-contabilidade.onrender.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://bv-contabilidade.onrender.com",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

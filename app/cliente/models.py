@@ -44,11 +44,10 @@ class Cliente(models.Model):
     controlarvencimentocertificado = models.BooleanField()
     emiteboleto = models.BooleanField()
     diavencimentoboleto = models.IntegerField(null=True, blank=True)
-    grupoeconomico_id = models.DecimalField(
+    grupoeconomico_id = models.CharField(
         null=True,
         blank=True,
-        decimal_places=1,
-        max_digits=10,
+        max_length=10,
     )
     contato_id = models.IntegerField(null=True, blank=True)
 

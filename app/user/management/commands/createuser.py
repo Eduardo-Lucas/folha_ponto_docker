@@ -18,4 +18,4 @@ class Command(BaseCommand):
                         username=row["username"],
                         password=row["password"],
                     )
-            print("Users has been successfully uploaded.")
+            print("Users have been successfully uploaded.")

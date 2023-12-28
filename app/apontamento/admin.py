@@ -11,7 +11,9 @@ class PontoResource(resources.ModelResource):
 
 class PontoAdmin(ImportExportModelAdmin):
     resource_classes = [PontoResource]
-
+    fieldsets = (
+        ("general", {"fields": ("entrada", "saida", "usuario_id")}),
+    )
 
 class TipoReceitaResource(resources.ModelResource):
 

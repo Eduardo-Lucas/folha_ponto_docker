@@ -24,4 +24,4 @@ COPY . .
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 
 # run entrypoint.sh
-ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
+# ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
