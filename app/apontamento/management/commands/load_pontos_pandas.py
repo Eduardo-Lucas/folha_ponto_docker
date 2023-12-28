@@ -30,7 +30,24 @@ def load_data_from_csv():
         except Cliente.DoesNotExist:
             cliente = None
 
-        ponto = Ponto(saida=saida, cliente=cliente, ...)
+        try:
+            tipo_receita=TipoReceita.objects.get(id=row['tipo_receita_id'])
+        except TipoReceita.DoesNotExist:
+            tipo_receita = None
+
+        ponto = Ponto(id=row['id'],
+                      entrada=datetime.strptime(row['entrada'].split('.')[0], '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.UTC),
+                      primeiro=row['primeiro'],
+                      segundo=row['segundo'],
+                      atraso=row['atraso'],
+                      saida=saida,
+                      usuario=row['usuario'],
+                      fechado=row['fechado'],
+                      cliente_id=cliente,
+                      tipo_receita=tipo_receita,
+                      atrasoautorizado=row['atrasoautorizado']
+                    )
         pontos.append(ponto)
 
     Ponto.objects.bulk_create(pontos)
+    print("Pontos-2023 have been successfully uploaded using pandas.")
