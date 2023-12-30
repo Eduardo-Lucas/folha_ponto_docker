@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from cliente.models import Cliente
+from django.utils import timezone
+
 
 class TipoReceita(models.Model):
     RECIBO_CHOICES = (
@@ -61,8 +63,6 @@ class PontoManager(models.Manager):
         Returns all open Ponto objects for a given user.
         """
         return self.filter(usuario=user, fechado=False)
-
-
 
 
 class Ponto(models.Model):
@@ -125,4 +125,4 @@ class Ponto(models.Model):
 
     def get_absolute_url(self):
         """ Returns the url to access a particular instance of the model."""
-        return reverse('apontamento:appointment_detail', args=[self.id])
+        return reverse('apontamento:appointment_detail', args=[self.pk])

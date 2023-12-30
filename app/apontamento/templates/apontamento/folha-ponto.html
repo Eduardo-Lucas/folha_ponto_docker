@@ -2,12 +2,12 @@
 {% load crispy_forms_tags %}
 {% load timedelta_filters %}
 
-{% block title %} Folha de Ponto | {{object.title}} {% endblock title %}
+{% block title %} Resumo | {{object.title}} {% endblock title %}
 
 {% block content %}
 
 
-<h1>Folha Ponto</h1>
+<h1>Resumo</h1>
 <div class="container">
     <form method="post" id="folhaPonto" class="row gx-3 gy-2 align-items-center">
         {% csrf_token %}

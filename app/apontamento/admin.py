@@ -4,23 +4,34 @@ from import_export import resources
 from apontamento.models import Ponto, TipoReceita
 
 
+
 class PontoResource(resources.ModelResource):
+    """Resource class for Ponto."""
     class Meta:
+        """Meta class for PontoResource."""
         model = Ponto
 
 
 class PontoAdmin(ImportExportModelAdmin):
+    """Admin class for Ponto."""
     resource_classes = [PontoResource]
     fieldsets = (
-        ("general", {"fields": ("entrada", "saida", "usuario_id")}),
+        (
+            "general", {
+                "fields": ("entrada", "saida", "usuario")
+            }
+        ),
     )
 
 class TipoReceitaResource(resources.ModelResource):
+    """Resource class for TipoReceita."""
 
     class Meta:
+        """Meta class for TipoReceitaResource."""
         model = TipoReceita
 
 class TipoReceitaAdmin(ImportExportModelAdmin):
+    """Admin class for TipoReceita."""
     resource_classes = [TipoReceitaResource]
 
 

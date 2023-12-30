@@ -35,13 +35,14 @@ def load_data_from_csv():
         tipo_receita = None
 
         if pd.notnull(row['saida']):
-            saida = pd.to_datetime(str(row['saida']).split()[0]).tz_localize(current_tz)
+            saida = pd.to_datetime(str(row['saida']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S').tz_localize(current_tz)
         else:
             saida = None
 
+        entrada = pd.to_datetime(str(row['entrada']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S').tz_localize(current_tz)
         ponto = Ponto(
             id=row['id'],
-            entrada=pd.to_datetime(str(row['entrada']).split()[0]).tz_localize(current_tz),
+            entrada=entrada,
             primeiro=row['primeiro'],
             segundo=row['segundo'],
             atraso=row['atraso'],

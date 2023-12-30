@@ -21,7 +21,7 @@ class FolhaPontoForm(forms.Form):
     usuario = forms.ModelChoiceField(queryset=User.objects.all().order_by('username'), required=True)
 
 
-    
+
 class AppointmentForm(forms.ModelForm):
     """Form for creating a new appointment."""
     class Meta:
@@ -48,7 +48,7 @@ class AppointmentUpdateForm(forms.ModelForm):
         fields = ('entrada', 'saida', 'usuario')
         widgets = {
             'entrada': DateTimeInput(),
-            'saida': DateTimeInput(),   
+            'saida': DateTimeInput(),
         }
 
 class AppointmentCreateForm(forms.ModelForm):

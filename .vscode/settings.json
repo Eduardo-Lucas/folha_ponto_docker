@@ -1,21 +1,21 @@
 {
     "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
     "python.defaultInterpreterPath": "env/bin/python",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true
     },
     "python.analysis.inlayHints.functionReturnTypes": true,
     "python.analysis.inlayHints.callArgumentNames": "all",
     "python.analysis.inlayHints.pytestParameters": true,
-    "python.analysis.inlayHints.variableTypes": true,
-    "python.analysis.typeCheckingMode": "basic",
-    "flake8.path": [
-        "./env/bin/flake8"
-    ],
-    "black-formatter.interpreter": [
-        "./env/bin/black"
-    ],
     "files.trimTrailingWhitespace": true,
     "files.trimFinalNewlines": true,
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "python.languageServer": "Pylance",
+    "black-formatter.importStrategy": "useBundled",
 }
