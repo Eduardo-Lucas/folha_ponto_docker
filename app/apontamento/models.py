@@ -1,34 +1,32 @@
 from collections.abc import Iterable
-from django.db import models
-from django.contrib.auth.models import User
 from datetime import datetime, time, timedelta, timezone
-from datetime import timedelta
-from django.db import models
-from django.contrib.auth.models import User
-from django.urls import reverse
+
 from cliente.models import Cliente
+from django.contrib.auth.models import User
+from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
 class TipoReceita(models.Model):
     RECIBO_CHOICES = (
-        ('Sim', 'Sim'),
-        ('Não', 'Não'),
+        ("Sim", "Sim"),
+        ("Não", "Não"),
     )
     STATUS_CHOICES = (
-        ('Ativo', 'Ativo'),
-        ('Inativo', 'Inativo'),
+        ("Ativo", "Ativo"),
+        ("Inativo", "Inativo"),
     )
     id = models.IntegerField(primary_key=True)
     descricao = models.CharField(max_length=100)
     recibo = models.CharField(
         choices=RECIBO_CHOICES,
-        default='Sim',
+        default="Sim",
         max_length=3,
     )
     status = models.CharField(
         choices=STATUS_CHOICES,
-        default='Ativo',
+        default="Ativo",
         max_length=10,
     )
 
@@ -36,6 +34,7 @@ class TipoReceita(models.Model):
         """
         Metadata for the TipoReceita model.
         """
+
         ordering = ("descricao",)
         db_table = "tiporeceitas"
         verbose_name = "Tipo de Receita"
@@ -44,10 +43,12 @@ class TipoReceita(models.Model):
     def __str__(self):
         return str(self.descricao)
 
+
 class PontoManager(models.Manager):
     """
     Manager for the Ponto model.
     """
+
     def for_day(self, day=None, user=None):
         """
         Returns all Ponto objects for a given day and user.
@@ -64,11 +65,27 @@ class PontoManager(models.Manager):
         """
         return self.filter(usuario=user, fechado=False)
 
+    def get_closed_pontos(self, user=None):
+        """
+        Returns all closed Ponto objects for a given user.
+        """
+        return self.filter(usuario=user, fechado=True)
+
+    def total_day_time(self, day=None, user=None):
+        """
+        Returns the total time for a given day and user.
+        """
+        total = timedelta(0)
+        for ponto in self.for_day(day, user):
+            total += ponto.difference
+        return total
+
 
 class Ponto(models.Model):
     """
     Model to represent a point in time for a user.
     """
+
     id = models.IntegerField(primary_key=True)
     entrada = models.DateTimeField()
     primeiro = models.BooleanField(default=False)
@@ -77,16 +94,15 @@ class Ponto(models.Model):
     saida = models.DateTimeField(null=True, blank=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     fechado = models.BooleanField(default=False)
-    cliente_id = models.ForeignKey(Cliente,
-                                   on_delete=models.CASCADE,
-                                   verbose_name="Cliente",
-                                   null=True,
-                                   blank=True)
-    tipo_receita = models.ForeignKey(TipoReceita,
-                                     on_delete=models.CASCADE,
-                                     null=True,
-                                     blank=True)
-    atrasoautorizado = models.BooleanField(default=False, verbose_name="Atraso Autorizado")
+    cliente_id = models.ForeignKey(
+        Cliente, on_delete=models.CASCADE, verbose_name="Cliente", null=True, blank=True
+    )
+    tipo_receita = models.ForeignKey(
+        TipoReceita, on_delete=models.CASCADE, null=True, blank=True
+    )
+    atrasoautorizado = models.BooleanField(
+        default=False, verbose_name="Atraso Autorizado"
+    )
 
     objects = PontoManager()
 
@@ -94,7 +110,8 @@ class Ponto(models.Model):
         """
         Metadata for the Ponto model.
         """
-        ordering = ("entrada", )
+
+        ordering = ("entrada",)
         db_table = "pontos"
         verbose_name = "Ponto"
         verbose_name_plural = "Pontos"
@@ -121,8 +138,8 @@ class Ponto(models.Model):
         """
         if self.cliente_id is not None:
             return self.cliente_id
-        return '-'
+        return "-"
 
     def get_absolute_url(self):
-        """ Returns the url to access a particular instance of the model."""
-        return reverse('apontamento:appointment_detail', args=[self.pk])
+        """Returns the url to access a particular instance of the model."""
+        return reverse("apontamento:appointment_detail", args=[self.pk])

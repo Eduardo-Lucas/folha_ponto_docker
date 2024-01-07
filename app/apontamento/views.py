@@ -251,6 +251,16 @@ class AppointmentDetailView(DetailView):
     and handles the detail view.
     """
 
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentDetailView, self).get_context_data(**kwargs)
+        context["historico"] = Ponto.objects.for_day(
+            self.object.entrada.date(), self.object.usuario
+        )
+        context["total_trabalhado"] = Ponto.objects.total_day_time(
+            self.object.entrada.date(), self.object.usuario
+        )
+        return context
+
     model = Ponto
     template_name = "apontamento/appointment_detail.html"
     context_object_name = "ponto"
