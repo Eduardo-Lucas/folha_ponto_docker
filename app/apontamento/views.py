@@ -182,6 +182,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["usuario"] = self.request.user
+        context["dia"] = timezone.now().date()
         return context
 
     def form_valid(self, form):
