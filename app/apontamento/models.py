@@ -80,6 +80,16 @@ class PontoManager(models.Manager):
             total += ponto.difference
         return total
 
+    def last_interaction(self, day=None, user=None):
+        """
+        Returns the last interaction for a given user.
+        """
+        if day is None:
+            day = timezone.now().date()
+        start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        return self.filter(entrada__range=(start, end), usuario=user).last()
+
 
 class Ponto(models.Model):
     """

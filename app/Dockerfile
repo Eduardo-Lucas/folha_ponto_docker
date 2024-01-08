@@ -9,12 +9,12 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
+# COPY ./Usuario.csv .
+# COPY ./TipoReceita.csv .
+# COPY ./Cliente.csv .
+# COPY ./Pontos-2023.csv .
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
-COPY ./Usuario.csv .
-COPY ./TipoReceita.csv .
-COPY ./Cliente.csv .
-COPY ./Pontos-2023.csv .
 RUN pip install -r requirements.txt
 
 # copy project
@@ -24,4 +24,4 @@ COPY . .
 COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
 
 # run entrypoint.sh
-# ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/usr/src/app/entrypoint.sh"]
