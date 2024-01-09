@@ -8,6 +8,16 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+class TipoReceitaManager(models.Manager):
+    """Manager for the TipoReceita model."""
+
+    def get_active(self):
+        """
+        Returns all active TipoReceita objects.
+        """
+        return self.filter(status="Ativo")
+
+
 class TipoReceita(models.Model):
     RECIBO_CHOICES = (
         ("Sim", "Sim"),
@@ -30,6 +40,8 @@ class TipoReceita(models.Model):
         max_length=10,
     )
 
+    objects = TipoReceitaManager()
+
     class Meta:
         """
         Metadata for the TipoReceita model.
@@ -41,7 +53,9 @@ class TipoReceita(models.Model):
         verbose_name_plural = "Tipos de Receitas"
 
     def __str__(self):
-        return str(self.descricao)
+        if self.status == "Ativo":
+            return str(self.descricao)
+        return f"{self.descricao} ({self.status})"
 
 
 class PontoManager(models.Manager):

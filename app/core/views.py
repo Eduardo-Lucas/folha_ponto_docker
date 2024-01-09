@@ -2,8 +2,9 @@ from apontamento.models import Ponto
 from django.contrib.auth.models import User
 from django.db.models import F, Max, Sum
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def home(request):
     """Home Page"""
     users = User.objects.all().order_by("username")

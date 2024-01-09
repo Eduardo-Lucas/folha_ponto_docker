@@ -186,6 +186,11 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        # check if tipo_receita is Ativo
+        if form.cleaned_data["tipo_receita"].status == "Inativo":
+            messages.error(self.request, "Tipo de Receita cannot be Inativo.")
+            return super().form_invalid(form)
+
         instance = form.save(commit=False)
 
         instance.usuario = User.objects.filter(username=self.request.user).first()

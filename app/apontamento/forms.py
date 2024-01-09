@@ -1,4 +1,4 @@
-from apontamento.models import Ponto
+from apontamento.models import Ponto, TipoReceita
 from django import forms
 from django.contrib.auth.models import User
 
@@ -96,3 +96,4 @@ class AppointmentCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["tipo_receita"].required = True
         self.fields["tipo_receita"].initial = 1
+        self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()
