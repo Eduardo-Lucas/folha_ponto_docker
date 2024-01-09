@@ -9,10 +9,10 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
-# COPY ./Usuario.csv .
-# COPY ./TipoReceita.csv .
-# COPY ./Cliente.csv .
-# COPY ./Pontos-2023.csv .
+COPY ./Usuario.csv .
+COPY ./TipoReceita.csv .
+COPY ./Cliente.csv .
+COPY ./Pontos-2023.csv .
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
