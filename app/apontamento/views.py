@@ -11,6 +11,7 @@ from django.db.models import Max
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -20,11 +21,12 @@ from django.views.generic import (
 )
 
 
+@login_required
 def apontamento_list(request):
     """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
 
-
+@login_required
 def folha_ponto(request):
     """Folha de ponto"""
     context = {}
@@ -139,7 +141,7 @@ def folha_ponto(request):
         return render(request, "apontamento/folha-ponto.html", context)
 
 
-class AppointmentListView(ListView):
+class AppointmentListView(LoginRequiredMixin, ListView):
     """
     List all the appointments for a specific date.
     """
@@ -161,7 +163,7 @@ class AppointmentListView(ListView):
         return context
 
 
-class AppointmentDeleteView(DeleteView):
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
     """Delete an appointment."""
 
     model = Ponto
@@ -249,7 +251,7 @@ class AppointmentUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class AppointmentDetailView(DetailView):
+class AppointmentDetailView(LoginRequiredMixin, DetailView):
     """
     This view is responsible for handling the detail view for an Appointment instance.
     It uses Django's built-in DetailView which provides a form on the template for the specified model
