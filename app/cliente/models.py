@@ -1,8 +1,17 @@
 from django.db import models
 
 
+class ClienteManager(models.Manager):
+    """Manager definition for Cliente."""
+
+    def get_queryset(self):
+        """Queryset definition for Cliente."""
+        return super().get_queryset().filter(situacaoentidade=1)
+
+
 class Cliente(models.Model):
-    '''Model definition for Cliente.'''
+    """Model definition for Cliente."""
+
     id = models.IntegerField(primary_key=True)
     tipodocumento = models.IntegerField(
         null=True,
@@ -39,7 +48,9 @@ class Cliente(models.Model):
     codigosistema = models.CharField(null=True, blank=True, max_length=10)
     situacaoentidade = models.IntegerField(null=True, blank=True)
     codigoterceiro = models.CharField(
-        null=True, blank=True, max_length=10,
+        null=True,
+        blank=True,
+        max_length=10,
     )
     controlarvencimentocertificado = models.BooleanField()
     emiteboleto = models.BooleanField()
@@ -51,11 +62,14 @@ class Cliente(models.Model):
     )
     contato_id = models.IntegerField(null=True, blank=True)
 
+    objects = ClienteManager()
+
     def __str__(self) -> str:
         return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
 
     class Meta:
-        '''Meta definition for Cliente.'''
+        """Meta definition for Cliente."""
+
         ordering = ("nomerazao",)
         db_table = "clientes"
         verbose_name = "Cliente"

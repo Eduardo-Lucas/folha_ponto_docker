@@ -35,12 +35,13 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row d-flex align-items-center">
             <div class="col-md-6 mt-1 mb-1">
                 {{ form.tipo_receita|as_crispy_field }}
             </div>
-            <div class="col-md-6 mt-1 mb-1">
-                {{ form.cliente_id|as_crispy_field }}
+            <div class="col-md-6 mt-1 mb-1 ui-widget">
+                <label for="cliente">Cliente</label><br>
+                <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Cliente">
             </div>
         </div>
 
@@ -73,5 +74,14 @@
         document.getElementById('current_time').innerHTML = hours + ":" + minutes + ":" + seconds;
     }
     setInterval(updateTime, 1000);
+</script>
+
+<script>
+    $(function () {
+        $("#cliente").autocomplete({
+            source: "{% url 'cliente:cliente_autocomplete' %}",
+            minLength: 2,
+        });
+    });
 </script>
 {% endblock %}

@@ -83,13 +83,15 @@ class AppointmentUpdateForm(forms.ModelForm):
 class AppointmentCreateForm(forms.ModelForm):
     """Form for creating a new appointment."""
 
+    cliente = forms.CharField(max_length=200)
+
     class Meta:
         """Meta definition for Appointmentform."""
 
         model = Ponto
         fields = (
             "tipo_receita",
-            "cliente_id",
+            "cliente",
         )
 
     def __init__(self, *args, **kwargs):

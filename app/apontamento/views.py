@@ -4,6 +4,7 @@ from typing import Any
 from apontamento.forms import AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
 from apontamento.services import PontoService
+from cliente.models import Cliente
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -25,6 +26,7 @@ from django.views.generic import (
 def apontamento_list(request):
     """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
+
 
 @login_required
 def folha_ponto(request):
@@ -194,6 +196,18 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
         instance = form.save(commit=False)
+
+        # turn cliente_id text into id
+        instance.cliente_id = Cliente.objects.filter(
+            nomerazao=form.cleaned_data["cliente"]
+        ).first()
+
+        if not instance.cliente_id:
+            messages.error(
+                self.request,
+                f"Cliente não encontrado: {form.cleaned_data['cliente']}",
+            )
+            return super().form_invalid(form)
 
         instance.usuario = User.objects.filter(username=self.request.user).first()
 
