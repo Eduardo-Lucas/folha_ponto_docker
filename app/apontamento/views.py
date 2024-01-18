@@ -195,6 +195,10 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             messages.error(self.request, "Tipo de Receita cannot be Inativo.")
             return super().form_invalid(form)
 
+        if form.cleaned_data["cliente"] is None:
+            messages.error(self.request, "Cliente cannot be empty.")
+            return super().form_invalid(form)
+
         instance = form.save(commit=False)
 
         # turn cliente_id text into id
@@ -261,6 +265,23 @@ class AppointmentUpdateView(UpdateView):
     template_name = "apontamento/appointment_update.html"
 
     def form_valid(self, form):
+        # get the value of saida in form
+        saida = form.cleaned_data["saida"]
+
+        # get all the data from saida
+        day = saida.date()
+        pontos = Ponto.objects.for_day(day, self.request.user)
+        # check if saida surpass any previous saida and not already updated
+        for ponto in pontos:
+            if ponto.saida is not None:
+                if saida > ponto.saida:
+                    messages.error(
+                        self.request,
+                        f"Saida cannot be greater than {ponto.saida.strftime('%H:%M:%S')}",
+                    )
+                    saida = None
+                    return super().form_invalid(form)
+
         messages.info(self.request, "Appointment updated successfully")
         return super().form_valid(form)
 
