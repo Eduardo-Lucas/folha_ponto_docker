@@ -1,11 +1,10 @@
 from collections.abc import Iterable
-from datetime import datetime, time, timedelta, timezone
+from datetime import datetime, time, timedelta
 
 from cliente.models import Cliente
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 
 class TipoReceitaManager(models.Manager):
@@ -68,7 +67,7 @@ class PontoManager(models.Manager):
         Returns all Ponto objects for a given day and user.
         """
         if day is None:
-            day = timezone.now().date()
+            day = datetime.now().date()
         start = datetime.combine(day, time.min)
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
@@ -99,7 +98,7 @@ class PontoManager(models.Manager):
         Returns the last interaction for a given user.
         """
         if day is None:
-            day = timezone.now().date()
+            day = datetime.now().date()
         start = datetime.combine(day, time.min)
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user).last()
