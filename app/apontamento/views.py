@@ -306,3 +306,24 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
     model = Ponto
     template_name = "apontamento/appointment_detail.html"
     context_object_name = "ponto"
+
+
+@login_required
+def mudar_tarefa(request):
+    """Muda a tarefa do último ponto do usuário"""
+    response = PontoService().muda_tarefa(request.user)
+    if response:
+        messages.info(
+            request,
+            "The last appointment was updated and closed.",
+        )
+    context = {
+        "usuario": request.user,
+        "dia": datetime.now().date(),
+        "form": AppointmentCreateForm(),
+    }
+    return render(
+        request,
+        "apontamento/appointment_form.html",
+        context,
+    )
