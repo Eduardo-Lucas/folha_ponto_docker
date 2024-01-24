@@ -1,5 +1,5 @@
 import csv
-from datetime import datetime, timezone
+from datetime import datetime, time, timedelta
 import pytz
 from apontamento.models import Ponto, TipoReceita
 from cliente.models import Cliente
@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 import pandas as pd
 from cliente.models import Cliente
 from django.contrib.auth.models import User
-from django.utils import timezone
+
 from django.conf import settings
 
 class Command(BaseCommand):
@@ -22,7 +22,6 @@ def load_data_from_csv():
     df = pd.read_csv('Pontos-2023.csv')
 
     # pontos = []
-    current_tz = str(pytz.timezone(settings.TIME_ZONE))
     for index, row in df.iterrows():
         cliente = Cliente.objects.get(id=row['cliente_id']) if row['cliente_id'] and str(row['cliente_id']).isdigit() else None
 
@@ -35,11 +34,11 @@ def load_data_from_csv():
         tipo_receita = None
 
         if pd.notnull(row['saida']):
-            saida = pd.to_datetime(str(row['saida']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S').tz_localize(current_tz)
+            saida = pd.to_datetime(str(row['saida']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S')
         else:
             saida = None
 
-        entrada = pd.to_datetime(str(row['entrada']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S').tz_localize(current_tz)
+        entrada = pd.to_datetime(str(row['entrada']).split('.', maxsplit=1)[0], format='%Y-%m-%d %H:%M:%S')
         ponto = Ponto(
             id=row['id'],
             entrada=entrada,

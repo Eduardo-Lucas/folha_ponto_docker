@@ -9,10 +9,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import Max
+from django.db.models import Max, Q
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.utils import timezone
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -219,26 +218,26 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         # If not, update the field entrada, otherwise update the field saida
 
         check = Ponto.objects.filter(
-            entrada__date=timezone.now().date(), usuario=instance.usuario
+            entrada__date=datetime.now().date(), usuario=instance.usuario
         ).last()
         if check:
             if check.saida is not None:
                 # If there is data for that day and saida is informed, update the field entrada
                 max_id = Ponto.objects.aggregate(Max("id"))["id__max"]
                 instance.id = max_id + 1 if max_id is not None else 1
-                instance.entrada = timezone.now().replace(microsecond=0)
+                instance.entrada = datetime.now().replace(microsecond=0)
                 instance.fechado = False
             else:
                 # If there is data for that day and saida is not informed, update the field saida
                 instance.id = check.id
                 instance.entrada = check.entrada
-                instance.saida = timezone.now().replace(microsecond=0)
+                instance.saida = datetime.now().replace(microsecond=0)
                 instance.fechado = True
         else:
             # If there is data for that day and saida is informed, update the field entrada
             max_id = Ponto.objects.aggregate(Max("id"))["id__max"]
             instance.id = max_id + 1 if max_id is not None else 1
-            instance.entrada = timezone.now().replace(microsecond=0)
+            instance.entrada = datetime.now().replace(microsecond=0)
             instance.fechado = False
 
         instance.save()
@@ -308,22 +307,30 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "ponto"
 
 
-@login_required
-def mudar_tarefa(request):
+class MudarTarefaUpdateView(LoginRequiredMixin, UpdateView):
     """Muda a tarefa do último ponto do usuário"""
-    response = PontoService().muda_tarefa(request.user)
-    if response:
-        messages.info(
-            request,
-            "The last appointment was updated and closed.",
-        )
-    context = {
-        "usuario": request.user,
-        "dia": datetime.now().date(),
-        "form": AppointmentCreateForm(),
-    }
-    return render(
-        request,
-        "apontamento/appointment_form.html",
-        context,
-    )
+    model = Ponto
+    fields = [
+        "entrada",
+        "saida",
+    ]
+
+    def get_context_data(self, **kwargs):
+        context = super(MudarTarefaUpdateView, self).get_context_data(**kwargs)
+        context["ponto"] = Ponto.objects.get(id=self.kwargs["pk"])
+        return context
+
+    def form_valid(self, form):
+        """Muda a tarefa do último ponto do usuário"""
+        saida = form.cleaned_data["saida"]
+        if saida is None:
+            Ponto.objects.get(id=self.kwargs["pk"]).update(
+                saida=datetime.now().replace(microsecond=0)
+            )
+
+            messages.info(
+                self.request,
+                "The last appointment was updated and closed.",
+            )
+
+        return reverse("apontamento:appointment_create")

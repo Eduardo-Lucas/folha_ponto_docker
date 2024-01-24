@@ -16,13 +16,3 @@ class PontoService:
 
         return query
 
-    def muda_tarefa(self, usuario_id):
-        """Muda a tarefa do último ponto do usuário"""
-        check = Ponto.objects.filter(
-            entrada__date=datetime.now().date(), usuario=usuario_id
-        ).last()
-        if check.saida is None:
-            check.saida = datetime.now()
-            check.save()
-            return True
-        return False

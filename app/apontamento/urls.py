@@ -7,9 +7,9 @@ from .views import (
     AppointmentDetailView,
     AppointmentListView,
     AppointmentUpdateView,
+    MudarTarefaUpdateView,
     apontamento_list,
     folha_ponto,
-    mudar_tarefa,
 )
 
 app_name = "apontamento"
@@ -44,5 +44,5 @@ urlpatterns = [
         AppointmentCreateView.as_view(),
         name="appointment_create",
     ),
-    path("mudar_tarefa", mudar_tarefa, name="mudar_tarefa"),
+    path("mudar_tarefa/<int:pk>", MudarTarefaUpdateView.as_view(), name="mudar_tarefa"),
 ]
