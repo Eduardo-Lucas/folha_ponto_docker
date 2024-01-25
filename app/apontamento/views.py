@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Any
 
+from django.http import HttpResponse
+
 from apontamento.forms import AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
 from apontamento.services import PontoService
@@ -9,7 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import Max, Q
+from django.db.models import Max
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -245,7 +247,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AppointmentUpdateView(UpdateView):
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     """
     This view is responsible for handling the update operation for an Appointment instance.
     It uses Django's built-in UpdateView which provides a form on the template for the specified model
@@ -285,7 +287,7 @@ class AppointmentUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class AppointmentDetailView(LoginRequiredMixin, DetailView):
+class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):
     """
     This view is responsible for handling the detail view for an Appointment instance.
     It uses Django's built-in DetailView which provides a form on the template for the specified model
@@ -300,15 +302,32 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView):
         context["total_trabalhado"] = Ponto.objects.total_day_time(
             self.object.entrada.date(), self.object.usuario
         )
+        context["saida"] = self.object.saida
         return context
 
     model = Ponto
+    fields = [
+        "saida",
+    ]
     template_name = "apontamento/appointment_detail.html"
     context_object_name = "ponto"
 
+    def form_valid(self, form) -> HttpResponse:
+        # get the self.object.saida value from context
+        if not self.object.saida:
+            self.object.saida = datetime().now().replace(microsecond=0)
+            self.object.save()
+
+            messages.info(self.request, "Appointment updated and closed successfully")
+            return reverse(
+                "apontamento:appointment_detail", kwargs={"pk": self.object.pk}
+            )
+        else:
+            return reverse("apontamento:appointment_create")
 
 class MudarTarefaUpdateView(LoginRequiredMixin, UpdateView):
     """Muda a tarefa do último ponto do usuário"""
+
     model = Ponto
     fields = [
         "entrada",
