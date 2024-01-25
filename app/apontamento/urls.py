@@ -9,6 +9,7 @@ from .views import (
     AppointmentUpdateView,
     MudarTarefaUpdateView,
     apontamento_list,
+    fecha_tarefa,
     folha_ponto,
 )
 
@@ -45,4 +46,5 @@ urlpatterns = [
         name="appointment_create",
     ),
     path("mudar_tarefa/<int:pk>", MudarTarefaUpdateView.as_view(), name="mudar_tarefa"),
+    path("fecha_tarefa/<int:pk>", fecha_tarefa, name="fecha_tarefa"),
 ]

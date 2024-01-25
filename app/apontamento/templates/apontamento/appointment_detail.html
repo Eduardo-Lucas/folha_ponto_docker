@@ -13,7 +13,8 @@
                         <tr>
                             <th class="text-center">Atualiza</th>
                             <th class="text-center">Apaga</th>
-                            <th scope="col">id</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">id</th>
                             <th scope="col">Data</th>
                             <th scope="col">Entrada</th>
                             <th scope="col">Saida</th>
@@ -36,6 +37,17 @@
                                     <i class="fas fa-times-circle" style="color:red"></i>
                                 </a>
                             </td>
+
+                            {% if not ponto.saida %}
+                            <td class="text-center">
+                                <a href="{% url 'apontamento:fecha_tarefa' ponto.id %}">
+                                    <i class="fas fa-door-closed" style="color:orange"></i>
+                                </a>
+                            </td>
+                            {% else %}
+                            <td class="text-center"><i class="fas fa-circle-check" style="color:green"></i></td>
+                            {% endif %}
+
                             <td>{{ponto.id}}</td>
                             <td>{{ponto.entrada|date:"d/m/Y"}}</td>
                             <td>{{ponto.entrada|time:"H:i:s"}}</td>
@@ -48,8 +60,8 @@
                     </tbody>
                     <tfoot>
                         <tr class="text-right">
-                            <td colspan="6">Total de Horas Trabalhadas no dia</td>
-                            <td colspan="6">{{total_trabalhado}}</td>
+                            <td colspan="7">Total de Horas Trabalhadas no dia</td>
+                            <td colspan="7">{{total_trabalhado}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -59,7 +71,7 @@
     <hr>
     <div class="row text-center">
         <div class="col-md-6 border border-dark">
-            <a href="{% url 'apontamento:mudar_tarefa' ponto.id %}">
+            <a href="{% url 'apontamento:appointment_create' %}">
                 <button type="button" class="btn btn-warning btn-block">
                     <i class="fas fa-sign-in-alt"></i>
                     Mudar Tarefa

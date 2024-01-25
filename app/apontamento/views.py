@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Any
 
-from django.http import HttpResponse
-
 from apontamento.forms import AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
 from apontamento.services import PontoService
@@ -12,7 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models import Max
-from django.shortcuts import render
+from django.db.models.base import Model
+from django.db.models.query import QuerySet
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -302,54 +303,61 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):
         context["total_trabalhado"] = Ponto.objects.total_day_time(
             self.object.entrada.date(), self.object.usuario
         )
-        context["saida"] = self.object.saida
         return context
 
     model = Ponto
+    template_name = "apontamento/appointment_detail.html"
+    context_object_name = "ponto"
     fields = [
         "saida",
     ]
-    template_name = "apontamento/appointment_detail.html"
-    context_object_name = "ponto"
 
-    def form_valid(self, form) -> HttpResponse:
-        # get the self.object.saida value from context
-        if not self.object.saida:
-            self.object.saida = datetime().now().replace(microsecond=0)
-            self.object.save()
+    def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
+        return get_object_or_404(Ponto, pk=self.kwargs["pk"])
 
-            messages.info(self.request, "Appointment updated and closed successfully")
-            return reverse(
-                "apontamento:appointment_detail", kwargs={"pk": self.object.pk}
+    def form_valid(self, form):
+        """Muda a tarefa do último ponto do usuário"""
+
+        if not form.cleaned_data["saida"]:
+            form.cleaned_data["saida"] = datetime.now().replace(microsecond=0)
+
+            messages.info(
+                self.request,
+                "The last appointment was updated and closed.",
             )
-        else:
-            return reverse("apontamento:appointment_create")
+        return reverse("apontamento:appointment_create")
+
 
 class MudarTarefaUpdateView(LoginRequiredMixin, UpdateView):
     """Muda a tarefa do último ponto do usuário"""
 
     model = Ponto
     fields = [
-        "entrada",
         "saida",
     ]
 
-    def get_context_data(self, **kwargs):
-        context = super(MudarTarefaUpdateView, self).get_context_data(**kwargs)
-        context["ponto"] = Ponto.objects.get(id=self.kwargs["pk"])
-        return context
+    def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
+        return get_object_or_404(Ponto, pk=self.kwargs["pk"])
 
     def form_valid(self, form):
         """Muda a tarefa do último ponto do usuário"""
-        saida = form.cleaned_data["saida"]
-        if saida is None:
-            Ponto.objects.get(id=self.kwargs["pk"]).update(
-                saida=datetime.now().replace(microsecond=0)
-            )
+
+        if not form.cleaned_data["saida"]:
+            form.cleaned_data["saida"] = datetime.now().replace(microsecond=0)
 
             messages.info(
                 self.request,
                 "The last appointment was updated and closed.",
             )
-
         return reverse("apontamento:appointment_create")
+
+
+def fecha_tarefa(request, pk):
+    """Fecha a tarefa do último ponto do usuário"""
+
+    ponto = get_object_or_404(Ponto, pk=pk)
+    ponto.saida = datetime.now().replace(microsecond=0)
+    ponto.fechado = True
+    ponto.save()
+    messages.info(request, "The last appointment was closed.")
+    return redirect("apontamento:appointment_create")
