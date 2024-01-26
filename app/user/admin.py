@@ -29,3 +29,6 @@ class UserProfileAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
+
+# add menu item to come back to home page from admin page
+admin.site.site_url = "/"
