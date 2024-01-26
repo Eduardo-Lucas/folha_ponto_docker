@@ -204,9 +204,15 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         instance = form.save(commit=False)
 
         # turn cliente_id text into id
-        instance.cliente_id = Cliente.objects.filter(
-            nomerazao=form.cleaned_data["cliente"]
-        ).first()
+        # check if there is | in cliente_id
+        if "|" in form.cleaned_data["cliente"]:
+            instance.cliente_id = Cliente.objects.filter(
+                nomerazao=form.cleaned_data["cliente"].split("|")[1]
+            ).first()
+        else:
+            instance.cliente_id = Cliente.objects.filter(
+                nomerazao=form.cleaned_data["cliente"]
+            ).first()
 
         if not instance.cliente_id:
             messages.error(

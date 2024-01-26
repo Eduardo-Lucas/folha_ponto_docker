@@ -19,7 +19,11 @@ def cliente_autocomplete(request):
 
         results = []
         for cliente in clientes:
-            place_json = cliente.nomerazao
+            if cliente.codigosistema:
+                place_json = f"{cliente.codigosistema.zfill(4)}|{cliente.nomerazao}"
+            else:
+                place_json = cliente.nomerazao
+
             results.append(place_json)
         data = json.dumps(results)
     mimetype = "application/json"
