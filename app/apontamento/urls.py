@@ -7,6 +7,7 @@ from .views import (
     AppointmentDetailView,
     AppointmentListView,
     AppointmentUpdateView,
+    HistoricoListView,
     MudarTarefaUpdateView,
     apontamento_list,
     fecha_tarefa,
@@ -47,4 +48,5 @@ urlpatterns = [
     ),
     path("mudar_tarefa/<int:pk>", MudarTarefaUpdateView.as_view(), name="mudar_tarefa"),
     path("fecha_tarefa/<int:pk>", fecha_tarefa, name="fecha_tarefa"),
+    path("historico/", HistoricoListView.as_view(), name="historico"),
 ]

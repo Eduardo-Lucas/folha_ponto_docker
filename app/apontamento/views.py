@@ -367,3 +367,21 @@ def fecha_tarefa(request, pk):
     ponto.save()
     messages.info(request, "The last appointment was closed.")
     return redirect("apontamento:appointment_create")
+
+
+class HistoricoListView(LoginRequiredMixin, ListView):
+    """Detalhe do histórico"""
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(HistoricoListView, self).get_context_data(**kwargs)
+        context["historico"] = Ponto.objects.for_day(
+            datetime.now().date(), self.request.user
+        )
+        context["total_trabalhado"] = Ponto.objects.total_day_time(
+            datetime.now().date(), self.request.user
+        )
+        return context
+
+    model = Ponto
+    template_name = "apontamento/appointment_detail.html"
+    context_object_name = "ponto"
