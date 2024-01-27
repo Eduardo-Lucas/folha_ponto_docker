@@ -19,3 +19,10 @@ class Command(BaseCommand):
                         password=row["password"],
                     )
             print("Users have been successfully uploaded.")
+
+        user_bruno = User.objects.get(username="bruno")
+        # turn user_bruno into superuser and staff
+        user_bruno.is_superuser = True
+        user_bruno.is_staff = True
+        user_bruno.save()
+        print("User bruno is now superuser and staff.")
