@@ -18,10 +18,16 @@ def home(request):
             total_dia = Ponto.objects.total_day_time(
                 day=ponto.entrada.date(), user=user
             )
+
+            if ponto.saida:
+                last_interaction = ponto.saida
+            else:
+                last_interaction = ponto.entrada
+
             pontos.append(
                 {
                     "usuario": user,
-                    "last_interaction": ponto.entrada,
+                    "last_interaction": last_interaction,
                     "cliente": cliente,
                     "tarefa": tarefa,
                     "total_dia": total_dia,

@@ -7,20 +7,20 @@
     <h3>Histórico do dia: {{ponto.entrada|date:"d/m/Y - l"}}</h3>
     <div class="row">
         <div class="col-md-12">
-            <table class="responsive">
-                <table class="table table-striped table-bordered table-hover">
+            <table class="table-responsive">
+                <table class="table table-striped table-bordered table-hover table-sm">
                     <thead class="thead-dark">
                         <tr>
-                            <th class="text-center">Atualiza</th>
-                            <th class="text-center">Apaga</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">id</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Entrada</th>
-                            <th scope="col">Saida</th>
-                            <th scope="col">Horas Trabalhadas</th>
-                            <th scope="col">Tipo Receita</th>
-                            <th scope="col">Cliente</th>
+                            <th class="text-center align-middle">Atualiza</th>
+                            <th class="text-center align-middle">Apaga</th>
+                            <th class="text-center align-middle">Fecha</th>
+                            <th class="text-center align-middle">id</th>
+                            <th class="text-center align-middle">Data</th>
+                            <th class="text-center align-middle">Entrada</th>
+                            <th class="text-center align-middle">Saida</th>
+                            <th class="text-center align-middle">Horas <br> Trabalhadas</th>
+                            <th class="text-center align-middle">Tipo <br> Receita</th>
+                            <th class="text-center align-middle">Cliente</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,7 +52,7 @@
                             <td>{{ponto.entrada|date:"d/m/Y"}}</td>
                             <td>{{ponto.entrada|time:"H:i:s"}}</td>
                             <td>{{ponto.saida|time:"H:i:s"}}</td>
-                            <td>{{ponto.difference}}</td>
+                            <td class="text-left">{{ponto.difference}}</td>
                             <td>{{ponto.tipo_receita}}</td>
                             <td>{{ponto.cliente_id}}</td>
                         </tr>
@@ -61,14 +61,14 @@
                     <tfoot>
                         <tr class="text-right">
                             <td colspan="7">Total de Horas Trabalhadas no dia</td>
-                            <td colspan="7">{{total_trabalhado}}</td>
+                            <td class="pl-3">{{total_trabalhado}}</td>
                         </tr>
                     </tfoot>
                 </table>
             </table>
         </div>
     </div>
-    <hr>
+
     <div class="row text-center">
         <div class="col-md-6 border border-dark">
             <a href="{% url 'apontamento:fecha_tarefa' ponto.id %}">
