@@ -214,7 +214,7 @@ JAZZMIN_SETTINGS = {
     "site_logo": None,
     "welcome_sign": "Welcome to the your_site_name",
     # Copyright on the footer
-    "copyright": "your_site_name",
+    "copyright": "BV Contabilidade",
     "user_avatar": None,
     ############
     # Top Menu #
@@ -223,7 +223,7 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
         # Url that gets reversed (Permissions can be added)
         {
-            "name": "BV Contabilidade",
+            "name": "voltar para BV Contabilidade",
             "url": "core:home",
             "permissions": ["auth.view_user"],
         },

@@ -7,5 +7,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         username = "bruno"
-        User.objects.filter(username=username).update(is_staff=True)
-        print(f"User {username} is now staff.")
+        user = User.objects.filter(username=username)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        print(f"User {username} is now staff and superuser.")
