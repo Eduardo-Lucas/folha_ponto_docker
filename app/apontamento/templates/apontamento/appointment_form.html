@@ -11,22 +11,23 @@
 
         <div class="row text-center">
             <div class="col-md-12 mt-1 mb-1">
-                <h3>BV Contabilidade</h3>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-md-12 mt-1 mb-1">
                 <h3>{{usuario}}</h3>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-md-12 mt-1 mb-1">
+                <h3>BV Contabilidade</h3>
+            </div>
+        </div>
+        <div class="row text-center  border border-dark">
+            <div class="col-md-12 mt-1 mb-1">
                 <h3>{{dia}}</h3>
             </div>
         </div>
+
         <div class="row text-center">
             <div class="col-md-12 mt-1 mb-1">
-                <h3>{{current_time|date:"d/m/Y H:i:s"}}</h3>
+                <h3>{{current_time|date:"l, j/F/Y"}}</h3>
             </div>
         </div>
         <div class="row text-center">
@@ -45,18 +46,23 @@
             </div>
         </div>
 
+
         <div class="row border border-dark">
-            <div class="col-md-8 mt-1 mb-1">
+
+            <div class="col-md-8 mt-1 mb-1 text-center">
                 <button type="submit" class="btn btn-success btn-block btn-lg"><i class="fas fa-database"></i>
                     Gravar
                 </button>
             </div>
-            <div class="col-md-4 mt-1 mb-1">
+
+            <div class="col-md-4 mt-1 mb-1 text-center">
                 <a href="{% url 'apontamento:historico' %}" class="btn btn-secondary btn-block btn-lg">
                     <i class="fas fa-stream"></i> Volta para o Histórico
                 </a>
             </div>
+
         </div>
+
     </form>
 
 </div>
@@ -81,4 +87,5 @@
         });
     });
 </script>
+
 {% endblock %}
