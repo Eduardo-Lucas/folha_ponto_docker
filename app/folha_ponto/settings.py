@@ -26,8 +26,8 @@ load_dotenv(BASE_DIR / ".env")  # render config
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
-DEBUG = False
+DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
+
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
