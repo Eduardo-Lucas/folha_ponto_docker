@@ -103,6 +103,11 @@ class PontoManager(models.Manager):
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user).last()
 
+    def get_last_open_task(self, user=None):
+        """
+        Returns the last open task for a given user.
+        """
+        return self.get_open_pontos(user).last()
 
 class Ponto(models.Model):
     """
