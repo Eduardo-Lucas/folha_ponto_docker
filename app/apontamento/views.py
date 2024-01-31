@@ -203,12 +203,6 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
 
         instance = form.save(commit=False)
 
-        last_open_task = Ponto.objects.get_last_open_task(instance.usuario)
-        if last_open_task:
-            # executes fecha_tarefa
-            fecha_tarefa(self.request, last_open_task.id)
-
-
         # turn cliente_id text into id
         # check if there is | in cliente_id
         if "|" in form.cleaned_data["cliente"]:
