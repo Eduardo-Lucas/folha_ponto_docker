@@ -189,6 +189,14 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["usuario"] = self.request.user
         context["dia"] = datetime.now().date()
+        context["fechar_tarefa"] = (
+            True
+            if Ponto.objects.filter(
+                usuario=User.objects.filter(username=self.request.user).first(),
+                saida=None,
+            ).last()
+            else False
+        )
         return context
 
     def form_valid(self, form):
@@ -367,17 +375,6 @@ class MudarTarefaUpdateView(LoginRequiredMixin, UpdateView):
         return reverse("apontamento:appointment_create")
 
 
-def fecha_tarefa(request, pk):
-    """Fecha a tarefa do último ponto do usuário"""
-
-    ponto = get_object_or_404(Ponto, pk=pk)
-    ponto.saida = datetime.now().replace(microsecond=0)
-    ponto.fechado = True
-    ponto.save()
-    messages.info(request, "The last appointment was closed.")
-    return redirect("apontamento:appointment_create")
-
-
 class HistoricoListView(LoginRequiredMixin, ListView):
     """Detalhe do histórico"""
 
@@ -404,3 +401,14 @@ class HistoricoListView(LoginRequiredMixin, ListView):
     model = Ponto
     template_name = "apontamento/appointment_detail.html"
     context_object_name = "ponto"
+
+
+def fecha_tarefa(request, pk):
+    """Fecha a tarefa do último ponto do usuário"""
+
+    ponto = get_object_or_404(Ponto, pk=pk)
+    ponto.saida = datetime.now().replace(microsecond=0)
+    ponto.fechado = True
+    ponto.save()
+    messages.info(request, "The last appointment was closed.")
+    return redirect("apontamento:appointment_create")

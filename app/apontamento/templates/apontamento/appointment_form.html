@@ -4,8 +4,14 @@
 {% block content %}
 <div class="container ">
     <h5>Ponto</h5>
+    <h1 class="text-danger text-center">
+        {% if fechar_tarefa %}
+        <a href="{% url 'apontamento:historico' %}" class="btn btn-danger btn-lg">
+            Fechar Ponto Aberto
+        </a>
+        {% endif %}
+    </h1>
     <h6><strong>Marcaçao do Ponto</strong></h6>
-    <hr>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
