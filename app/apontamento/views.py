@@ -193,6 +193,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             True
             if Ponto.objects.filter(
                 usuario=User.objects.filter(username=self.request.user).first(),
+                entrada__year__gte=2024,
                 saida=None,
             ).last()
             else False
@@ -321,6 +322,7 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):
             True
             if Ponto.objects.filter(
                 usuario=User.objects.filter(username=self.request.user).first(),
+                entrada__year__gte=2024,
                 saida=None,
             ).last()
             else False
@@ -390,6 +392,7 @@ class HistoricoListView(LoginRequiredMixin, ListView):
             True
             if Ponto.objects.filter(
                 usuario=User.objects.filter(username=self.request.user).first(),
+                entrada__year__gte=2024,
                 saida=None,
             ).last()
             else False
