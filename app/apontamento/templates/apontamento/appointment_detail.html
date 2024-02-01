@@ -11,9 +11,9 @@
                 <table class="table table-striped table-bordered table-hover table-sm">
                     <thead class="thead-dark">
                         <tr>
-                            <th class="text-center align-middle">Atualiza</th>
-                            <th class="text-center align-middle">Apaga</th>
-                            <th class="text-center align-middle">Fecha</th>
+                            <th class="text-center align-middle"></th>
+                            <th class="text-center align-middle"></th>
+                            <th class="text-center align-middle"></th>
                             <th class="text-center align-middle">id</th>
                             <th class="text-center align-middle">Data</th>
                             <th class="text-center align-middle">Entrada</th>
@@ -29,23 +29,27 @@
 
                             <td class="text-center">
                                 <a href="{% url 'apontamento:appointment_update' ponto.id %}">
-                                    <i class="fas fa-edit" style="color:blue"></i>
+                                    <i class="fas fa-edit" data-toggle="tooltip" title="Alterar a Marcação"
+                                        style="color:blue"></i>
                                 </a>
                             </td>
                             <td class="text-center">
                                 <a href="{% url 'apontamento:appointment_delete' ponto.id %}">
-                                    <i class="fas fa-times-circle" style="color:red"></i>
+                                    <i class="fas fa-times-circle" data-toggle="tooltip" title="Apagar a Marcação"
+                                        style="color:red"></i>
                                 </a>
                             </td>
 
                             {% if not ponto.saida %}
                             <td class="text-center">
                                 <a href="{% url 'apontamento:fecha_tarefa' ponto.id %}">
-                                    <i class="fas fa-door-closed" style="color:orange"></i>
+                                    <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar essa Tarefa"
+                                        style="color:orange"></i>
                                 </a>
                             </td>
                             {% else %}
-                            <td class="text-center"><i class="fas fa-circle-check" style="color:green"></i></td>
+                            <td class="text-center"><i class="fas fa-circle-check" data-toggle="tooltip"
+                                    title="Tarefa Fechada" style="color:green"></i></td>
                             {% endif %}
 
                             <td>{{ponto.id}}</td>
@@ -71,12 +75,19 @@
 
     <div class="row text-center">
         <div class="col-md-6 border border-dark">
+            {% if fechar_tarefa %}
+            <button type="button" class="btn btn-warning btn-block">
+                <i class="fas fa-arrow-up"></i>
+                Precisa fechar a tarefa, antes de mudar
+            </button>
+            {% else %}
             <a href="{% url 'apontamento:appointment_create' %}">
                 <button type="button" class="btn btn-warning btn-block">
                     <i class="fas fa-sign-in-alt"></i>
                     Mudar Tarefa
                 </button>
             </a>
+            {% endif %}
         </div>
 
         <div class="col-md-6 border border-dark">
@@ -92,8 +103,9 @@
 </div>
 
 <script>
-    function goBack() {
-        window.history.back();
-    }
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>
+
 {% endblock %}

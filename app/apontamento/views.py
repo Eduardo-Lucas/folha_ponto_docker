@@ -309,6 +309,15 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):
         context["total_trabalhado"] = Ponto.objects.total_day_time(
             self.object.entrada.date(), self.object.usuario
         )
+        context["fechar_tarefa"] = (
+            True
+            if Ponto.objects.filter(
+                usuario=User.objects.filter(username=self.request.user).first(),
+                saida=None,
+            ).last()
+            else False
+        )
+        context["data_de_hoje"] = datetime.now().date()
         return context
 
     model = Ponto
@@ -380,6 +389,16 @@ class HistoricoListView(LoginRequiredMixin, ListView):
         context["total_trabalhado"] = Ponto.objects.total_day_time(
             datetime.now().date(), self.request.user
         )
+        context["fechar_tarefa"] = (
+            True
+            if Ponto.objects.filter(
+                usuario=User.objects.filter(username=self.request.user).first(),
+                saida=None,
+            ).last()
+            else False
+        )
+        context["data_de_hoje"] = datetime.now().date()
+
         return context
 
     model = Ponto
