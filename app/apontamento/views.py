@@ -216,7 +216,8 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         # check if there is | in cliente_id
         if "|" in form.cleaned_data["cliente"]:
             instance.cliente_id = Cliente.objects.filter(
-                nomerazao=form.cleaned_data["cliente"].split("|")[1]
+                codigosistema=int(form.cleaned_data["cliente"].split("|")[0]),
+                nomerazao=form.cleaned_data["cliente"].split("|")[1],
             ).first()
         else:
             instance.cliente_id = Cliente.objects.filter(
@@ -282,25 +283,39 @@ class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "apontamento/appointment_update.html"
 
     def form_valid(self, form):
-        # get the value of saida in form
-        saida = form.cleaned_data["saida"]
+        # get the new values from the form
+        new_entrada = form.cleaned_data["entrada"]
+        new_saida = form.cleaned_data.get(
+            "saida"
+        )  # replace "saida" with the actual field name if it's different
 
-        # get all the data from saida
-        day = saida.date()
-        pontos = Ponto.objects.for_day(day, self.request.user)
-        # check if saida surpass any previous saida and not already updated
-        for ponto in pontos:
-            if ponto.saida is not None:
-                if saida > ponto.saida:
-                    messages.error(
-                        self.request,
-                        f"Saida cannot be greater than {ponto.saida.strftime('%H:%M:%S')}",
-                    )
-                    saida = None
-                    return super().form_invalid(form)
+        # get the old values from the database
+        old_entrada = self.object.entrada
+        old_saida = (
+            self.object.saida
+        )  # replace "saida" with the actual field name if it's different
 
-        messages.info(self.request, "Appointment updated successfully")
-        return super().form_valid(form)
+        # check if the values were updated
+        if new_entrada == old_entrada and new_saida == old_saida:
+            messages.info(self.request, "Appointment updated successfully")
+            return super().form_valid(form)
+        else:
+            # get the value of saida in form
+            entrada = form.cleaned_data["entrada"]
+
+            # get all the data from saida
+            day = entrada.date()
+            pontos = Ponto.objects.for_day(day, self.request.user)
+            # check if saida surpass any previous saida and not already updated
+            for ponto in pontos:
+                if ponto.entrada is not None:
+                    if entrada > ponto.entrada:
+                        messages.error(
+                            self.request,
+                            f"Entrada cannot be greater than {ponto.id}|{ponto.entrada.strftime('%H:%M:%S')}",
+                        )
+                        entrada = None
+                        return super().form_invalid(form)
 
 
 class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):

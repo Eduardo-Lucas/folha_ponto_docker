@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-
+from celery.schedules import crontab
 import dj_database_url
 from dotenv import load_dotenv  # render config
 
@@ -275,3 +275,23 @@ JAZZMIN_SETTINGS = {
         "auth.group": "vertical_tabs",
     },
 }
+
+REDIS_URL = "redis://" + os.getenv("REDIS_HOST", "localhost") + ":6379/0"
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "America/Sao_Paulo"
+
+CELERY_BEAT_SCHEDULE = {}
+
+CELERY_BEAT_SCHEDULE = {
+    "check_active_sessions": {
+        "task": "user.tasks.check_active_sessions",
+        "schedule": 60.0,  # every 1 minute
+        "args": [],
+    }
+}
+
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

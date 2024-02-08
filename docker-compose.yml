@@ -1,8 +1,31 @@
 version: '3.3'
 
 services:
-  web-folha:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=folha_on_docker
+      - POSTGRES_PASSWORD=folha_on_docker
+      - POSTGRES_DB=folha_on_docker_dev
+    ports:
+      - 5432:5432
+  redis-folha_on_docker:
+    image: redis:alpine
+    volumes:
+      - ./data/redis:/data
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --save 60 1  --loglevel warning
+  web-folha-on-docker:
     build: ./app
+    environment:
+      - DB_HOST=db
+      - DB_USER=folha_on_docker
+      - DB_NAME=folha_on_docker_dev
+      - DB_PASSWORD=folha_on_docker
+      - REDIS_HOST=redis-folha_on_docker
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
@@ -13,16 +36,42 @@ services:
       - ./.env.dev
     depends_on:
       - db
-  db:
-    image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
-    ports:
-      - "5434:5432"
 
+  celery-folha_on_docker:
+    build: ./app
+    environment:
+      - DB_HOST=db
+      - DB_USER=folha_on_docker
+      - DB_NAME=folha_on_docker_dev
+      - DB_PASSWORD=folha_on_docker
+      - REDIS_HOST=redis-folha_on_docker
+
+    entrypoint: celery -A folha_on_docker worker -l INFO -B -E -c 2
+    volumes:
+      - ./app/:/usr/src/app/
+    depends_on:
+      - db
+      - redis-folha_on_docker
+      - web-folha-on-docker
+
+  flower-folha_on_docker:
+    build: ./app
+    environment:
+      - DB_HOST=db
+      - DB_USER=folha_on_docker
+      - DB_NAME=folha_on_docker_dev
+      - DB_PASSWORD=folha_on_docker
+      - REDIS_HOST=redis-folha_on_docker
+
+    entrypoint: celery -A folha_on_docker flower
+    ports:
+      - "5556:5555"
+    depends_on:
+      - celery-folha_on_docker
+      - redis-folha_on_docker
+networks:
+  default:
+    external:
+      name: folha_on_docker
 volumes:
   postgres_data:
