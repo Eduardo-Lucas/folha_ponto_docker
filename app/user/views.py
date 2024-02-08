@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy  # type: ignore
-
+from django.contrib.auth.views import PasswordChangeView
 from .forms import LoginForm
 
 
@@ -38,23 +38,13 @@ def logout_view(request):
     return redirect("user:login")
 
 
-@login_required
-def change_password(request):
+class PasswordsChangeView(PasswordChangeView):
     """View for changing a user's password."""
-    if request.method == "POST":
-        new_password = request.POST.get("new_password")
-        confirm_password = request.POST.get("confirm_password")
 
-        if new_password == confirm_password:
-            user = User.objects.get(username=request.user.username)
-            user.set_password(new_password)
-            user.save()
-            messages.success(request, "Password changed successfully")
-            return redirect("login")
-        else:
-            messages.error(request, "Passwords do not match")
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy("user:success_password")
 
-    return render(
-        request,
-        "registration/change_password.html",
-    )
+
+def success_password(request):
+    """View for successful password change."""
+    return render(request, "registration/success_password.html")
