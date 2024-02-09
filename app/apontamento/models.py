@@ -77,7 +77,7 @@ class PontoManager(models.Manager):
         """
         Returns all open Ponto objects for a given user.
         """
-        return self.filter(usuario=user, fechado=False)
+        return self.filter(usuario=user, entrada__year__gte=2024, fechado=False)
 
     def get_closed_pontos(self, user=None):
         """
