@@ -4,10 +4,10 @@ from django.urls import reverse_lazy  # type: ignore
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import LoginForm
-from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
-
+from apontamento.models import Ponto
+from apontamento.views import fecha_tarefa
+from .forms import LoginForm
 
 def sign_in(request):
     """View for signing in a user."""
@@ -33,6 +33,9 @@ def sign_in(request):
 
 def logout_view(request):
     """View for logging out a user."""
+
+    verificar_tarefas_abertas(request)
+
     logout(request)
     messages.success(request, "You have been logged out.")
     return redirect("user:login")
@@ -48,3 +51,16 @@ class PasswordsChangeView(PasswordChangeView):
 def success_password(request):
     """View for successful password change."""
     return render(request, "registration/success_password.html")
+
+
+@login_required
+def verificar_tarefas_abertas(request):
+    """View for checking open tasks."""
+    open_tasks = Ponto.objects.get_open_pontos(user=request.user)
+
+    if open_tasks:
+        # close them
+        for task in open_tasks:
+            fecha_tarefa(request, task.id)
+        return True
+    return False

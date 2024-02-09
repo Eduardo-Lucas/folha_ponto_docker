@@ -68,7 +68,8 @@ class PontoManager(models.Manager):
         """
         if day is None:
             day = datetime.now().date()
-        start = datetime.combine(day, time.min)
+        # start should be the day itself and the day before
+        start = datetime.combine(day, time.min) - timedelta(days=1)
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
 

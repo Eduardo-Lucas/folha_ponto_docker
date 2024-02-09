@@ -2,6 +2,7 @@ crispy-bootstrap5==0.7
 debugpy==1.8.0
 celery==5.3.6
 Django==4.2.7
+django-auto-logout==0.5.1
 django-cors-headers==4.3.1
 django-import-export==3.3.1
 django-jazzmin==2.6.0

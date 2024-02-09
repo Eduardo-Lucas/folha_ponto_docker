@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
+
 from celery.schedules import crontab
 import dj_database_url
 from dotenv import load_dotenv  # render config
@@ -75,6 +77,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "django_auto_logout.middleware.auto_logout",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -102,6 +105,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django_auto_logout.context_processors.auto_logout_client",
             ],
         },
     },
@@ -293,3 +297,17 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# EMAIL SETTINGS
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "eduardolucas40@gmail.com"
+EMAIL_HOST_PASSWORD = "Bizagi2019#"
+
+AUTO_LOGOUT = {
+    "IDLE_TIME": timedelta(minutes=15),
+    "MESSAGE": "A sessão expirou. Por favor, faça login novamente para continuar. Não esqueça de fechar a tarefa ao final da jornada de trabalho.",
+    "REDIRECT_TO_LOGIN_IMMEDIATELY": True,
+}
