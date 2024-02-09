@@ -77,7 +77,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "django_auto_logout.middleware.auto_logout",
+    
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -105,7 +105,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "django_auto_logout.context_processors.auto_logout_client",
+
             ],
         },
     },
@@ -305,9 +305,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "eduardolucas40@gmail.com"
 EMAIL_HOST_PASSWORD = "Bizagi2019#"
-
-AUTO_LOGOUT = {
-    "IDLE_TIME": timedelta(minutes=15),
-    "MESSAGE": "A sessão expirou. Por favor, faça login novamente para continuar. Não esqueça de fechar a tarefa ao final da jornada de trabalho.",
-    "REDIRECT_TO_LOGIN_IMMEDIATELY": True,
-}
