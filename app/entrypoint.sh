@@ -1,8 +1,8 @@
 #!/bin/bash
 
 python manage.py collectstatic --no-input
-# python manage.py makemigrations
-# python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 # python manage.py createuser # normal user
 # python manage.py createsu # super user
 # python manage.py load_tipo_receita # Tipo Receita
