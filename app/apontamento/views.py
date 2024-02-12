@@ -12,7 +12,6 @@ from django.contrib.auth.models import User
 from django.db.models import Max
 from django.db.models.base import Model
 from django.db.models.query import QuerySet
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -86,20 +85,22 @@ def folha_ponto(request):
                 else:
                     atrasado = "Não"
 
+                if ponto.entrada.weekday() >= 5:  # it's a weekend
+                    credor = horas_trabalhadas
+                    devedor = timedelta(0)
+                else:
+                    credor_devedor = horas_obrigatorias - horas_trabalhadas
+
+                    if credor_devedor > timedelta(0):
+                        credor = timedelta(0)
+                        devedor = abs(credor_devedor)
+                    else:
+                        credor = abs(credor_devedor)
+                        devedor = timedelta(0)
+
                 # if the day has changed since the last time we added a sum for a day
                 if ponto.entrada.date() != dia:
-                    if ponto.entrada.weekday() >= 5:  # it's a weekend
-                        credor = horas_trabalhadas
-                        devedor = timedelta(0)
-                    else:
-                        credor_devedor = horas_obrigatorias - horas_trabalhadas
 
-                        if credor_devedor > timedelta(0):
-                            credor = timedelta(0)
-                            devedor = abs(credor_devedor)
-                        else:
-                            credor = abs(credor_devedor)
-                            devedor = timedelta(0)
 
                     pontos_sumarizados.append(
                         {
@@ -430,3 +431,44 @@ def fecha_tarefa(request, pk):
     ponto.save()
     messages.info(request, "The last appointment was closed.")
     return redirect("apontamento:appointment_create")
+
+
+def totaliza_ponto(request):
+    """Retorna o total de horas trabalhadas em um intervalo de datas"""
+    service = PontoService()
+    usuario_id = request.user.id
+    data_inicial = datetime.now().date()
+    data_final = datetime.now().date()
+
+    query = service.totaliza_ponto(usuario_id, data_inicial, data_final)
+
+    return render(request, "apontamento/totaliza_ponto.html", {"query": query})
+
+
+def historico_com_usuario(request):
+    """Retorna o histórico de um usuário"""
+    form = FolhaPontoForm()
+    context = {
+        "form": form,
+    }
+    if request.method == "POST":
+        form = FolhaPontoForm(request.POST)
+        if form.is_valid():
+            data_inicial = form.cleaned_data["entrada"]
+            data_final = form.cleaned_data["saida"]
+            usuario = form.cleaned_data["usuario"]
+
+            if data_inicial > data_final:
+                messages.error(
+                    request, "Data inicial não pode ser maior que data final"
+                )
+        historico = Ponto.objects.for_range_days(data_inicial, data_final, usuario)
+
+        context = {
+            "form": form,
+            "historico": historico,
+            "total_trabalhado": Ponto.objects.total_range_days_time(
+                data_inicial, data_final, usuario
+            ),
+        }
+    return render(request, "apontamento/historico_com_usuario.html", context)

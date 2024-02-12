@@ -6,9 +6,8 @@
 
 {% block content %}
 
-
-<h1>Resumo</h1>
 <div class="container">
+    <h1>Resumo</h1>
     <form method="post" id="folhaPonto" class="row gx-3 gy-2 align-items-center">
         {% csrf_token %}
 
@@ -102,14 +101,15 @@
             </thead>
             <tbody>
                 <tr>
-                    <td colspan="6" class="text-center text-success"><strong>Nenhum registro encontrado nesse
+                    <td colspan="12" class="text-center text-success"><strong>Nenhum registro encontrado nesse
                             período!</strong>
                     </td>
                 </tr>
             </tbody>
         </table>
     </table>
-    {% endif %}
-    {% endif %}
+</div>
+{% endif %}
+{% endif %}
 
-    {% endblock %}
+{% endblock %}

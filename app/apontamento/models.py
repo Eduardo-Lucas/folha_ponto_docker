@@ -73,6 +73,18 @@ class PontoManager(models.Manager):
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
 
+    def for_range_days(self, start=None, end=None, user=None):
+        """
+        Returns all Ponto objects for a given range of days and user.
+        """
+        if start is None:
+            start = datetime.now().date()
+        if end is None:
+            end = datetime.now().date()
+        start = datetime.combine(start, time.min)
+        end = datetime.combine(end, time.max)
+        return self.filter(entrada__range=(start, end), usuario=user)
+
     def get_open_pontos(self, user=None):
         """
         Returns all open Ponto objects for a given user.
@@ -93,6 +105,15 @@ class PontoManager(models.Manager):
         for ponto in self.for_day(day, user):
             total += ponto.difference
         return total
+
+    def total_range_days_time(self, start=None, end=None, user=None):
+        """
+        Returns the total time for a given range of days and user.
+        """
+        total_trabalhado = timedelta(hours=0)
+        for ponto in self.for_range_days(start, end, user):
+            total_trabalhado += ponto.difference
+        return total_trabalhado
 
     def last_interaction(self, day=None, user=None):
         """
