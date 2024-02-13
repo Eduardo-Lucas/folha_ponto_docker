@@ -1,10 +1,10 @@
-from collections.abc import Iterable
 from datetime import datetime, time, timedelta
 
 from cliente.models import Cliente
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from feriado.models import Feriado
 
 
 class TipoReceitaManager(models.Manager):
@@ -131,6 +131,104 @@ class PontoManager(models.Manager):
         """
         return self.get_open_pontos(user).last()
 
+    def get_total_hours_by_day_by_user(self, start, end, user):
+        """
+        Returns a list of dictionaries with day and the total hours, summarized by day worked for a given range of days and user.
+        Using the format {day: date, total_hours: total_hours}.
+        """
+        total_hours = []
+
+        for day in range((end - start).days + 1):
+            day = start + timedelta(days=day)
+            horas_trabalhadas = self.total_day_time(day, user)
+
+            feriado = Feriado.objects.is_holiday(
+                year=day.year, month=day.month, day=day.day
+            )
+
+            if feriado:
+                nome_feriado = Feriado.objects.get_description(
+                    year=day.year, month=day.month, day=day.day
+                )
+
+            if day.weekday() >= 5:
+                carga_horaria = timedelta(hours=0)
+            elif feriado:
+                carga_horaria = timedelta(hours=0)
+            else:
+                carga_horaria = timedelta(hours=8)
+
+            if horas_trabalhadas > carga_horaria and feriado:
+                credor = horas_trabalhadas - carga_horaria
+                devedor = timedelta(hours=0)
+            elif horas_trabalhadas <= carga_horaria and not feriado:
+                credor = timedelta(hours=0)
+                devedor = carga_horaria - horas_trabalhadas
+
+            total_hours.append(
+                {
+                    "day": day,
+                    "total_hours": horas_trabalhadas,
+                    "atrasado": self.get_status_atrasado(day, user),
+                    "feriado": feriado,
+                    "nome_feriado": nome_feriado if feriado else "",
+                    "credor": credor,
+                    "devedor": devedor,
+                }
+            )
+
+        return total_hours
+
+    def get_status_atrasado(self, day=None, user=None):
+        """get the first entrada of the day and if it is later than 9:15, it is considered late"""
+        if day is None:
+            day = datetime.now().date()
+        start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        ponto = self.filter(entrada__range=(start, end), usuario=user).first()
+        feriado = Feriado.objects.is_holiday(
+            year=day.year, month=day.month, day=day.day
+        )
+        if ponto:
+            if ponto.entrada.time() > time(9, 15) and not feriado:
+                return True
+        return False
+
+    def get_credor_devedor(self, start, end, user=None):
+        """return a dictionary with total_credor in hours and total_devedor in hours for a given range of days and user"""
+        total_credor = timedelta(hours=0)
+        total_devedor = timedelta(hours=0)
+        for day in range((end - start).days + 1):
+            day = start + timedelta(days=day)
+            horas_trabalhadas = self.total_day_time(day, user)
+
+            feriado = Feriado.objects.is_holiday(
+                year=day.year, month=day.month, day=day.day
+            )
+
+            if day.weekday() >= 5:
+                # if it is a weekend
+                carga_horaria = timedelta(hours=0)
+            elif feriado:
+                # if it is a holiday
+                carga_horaria = timedelta(hours=0)
+            else:
+                # if it is a regular day
+                carga_horaria = timedelta(hours=8)
+
+            if horas_trabalhadas > carga_horaria and feriado:
+                # if the user worked more than the regular hours
+                total_credor += horas_trabalhadas - carga_horaria
+            elif horas_trabalhadas < carga_horaria and not feriado:
+                # if the user worked less than the regular hours
+                total_devedor += carga_horaria - horas_trabalhadas
+
+        return {
+            "total_credor": total_credor,
+            "total_devedor": total_devedor,
+        }
+
+
 class Ponto(models.Model):
     """
     Model to represent a point in time for a user.
@@ -173,7 +271,7 @@ class Ponto(models.Model):
         """
         if self.saida is not None:
             return self.saida - self.entrada
-        return timedelta(0)
+        return timedelta(hours=0)
 
     def __str__(self) -> str:
         """

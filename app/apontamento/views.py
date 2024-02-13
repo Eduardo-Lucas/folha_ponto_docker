@@ -435,14 +435,40 @@ def fecha_tarefa(request, pk):
 
 def totaliza_ponto(request):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
-    service = PontoService()
-    usuario_id = request.user.id
-    data_inicial = datetime.now().date()
-    data_final = datetime.now().date()
+    form = FolhaPontoForm()
+    context = {
+        "form": form,
+    }
+    if request.method == "POST":
+        form = FolhaPontoForm(request.POST)
+        if form.is_valid():
+            data_inicial = form.cleaned_data["entrada"]
+            data_final = form.cleaned_data["saida"]
+            usuario = form.cleaned_data["usuario"]
 
-    query = service.totaliza_ponto(usuario_id, data_inicial, data_final)
+            if data_inicial > data_final:
+                messages.error(
+                    request, "Data inicial não pode ser maior que data final"
+                )
 
-    return render(request, "apontamento/totaliza_ponto.html", {"query": query})
+        query = Ponto.objects.get_total_hours_by_day_by_user(
+            start=data_inicial, end=data_final, user=usuario
+        )
+
+        dict_total_credor_devedor = Ponto.objects.get_credor_devedor(
+            start=data_inicial, end=data_final, user=usuario
+        )
+
+        context = {
+            "form": form,
+            "query": query,
+            "total_trabalhado": Ponto.objects.total_range_days_time(
+                data_inicial, data_final, usuario
+            ),
+            "total_credor": dict_total_credor_devedor["total_credor"],
+            "total_devedor": dict_total_credor_devedor["total_devedor"],
+        }
+    return render(request, "apontamento/totaliza_ponto.html", context)
 
 
 def historico_com_usuario(request):
