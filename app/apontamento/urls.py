@@ -13,7 +13,6 @@ from .views import (
     fecha_tarefa,
     folha_ponto,
     historico_com_usuario,
-    totaliza_ponto,
 
 )
 
@@ -52,6 +51,5 @@ urlpatterns = [
     path("mudar_tarefa/<int:pk>", MudarTarefaUpdateView.as_view(), name="mudar_tarefa"),
     path("fecha_tarefa/<int:pk>", fecha_tarefa, name="fecha_tarefa"),
     path("historico/", HistoricoListView.as_view(), name="historico"),
-    path("totaliza_ponto/", totaliza_ponto, name="totaliza_ponto"),
     path("historico_com_usuario/", historico_com_usuario, name="historico_com_usuario"),
 ]

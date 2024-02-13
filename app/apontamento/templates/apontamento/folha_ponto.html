@@ -5,7 +5,7 @@
 {% load timedelta_filters %}
 {% block content %}
 <div class="container">
-    <h1>Totaliza Ponto</h1>
+    <h3 class="text-info">Resumo</h3>
     <form method="post" id="folhaPonto" class="row gx-3 gy-2 align-items-center">
         {% csrf_token %}
 
@@ -19,7 +19,7 @@
                 <i class="fa-solid fa-search"></i> Consulta
                 </button>
 
-                <a href="{% url 'apontamento:totaliza_ponto' %}" class="btn btn-primary btn-sm"
+                <a href="{% url 'apontamento:folha_ponto' %}" class="btn btn-primary btn-sm"
                     style="border: 1px solid white;">
                     <i class="fa-solid fa-arrows-rotate"></i> Limpar
                 </a>
@@ -46,21 +46,21 @@
                 <tr>
                     <td>{{ dia.day|date:"d/m/Y - l" }}
                         {% if dia.feriado %}
-                             - <span class="badge rounded-pill text-bg-danger">{{dia.nome_feriado}}</span>
+                        - <span class="badge rounded-pill text-bg-danger">{{dia.nome_feriado}}</span>
                         {% endif %}
                     </td>
                     <td class="text-center text">
                         {% if dia.feriado%}
-                            <span class="badge rounded-pill text-bg-danger">Sim</span>
+                        <span class="badge rounded-pill text-bg-danger">Sim</span>
                         {%else%}
-                            <span class="badge rounded-pill text-bg-success">Não</span>
+                        <span class="badge rounded-pill text-bg-success">Não</span>
                         {% endif %}
                     </td>
                     <td class="text-center">
                         {% if dia.atrasado %}
-                            <span class="badge rounded-pill text-bg-danger">Sim</span>
+                        <span class="badge rounded-pill text-bg-danger">Sim</span>
                         {%else%}
-                            <span class="badge rounded-pill text-bg-success">Não</span>
+                        <span class="badge rounded-pill text-bg-success">Não</span>
                         {% endif %}
                     </td>
                     <td class="text-center">{{dia.total_hours}}</td>

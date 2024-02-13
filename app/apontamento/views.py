@@ -30,7 +30,7 @@ def apontamento_list(request):
 
 
 @login_required
-def folha_ponto(request):
+def folha_ponto_copy(request):
     """Folha de ponto"""
     context = {}
     if request.method == "POST":
@@ -433,7 +433,7 @@ def fecha_tarefa(request, pk):
     return redirect("apontamento:appointment_create")
 
 
-def totaliza_ponto(request):
+def folha_ponto(request):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
     form = FolhaPontoForm()
     context = {
@@ -468,7 +468,7 @@ def totaliza_ponto(request):
             "total_credor": dict_total_credor_devedor["total_credor"],
             "total_devedor": dict_total_credor_devedor["total_devedor"],
         }
-    return render(request, "apontamento/totaliza_ponto.html", context)
+    return render(request, "apontamento/folha_ponto.html", context)
 
 
 def historico_com_usuario(request):
