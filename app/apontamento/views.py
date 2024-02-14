@@ -435,7 +435,7 @@ def fecha_tarefa(request, pk):
 
 def folha_ponto(request):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
-    form = FolhaPontoForm()
+    form = FolhaPontoForm(user=request.user)
     context = {
         "form": form,
     }
@@ -474,7 +474,7 @@ def folha_ponto(request):
 
 def historico_com_usuario(request):
     """Retorna o histórico de um usuário"""
-    form = FolhaPontoForm()
+    form = FolhaPontoForm(user=request.user)
     context = {
         "form": form,
     }
