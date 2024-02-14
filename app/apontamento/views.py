@@ -467,8 +467,9 @@ def folha_ponto(request):
             ),
             "total_credor": dict_total_credor_devedor["total_credor"],
             "total_devedor": dict_total_credor_devedor["total_devedor"],
+            "usuario_id": User.objects.filter(username=request.user).first().id,
         }
-    return render(request, "apontamento/folha_ponto.html", context)
+    return render(request, "apontamento/folha-ponto.html", context)
 
 
 def historico_com_usuario(request):

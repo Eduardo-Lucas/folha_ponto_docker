@@ -39,6 +39,7 @@
                     <th class="text-center">Trabalhadas:<br> {{ total_trabalhado|format_timedelta }}</th>
                     <th class="text-center text-success">Credor:<br> {{total_credor|format_timedelta}}</th>
                     <th class="text-center text-danger">Devedor:<br> {{total_devedor|format_timedelta}}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +67,10 @@
                     <td class="text-center">{{dia.total_hours}}</td>
                     <td class="text-center text-success">{{dia.credor}}</td>
                     <td class="text-center text-danger">{{dia.devedor}}</td>
+                    <td scope="row" class="text-center">
+                        <a href="{% url 'apontamento:appointment_list' dia.day usuario_id %}">
+                            <i class="fas fa-eye" style="color:blue"></i>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
