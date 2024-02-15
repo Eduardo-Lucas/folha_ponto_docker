@@ -55,9 +55,9 @@ class FolhaPontoForm(forms.Form):
         self.fields["entrada"].initial = first_day
 
         # Get the last day of the current month
-        last_day = self.get_last_day_month(now.year, now.month)
+        # last_day = self.get_last_day_month(now.year, now.month)
         # Set the initial value of the saida field
-        self.fields["saida"].initial = now.replace(day=last_day).strftime("%Y-%m-%d")
+        self.fields["saida"].initial = now.strftime("%Y-%m-%d")
 
         # Set the initial value of the usuario field
         if self.user is not None:
