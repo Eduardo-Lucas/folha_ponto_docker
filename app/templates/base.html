@@ -55,7 +55,7 @@
             <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'apontamento:historico' %}" class="btn btn-outline">Histórico</a>
+            <a href="{% url 'apontamento:historico_com_usuario' %}" class="btn btn-outline">Histórico</a>
           </li>
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
@@ -68,7 +68,6 @@
               <li><a class="dropdown-item" href="{% url 'user:password' %}">Troca Senha</a></li>
               {% if request.user.is_staff %}
                   <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
-                  <li><a class="dropdown-item" href="{% url 'apontamento:historico_com_usuario' %}">Histórico com Usuário</a></li>
               {% endif %}
               <li><a class="dropdown-item" href="{% url 'user:logout' %}">Logout</a></li>
             </ul>
