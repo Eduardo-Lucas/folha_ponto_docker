@@ -137,6 +137,8 @@ class PontoManager(models.Manager):
         Using the format {day: date, total_hours: total_hours}.
         """
         total_hours = []
+        credor = timedelta(hours=0)
+        devedor = timedelta(hours=0)
 
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
