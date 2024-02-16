@@ -51,7 +51,7 @@
                         {% endif %}
                     </td>
                     <td class="text-center text">
-                        {% if dia.feriado%}
+                        {% if dia.feriado %}
                         <span class="badge rounded-pill text-bg-danger">Sim</span>
                         {%else%}
                         <span class="badge rounded-pill text-bg-success">Não</span>
@@ -68,7 +68,7 @@
                     <td class="text-center text-success">{{dia.credor}}</td>
                     <td class="text-center text-danger">{{dia.devedor}}</td>
                     <td scope="row" class="text-center">
-                        <a href="{% url 'apontamento:appointment_list' dia.day usuario_id %}">
+                        <a href="{% url 'apontamento:appointment_list' dia.day dia.user.id %}">
                             <i class="fas fa-eye" style="color:blue"></i>
                     </td>
                 </tr>

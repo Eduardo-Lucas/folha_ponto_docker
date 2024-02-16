@@ -73,6 +73,33 @@ class PontoManager(models.Manager):
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
 
+    def for_day_unauthorized(self, day=None, user=None):
+        """
+        Returns all Ponto objects for a given day and user.
+        Over 10 hours authorization is False
+        """
+        if day is None:
+            day = datetime.now().date()
+        # start should the day itself and the day before
+        start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        return self.filter(
+            entrada__range=(start, end), usuario=user, over_10_hours_authorization=False
+        )
+
+    def validate_over_10_hours(self, day=None, user=None):
+        """ Turn all over_10_hours_authorization to True  for a given day and user."""
+        if day is None:
+            day = datetime.now().date()
+        start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        pontos = self.filter(
+            entrada__range=(start, end), usuario=user, over_10_hours_authorization=False
+        )
+        for ponto in pontos:
+            ponto.over_10_hours_authorization = True
+            ponto.save()
+
     def for_range_days(self, start=None, end=None, user=None):
         """
         Returns all Ponto objects for a given range of days and user.
@@ -170,6 +197,8 @@ class PontoManager(models.Manager):
             total_hours.append(
                 {
                     "day": day,
+                    "user": user,
+                    "username": User.objects.filter(username=user).first().username,
                     "total_hours": horas_trabalhadas,
                     "atrasado": self.get_status_atrasado(day, user),
                     "feriado": feriado,
@@ -230,6 +259,28 @@ class PontoManager(models.Manager):
             "total_devedor": total_devedor,
         }
 
+    def get_over_10_hours_list(self, user=None):
+        """return a list of dictionaries with the days that the user worked more than 10 hours using the following format:
+        {user: user, day: date, total_hours: total_hours}"""
+        over_10_hours_list = []
+        users = User.objects.all()
+        for day in range(30):
+            day = datetime.now().date() - timedelta(days=day)
+            # loop through users
+            for user in users:
+
+                horas_trabalhadas = self.total_day_time(day, user.id)
+                if horas_trabalhadas > timedelta(hours=10):
+                    over_10_hours_list.append(
+                        {
+                            "user_id": user.id,
+                            "username": User.objects.get(id=user.id).username,
+                            "day": day,
+                            "total_hours": horas_trabalhadas,
+                        }
+                    )
+        return over_10_hours_list
+
 
 class Ponto(models.Model):
     """
@@ -252,6 +303,9 @@ class Ponto(models.Model):
     )
     atrasoautorizado = models.BooleanField(
         default=False, verbose_name="Atraso Autorizado"
+    )
+    over_10_hours_authorization = models.BooleanField(
+        default=False, verbose_name="Autorização de +10 horas de jornada"
     )
 
     objects = PontoManager()

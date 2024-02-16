@@ -499,3 +499,12 @@ def historico_com_usuario(request):
             ),
         }
     return render(request, "apontamento/historico_com_usuario.html", context)
+
+
+def over_10_hours_list(request):
+    """Listagem de pontos com mais de 10 horas"""
+    pontos = Ponto.objects.get_over_10_hours_list()
+    context = {
+        "pontos": pontos,
+    }
+    return render(request, "apontamento/over_10_hours_list.html", context)

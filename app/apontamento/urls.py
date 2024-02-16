@@ -13,7 +13,7 @@ from .views import (
     fecha_tarefa,
     folha_ponto,
     historico_com_usuario,
-
+    over_10_hours_list,
 )
 
 app_name = "apontamento"
@@ -52,4 +52,6 @@ urlpatterns = [
     path("fecha_tarefa/<int:pk>", fecha_tarefa, name="fecha_tarefa"),
     path("historico/", HistoricoListView.as_view(), name="historico"),
     path("historico_com_usuario/", historico_com_usuario, name="historico_com_usuario"),
+    path("over_10_hours_list/", over_10_hours_list, name="over_10_hours_list"),
+    path("validate_over_10_hours/", over_10_hours_list, name="validate_over_10_hours"),
 ]
