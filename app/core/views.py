@@ -34,4 +34,7 @@ def home(request):
                 }
             )
 
+            # sort pontos by last_interaction desc
+            pontos = sorted(pontos, key=lambda k: k["last_interaction"], reverse=True)
+
     return render(request, "core/home.html", {"pontos": pontos})
