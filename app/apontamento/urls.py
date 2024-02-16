@@ -12,6 +12,7 @@ from .views import (
     apontamento_list,
     fecha_tarefa,
     folha_ponto,
+    get_30_min_break_list,
     historico_com_usuario,
     over_10_hours_list,
 )
@@ -54,4 +55,5 @@ urlpatterns = [
     path("historico_com_usuario/", historico_com_usuario, name="historico_com_usuario"),
     path("over_10_hours_list/", over_10_hours_list, name="over_10_hours_list"),
     path("validate_over_10_hours/", over_10_hours_list, name="validate_over_10_hours"),
+    path("get_30_min_break_list", get_30_min_break_list, name="get_30_min_break_list"),
 ]

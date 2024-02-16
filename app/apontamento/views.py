@@ -101,7 +101,6 @@ def folha_ponto_copy(request):
                 # if the day has changed since the last time we added a sum for a day
                 if ponto.entrada.date() != dia:
 
-
                     pontos_sumarizados.append(
                         {
                             "dia": dia,
@@ -508,3 +507,12 @@ def over_10_hours_list(request):
         "pontos": pontos,
     }
     return render(request, "apontamento/over_10_hours_list.html", context)
+
+
+def get_30_min_break_list(request):
+    """Listagem de pontos sem intervalo de 30 minutos"""
+    pontos = Ponto.objects.get_30_min_break_list()
+    context = {
+        "pontos": pontos,
+    }
+    return render(request, "apontamento/30_min_break_list.html", context)

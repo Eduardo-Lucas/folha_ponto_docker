@@ -63,7 +63,13 @@
               Relatórios
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Over 10 hours</a></li>
+              <li>
+                <a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Over 10 hours</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">30-min-break list</a>
+              </li>
+
             </ul>
           </li>
           {% if request.user.is_authenticated %}
