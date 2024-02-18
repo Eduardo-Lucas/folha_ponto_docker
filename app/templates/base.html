@@ -55,6 +55,9 @@
             <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
           </li>
           <li class="nav-item">
+            <a href="{% url 'apontamento:ajuste_ponto' %}" class="btn btn-outline">Ajuste</a>
+          </li>
+          <li class="nav-item">
             <a href="{% url 'apontamento:historico_com_usuario' %}" class="btn btn-outline">Histórico</a>
           </li>
           <li class="nav-item dropdown">
@@ -64,7 +67,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Over 10 hours</a>
+                <a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Over 10 hours list</a>
               </li>
               <li>
                 <a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">30-min-break list</a>
@@ -82,7 +85,7 @@
               <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
               <li><a class="dropdown-item" href="{% url 'user:password' %}">Troca Senha</a></li>
               {% if request.user.is_staff %}
-                  <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+              <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
               {% endif %}
               <li><a class="dropdown-item" href="{% url 'user:logout' %}">Logout</a></li>
             </ul>
@@ -111,11 +114,11 @@
   <!-- Section-->
   <div class="container">
     {% if messages %}
-    <ul class="messages">
+
       {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
+      <p class="{{ message.tags }}">{{ message }}</p>
       {% endfor %}
-    </ul>
+
     {% endif %}
 
     {% block content %}

@@ -1,12 +1,11 @@
 """ Forms for the apontamento app. """
 
 from calendar import monthrange
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-
 from .models import Ponto, TipoReceita
 
 
@@ -150,3 +149,65 @@ class AppointmentCreateForm(forms.ModelForm):
         if not cliente:
             raise ValidationError("Cliente cannot be null.")
         return cliente
+
+
+class AjustePontoForm(forms.ModelForm):
+    """Form for creating a new appointment."""
+
+    class Meta:
+        """Meta definition for Appointmentform."""
+
+        model = Ponto
+        fields = (
+            "entrada",
+            "saida",
+            "tipo_receita",
+            "cliente_id",
+            "fechado",
+        )
+        widgets = {
+            "entrada": DateTimeInput(),
+            "saida": DateTimeInput(),
+        }
+
+    def __init__(
+        self, *args, day=None, user_id=None, tipo_receita=None, request=None, **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        self.day = day
+        # self.user_id = (
+        #     user_id
+        #     if user_id is not None
+        #     else User.objects.filter(username=["usuario"]).first().id
+        # )
+        self.fields["tipo_receita"].required = True
+        self.fields["saida"].required = True
+
+    def clean_tipo_receita(self):
+        """Validates the tipo_receita field."""
+        tipo_receita = self.cleaned_data.get("tipo_receita")
+        if tipo_receita and tipo_receita.status == "Inativo":
+            raise ValidationError("Tipo de Receita não pode estar Inativo.")
+        return tipo_receita
+
+    # validate if entrada is greater than saida
+    def clean(self):
+        """Validates the entrada and saida fields."""
+        cleaned_data = super().clean()
+        entrada = cleaned_data.get("entrada")
+        saida = cleaned_data.get("saida")
+        if entrada and saida:
+            if entrada > saida:
+                raise ValidationError("Entrada não pode ser maior que Saída.")
+
+            # entrada cannot be in the future
+            if entrada > datetime.now():
+                raise ValidationError("Entrada não pode ser no futuro.")
+
+            # saida cannot be in the future
+            if saida > datetime.now():
+                raise ValidationError("Saída não pode ser no futuro.")
+
+            if saida - entrada > timedelta(hours=10):
+                raise ValidationError("Jornada não pode ser maior que 10 horas.")
+        return cleaned_data

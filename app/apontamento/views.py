@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Any
 
-from apontamento.forms import AppointmentCreateForm, FolhaPontoForm
+from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
 from apontamento.services import PontoService
 from cliente.models import Cliente
@@ -516,3 +516,55 @@ def get_30_min_break_list(request):
         "pontos": pontos,
     }
     return render(request, "apontamento/30_min_break_list.html", context)
+
+
+@login_required
+def ajuste_ponto(request):
+    """Ajuste de ponto"""
+
+    form = AjustePontoForm()
+    context = {
+        "form": form,
+    }
+    if request.method == "POST":
+        form = AjustePontoForm(request.POST)
+
+        if form.is_valid():
+            entrada = form.cleaned_data["entrada"]
+            saida = form.cleaned_data["saida"]
+            tipo_receita = form.cleaned_data["tipo_receita"]
+
+            usuario = User.objects.filter(username=request.user).first()
+
+            if entrada > saida:
+                # raise validation error
+                messages.error(request, "Entrada cannot be greater than saida")
+
+            # turn cliente_id text into id
+            # check if there is | in cliente_id
+            cliente_id = form.cleaned_data.get("cliente_id")
+            if cliente_id and "|" in "cliente_id":
+                cliente_id = Cliente.objects.filter(
+                    codigosistema=int(form.cleaned_data["cliente_id"].split("|")[0]),
+                    nomerazao=form.cleaned_data["cliente_id"].split("|")[1],
+                ).first()
+            else:
+                cliente_id = Cliente.objects.filter(
+                    nomerazao=form.cleaned_data["cliente_id"]
+                ).first()
+
+            max_id = Ponto.objects.aggregate(Max("id"))["id__max"]
+            Ponto.objects.create(
+                id=max_id + 1,
+                entrada=entrada,
+                saida=saida,
+                tipo_receita=tipo_receita,
+                cliente_id=cliente_id,
+                usuario=usuario,
+            )
+            messages.success(request, "Appointment created successfully")
+        else:
+            # get the validatin error message
+            messages.error(request, form.errors.as_text())
+
+    return render(request, "apontamento/ajuste_ponto.html", context)

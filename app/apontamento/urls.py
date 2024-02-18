@@ -9,6 +9,7 @@ from .views import (
     AppointmentUpdateView,
     HistoricoListView,
     MudarTarefaUpdateView,
+    ajuste_ponto,
     apontamento_list,
     fecha_tarefa,
     folha_ponto,
@@ -56,4 +57,5 @@ urlpatterns = [
     path("over_10_hours_list/", over_10_hours_list, name="over_10_hours_list"),
     path("validate_over_10_hours/", over_10_hours_list, name="validate_over_10_hours"),
     path("get_30_min_break_list", get_30_min_break_list, name="get_30_min_break_list"),
+    path("ajuste_ponto/", ajuste_ponto, name="ajuste_ponto"),
 ]
