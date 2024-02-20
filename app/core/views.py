@@ -1,6 +1,6 @@
 from apontamento.models import Ponto
 from django.contrib.auth.models import User
-from django.db.models import F, Max, Sum
+from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
@@ -38,4 +38,26 @@ def home(request):
             # sort pontos by last_interaction desc
             pontos = sorted(pontos, key=lambda k: k["last_interaction"], reverse=True)
 
+    # Carrega as datas iniciais e finais na sessão
+    carrega_datas_session(request)
+    
     return render(request, "core/home.html", {"pontos": pontos})
+
+
+def carrega_datas_session(request, user_id=None):
+    """Carrega as datas iniciais e finais na sessão"""
+    now = datetime.now()
+
+    # Set data inicial
+    first_day = now.replace(day=1).strftime("%Y-%m-%d")
+    request.session["data_inicial"] = first_day
+
+    # Set data final
+    last_day = now.strftime("%Y-%m-%d")
+    request.session["data_final"] = last_day
+
+    if user_id is None:
+        # Set user_id
+        request.session["user_id"] = User.objects.get(username=request.user).id
+    else:
+        request.session["user_id"] = user_id

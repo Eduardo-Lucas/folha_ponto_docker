@@ -412,8 +412,13 @@ def historico_com_usuario(request):
     return render(request, "apontamento/historico_com_usuario.html", context)
 
 
-def historico_sem_form(request, data_inicial, data_final, user_id):
+def historico_sem_form(request, user_id):
     """Retorna o histórico de um usuário"""
+
+    # Access variables from session
+    data_inicial = request.session.get("data_inicial")
+    data_final = request.session.get("data_final")
+
     if data_inicial > data_final:
         messages.error(request, "Data inicial não pode ser maior que data final")
 

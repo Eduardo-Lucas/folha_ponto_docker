@@ -69,7 +69,7 @@ class PontoManager(models.Manager):
         if day is None:
             day = datetime.now().date()
         # start should be the day itself and the day before
-        start = datetime.combine(day, time.min) # - timedelta(days=1)
+        start = datetime.combine(day, time.min)  # - timedelta(days=1)
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
 
@@ -88,7 +88,7 @@ class PontoManager(models.Manager):
         )
 
     def validate_over_10_hours(self, day=None, user=None):
-        """ Turn all over_10_hours_authorization to True  for a given day and user."""
+        """Turn all over_10_hours_authorization to True  for a given day and user."""
         if day is None:
             day = datetime.now().date()
         start = datetime.combine(day, time.min)
@@ -108,6 +108,12 @@ class PontoManager(models.Manager):
             start = datetime.now().date()
         if end is None:
             end = datetime.now().date()
+
+        # turn start in datetime object
+        start = datetime.strptime(start, "%Y-%m-%d")
+        # turn end in datetime object
+        end = datetime.strptime(end, "%Y-%m-%d")
+
         start = datetime.combine(start, time.min)
         end = datetime.combine(end, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)

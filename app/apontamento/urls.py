@@ -62,7 +62,7 @@ urlpatterns = [
     path("historico/", HistoricoListView.as_view(), name="historico"),
     path("historico_com_usuario/", historico_com_usuario, name="historico_com_usuario"),
     path(
-        "historico_sem_form//<date:data_inicial>/<date:data_final>/<int:user_id>/",
+        "historico_sem_form/<int:user_id>",
         historico_sem_form,
         name="historico_sem_form",
     ),
