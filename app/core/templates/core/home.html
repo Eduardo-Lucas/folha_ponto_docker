@@ -4,6 +4,7 @@
 {% block content %}
 <div class="row">
     <div class="col">
+        <h5 class="text-info">Última Interação</h5>
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover table-sm">
                 <thead style="background-color: orangered; vertical-align: middle;">
@@ -12,27 +13,30 @@
                     <th>Cliente</th>
                     <th>Tarefa</th>
                     <th>Total Dia</th>
+                    <th></th>
                 </thead>
 
                 <tbody>
                     {% if pontos %}
-                    {% for appointment in pontos %}
+                    {% for ponto in pontos %}
 
                     <tr style="vertical-align: middle;">
-                        <td>{{ appointment.usuario }}</td>
-                        <td>{{ appointment.last_interaction|date:"d/m/y H:i" }}</td>
-                        <td>{{ appointment.cliente }}</td>
-                        <td>{{ appointment.tarefa }}</td>
-                        <td>{{ appointment.total_dia }}</td>
+                        <td>{{ ponto.usuario }}</td>
+                        <td>{{ ponto.last_interaction|date:"d/m/y H:i" }}</td>
+                        <td>{{ ponto.cliente }}</td>
+                        <td>{{ ponto.tarefa }}</td>
+                        <td>{{ ponto.total_dia }}</td>
+                        <td scope="row" class="text-center">
+                            <a
+                                href="{% url 'apontamento:folha_ponto_sem_form' data_inicial=ponto.day data_final=ponto.day user_id=ponto.usuario.id %}">
+                                <i class="fas fa-eye" style="color:blue"></i>
+                        </td>
                     </tr>
                     {% endfor %}
                     {% endif %}
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="col">
-        <h1>Lembretes</h1>
     </div>
 </div>
 

@@ -28,123 +28,6 @@ def apontamento_list(request):
     """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
 
-
-@login_required
-def folha_ponto_copy(request):
-    """Folha de ponto"""
-    context = {}
-    if request.method == "POST":
-        form = FolhaPontoForm(request.POST)
-        if form.is_valid():
-            usuario = User.objects.filter(username=request.user).first()
-            service = PontoService()
-
-            # get sum  of differences group by date #
-
-            data_inicial = form.cleaned_data["entrada"]
-            data_final = form.cleaned_data["saida"]
-            usuario = form.cleaned_data["usuario"]
-
-            if data_inicial > data_final:
-                messages.error(
-                    request, "Data inicial não pode ser maior que data final"
-                )
-
-            usuario = User.objects.filter(username=usuario).first()
-
-            service = PontoService()
-
-            pontos = service.ponto_list(
-                usuario.id,
-                data_inicial,
-                data_final,
-            )
-
-            pontos_sumarizados = []
-            horas_trabalhadas = timedelta(0)
-            total_horas_trabalhadas = timedelta(0)  # total hours worked across all days
-
-            horas_obrigatorias = timedelta(hours=8)  # hours worked per day
-            total_credor = timedelta(0)
-            total_devedor = timedelta(0)
-
-            # data_inicial is date
-            dia = data_inicial
-
-            atrasado = "Não"
-
-            for ponto in pontos:
-                if ponto.primeiro:
-                    if (
-                        ponto.entrada.time()
-                        > datetime.strptime("09:15:00", "%H:%M:%S").time()
-                    ):
-                        atrasado = "Sim"
-                    else:
-                        atrasado = "Não"
-                else:
-                    atrasado = "Não"
-
-                if ponto.entrada.weekday() >= 5:  # it's a weekend
-                    credor = horas_trabalhadas
-                    devedor = timedelta(0)
-                else:
-                    credor_devedor = horas_obrigatorias - horas_trabalhadas
-
-                    if credor_devedor > timedelta(0):
-                        credor = timedelta(0)
-                        devedor = abs(credor_devedor)
-                    else:
-                        credor = abs(credor_devedor)
-                        devedor = timedelta(0)
-
-                # if the day has changed since the last time we added a sum for a day
-                if ponto.entrada.date() != dia:
-
-                    pontos_sumarizados.append(
-                        {
-                            "dia": dia,
-                            "horas_trabalhadas": horas_trabalhadas,
-                            "atrasado": atrasado,
-                            "credor": credor,
-                            "devedor": devedor,
-                            "usuario": usuario.id,
-                        }
-                    )
-                    total_horas_trabalhadas += horas_trabalhadas  # add the hours worked for the day to the total
-                    total_credor += credor
-                    total_devedor += devedor
-                    horas_trabalhadas = timedelta(0)
-                    dia = ponto.entrada.date()
-                horas_trabalhadas += ponto.difference
-
-            total_horas_trabalhadas += horas_trabalhadas
-            # add the hours worked for the last day to the total
-
-            context = {
-                "form": form,
-                "pontos": pontos,
-                "pontos_sumarizados": pontos_sumarizados,
-                "horas_trabalhadas": horas_trabalhadas,
-                "total_credor": total_credor,
-                "total_devedor": total_devedor,
-                "total_horas_trabalhadas": total_horas_trabalhadas,
-            }
-            return render(request, "apontamento/folha-ponto.html", context)
-    else:
-        form = FolhaPontoForm()
-        context = {
-            "form": form,
-            "pontos": "",
-            "pontos_sumarizados": "",
-            "horas_trabalhadas": "",
-            "total_credor": "",
-            "total_devedor": "",
-            "total_horas_trabalhadas": "",
-        }
-        return render(request, "apontamento/folha-ponto.html", context)
-
-
 class AppointmentListView(LoginRequiredMixin, ListView):
     """
     List all the appointments for a specific date.
@@ -471,6 +354,35 @@ def folha_ponto(request):
     return render(request, "apontamento/folha-ponto.html", context)
 
 
+def folha_ponto_sem_form(request, data_inicial, data_final, user_id):
+    """Retorna o total de horas trabalhadas em um intervalo de datas"""
+
+    usuario = User.objects.get(id=user_id)
+
+    if data_inicial > data_final:
+        messages.error(request, "Data inicial não pode ser maior que data final")
+
+    query = Ponto.objects.get_total_hours_by_day_by_user(
+        start=data_inicial, end=data_final, user=usuario
+    )
+
+    dict_total_credor_devedor = Ponto.objects.get_credor_devedor(
+        start=data_inicial, end=data_final, user=usuario
+    )
+
+    context = {
+        "query": query,
+        "total_trabalhado": Ponto.objects.total_range_days_time(
+            data_inicial, data_final, usuario
+        ),
+        "usuario": usuario,
+        "total_credor": dict_total_credor_devedor["total_credor"],
+        "total_devedor": dict_total_credor_devedor["total_devedor"],
+    }
+
+    return render(request, "apontamento/folha-ponto_sem_form.html", context)
+
+
 def historico_com_usuario(request):
     """Retorna o histórico de um usuário"""
     form = FolhaPontoForm(user=request.user)
@@ -498,6 +410,25 @@ def historico_com_usuario(request):
             ),
         }
     return render(request, "apontamento/historico_com_usuario.html", context)
+
+
+def historico_sem_form(request, data_inicial, data_final, user_id):
+    """Retorna o histórico de um usuário"""
+    if data_inicial > data_final:
+        messages.error(request, "Data inicial não pode ser maior que data final")
+
+    usuario = User.objects.get(id=user_id)
+
+    historico = Ponto.objects.for_range_days(data_inicial, data_final, user_id)
+
+    context = {
+        "usuario": usuario,
+        "historico": historico,
+        "total_trabalhado": Ponto.objects.total_range_days_time(
+            data_inicial, data_final, user_id
+        ),
+    }
+    return render(request, "apontamento/historico_sem_form.html", context)
 
 
 def over_10_hours_list(request):

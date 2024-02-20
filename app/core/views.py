@@ -28,6 +28,7 @@ def home(request):
                 {
                     "usuario": user,
                     "last_interaction": last_interaction,
+                    "day": last_interaction.date(),
                     "cliente": cliente,
                     "tarefa": tarefa,
                     "total_dia": total_dia,
