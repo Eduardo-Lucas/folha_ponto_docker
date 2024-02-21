@@ -57,9 +57,11 @@
           <li class="nav-item">
             <a href="{% url 'apontamento:ajuste_ponto' %}" class="btn btn-outline">Ajuste</a>
           </li>
+          {% if request.user.is_authenticated %}
           <li class="nav-item">
             <a href="{% url 'apontamento:historico_sem_form' request.user.id %}" class="btn btn-outline">Histórico</a>
           </li>
+          {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
