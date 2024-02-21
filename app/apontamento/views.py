@@ -28,6 +28,7 @@ def apontamento_list(request):
     """Listagem de pontos"""
     return render(request, "apontamento/apontamento-list.html", {})
 
+
 class AppointmentListView(LoginRequiredMixin, ListView):
     """
     List all the appointments for a specific date.
@@ -304,6 +305,7 @@ class HistoricoListView(LoginRequiredMixin, ListView):
     context_object_name = "ponto"
 
 
+@login_required
 def fecha_tarefa(request, pk):
     """Fecha a tarefa do último ponto do usuário"""
 
@@ -315,6 +317,7 @@ def fecha_tarefa(request, pk):
     return redirect("apontamento:appointment_create")
 
 
+@login_required
 def folha_ponto(request):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
     form = FolhaPontoForm(user=request.user)
@@ -324,6 +327,7 @@ def folha_ponto(request):
     if request.method == "POST":
         form = FolhaPontoForm(request.POST)
         if form.is_valid():
+
             data_inicial = form.cleaned_data["entrada"]
             data_final = form.cleaned_data["saida"]
             usuario = form.cleaned_data["usuario"]
@@ -354,6 +358,7 @@ def folha_ponto(request):
     return render(request, "apontamento/folha-ponto.html", context)
 
 
+@login_required
 def folha_ponto_sem_form(request, data_inicial, data_final, user_id):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
 
@@ -383,6 +388,7 @@ def folha_ponto_sem_form(request, data_inicial, data_final, user_id):
     return render(request, "apontamento/folha-ponto_sem_form.html", context)
 
 
+@login_required
 def historico_com_usuario(request):
     """Retorna o histórico de um usuário"""
     form = FolhaPontoForm(user=request.user)
@@ -412,6 +418,7 @@ def historico_com_usuario(request):
     return render(request, "apontamento/historico_com_usuario.html", context)
 
 
+@login_required
 def historico_sem_form(request, user_id):
     """Retorna o histórico de um usuário"""
 
@@ -436,6 +443,7 @@ def historico_sem_form(request, user_id):
     return render(request, "apontamento/historico_sem_form.html", context)
 
 
+@login_required
 def over_10_hours_list(request):
     """Listagem de pontos com mais de 10 horas"""
     pontos = Ponto.objects.get_over_10_hours_list()
@@ -445,6 +453,7 @@ def over_10_hours_list(request):
     return render(request, "apontamento/over_10_hours_list.html", context)
 
 
+@login_required
 def get_30_min_break_list(request):
     """Listagem de pontos sem intervalo de 30 minutos"""
     pontos = Ponto.objects.get_30_min_break_list()
@@ -504,3 +513,13 @@ def ajuste_ponto(request):
             messages.error(request, form.errors.as_text())
 
     return render(request, "apontamento/ajuste_ponto.html", context)
+
+
+@login_required
+def open_task_list(request):
+    """Listagem de tarefas abertas"""
+    pontos = Ponto.objects.get_open_task_list()
+    context = {
+        "pontos": pontos,
+    }
+    return render(request, "apontamento/open_task_list.html", context)

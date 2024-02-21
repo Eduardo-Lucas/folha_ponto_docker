@@ -72,6 +72,9 @@
               <li>
                 <a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">30-min-break list</a>
               </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Open task list</a>
+              </li>
 
             </ul>
           </li>
@@ -115,9 +118,9 @@
   <div class="container">
     {% if messages %}
 
-      {% for message in messages %}
-      <p class="{{ message.tags }}">{{ message }}</p>
-      {% endfor %}
+    {% for message in messages %}
+    <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
 
     {% endif %}
 

@@ -118,11 +118,30 @@ class PontoManager(models.Manager):
         end = datetime.combine(end, time.max)
         return self.filter(entrada__range=(start, end), usuario=user)
 
+    def get_open_task_list(self):
+        """
+        Returns a dictionary with all open Ponto objects for all users.
+        """
+        open_task_list = []
+        users = User.objects.all()
+        for user in users:
+            ponto = self.get_open_pontos(user).last()
+            if ponto:
+                open_task_list.append(
+                    {
+                        "user_id": user.id,
+                        "username": user.username,
+                        "ponto_id": ponto.id,
+                        "entrada": ponto.entrada,
+                    }
+                )
+        return open_task_list
+
     def get_open_pontos(self, user=None):
         """
         Returns all open Ponto objects for a given user.
         """
-        return self.filter(usuario=user, entrada__year__gte=2024, fechado=False)
+        return self.filter(usuario=user, entrada__year__gte=2024, saida=None)
 
     def get_closed_pontos(self, user=None):
         """
@@ -172,6 +191,11 @@ class PontoManager(models.Manager):
         total_hours = []
         credor = timedelta(hours=0)
         devedor = timedelta(hours=0)
+
+        # turn start in datetime object
+        start = datetime.strptime(start, "%Y-%m-%d")
+        # turn end in datetime object
+        end = datetime.strptime(end, "%Y-%m-%d")
 
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
@@ -235,6 +259,12 @@ class PontoManager(models.Manager):
         """return a dictionary with total_credor in hours and total_devedor in hours for a given range of days and user"""
         total_credor = timedelta(hours=0)
         total_devedor = timedelta(hours=0)
+
+        # turn start in datetime object
+        start = datetime.strptime(start, "%Y-%m-%d")
+        # turn end in datetime object
+        end = datetime.strptime(end, "%Y-%m-%d")
+        
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
             horas_trabalhadas = self.total_day_time(day, user)
