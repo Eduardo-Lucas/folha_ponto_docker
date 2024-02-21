@@ -328,8 +328,8 @@ def folha_ponto(request):
         form = FolhaPontoForm(request.POST)
         if form.is_valid():
 
-            data_inicial = form.cleaned_data["entrada"]
-            data_final = form.cleaned_data["saida"]
+            data_inicial = str(form.cleaned_data["entrada"])
+            data_final = str(form.cleaned_data["saida"])
             usuario = form.cleaned_data["usuario"]
 
             if data_inicial > data_final:
