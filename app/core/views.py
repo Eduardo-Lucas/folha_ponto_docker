@@ -1,6 +1,8 @@
 from apontamento.models import Ponto
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
@@ -40,7 +42,7 @@ def home(request):
 
     # Carrega as datas iniciais e finais na sessão
     carrega_datas_session(request)
-    
+
     return render(request, "core/home.html", {"pontos": pontos})
 
 
@@ -58,6 +60,11 @@ def carrega_datas_session(request, user_id=None):
 
     if user_id is None:
         # Set user_id
-        request.session["user_id"] = User.objects.get(username=request.user).id
+        try:
+            user = User.objects.get(username=request.user)
+            request.session["user_id"] = user.id
+        except ObjectDoesNotExist:  # Replace DoesNotExist with ObjectDoesNotExist
+            request.session["user_id"] = None
+
     else:
         request.session["user_id"] = user_id
