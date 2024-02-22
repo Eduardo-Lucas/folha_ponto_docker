@@ -1,9 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any
 
 from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
-from apontamento.services import PontoService
 from cliente.models import Cliente
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -419,6 +418,36 @@ def historico_com_usuario(request):
 
 
 @login_required
+def historico_com_datas(request, data_inicial, data_final, user_id):
+    """Retorna o histórico de um usuário"""
+
+    # Access variables from session
+    data_inicial = (
+        request.session.get("data_inicial") if data_inicial is None else data_inicial
+    )
+    data_final = request.session.get("data_final") if data_final is None else data_final
+
+    if data_inicial > data_final:
+        messages.error(request, "Data inicial não pode ser maior que data final")
+
+    usuario = User.objects.get(id=user_id)
+
+    data_inicial = data_inicial.strftime("%Y-%m-%d")
+    data_final = data_final.strftime("%Y-%m-%d")
+
+    historico = Ponto.objects.for_range_days(data_inicial, data_final, user_id)
+
+    context = {
+        "usuario": usuario,
+        "historico": historico,
+        "total_trabalhado": Ponto.objects.total_range_days_time(
+            data_inicial, data_final, user_id
+        ),
+    }
+    return render(request, "apontamento/historico_sem_form.html", context)
+
+
+@login_required
 def historico_sem_form(request, user_id):
     """Retorna o histórico de um usuário"""
 
@@ -452,6 +481,18 @@ def over_10_hours_list(request):
     }
     return render(request, "apontamento/over_10_hours_list.html", context)
 
+
+@login_required
+def over_10_hour_validation(request, day, user_id):
+    """Validação de ponto com mais de 10 horas"""
+    # filter ponto by the day and user_id and update over_10_hours field to True
+    pontos = Ponto.objects.filter(entrada__date=day, saida__date=day, usuario=user_id)
+    if pontos:
+        for ponto in pontos:
+            ponto.over_10_hours_authorization = True
+            ponto.save()
+        messages.info(request, "Pontos com mais de 10 horas validados")
+    return redirect("apontamento:over_10_hours_list")
 
 @login_required
 def get_30_min_break_list(request):

@@ -264,7 +264,8 @@ class PontoManager(models.Manager):
         start = datetime.strptime(start, "%Y-%m-%d")
         # turn end in datetime object
         end = datetime.strptime(end, "%Y-%m-%d")
-        
+
+
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
             horas_trabalhadas = self.total_day_time(day, user)
@@ -370,7 +371,8 @@ class Ponto(models.Model):
         default=False, verbose_name="Atraso Autorizado"
     )
     over_10_hours_authorization = models.BooleanField(
-        default=False, verbose_name="Autorização de +10 horas de jornada"
+        default=False, verbose_name="Autorização de +10 horas de jornada",
+        db_index=True
     )
 
     objects = PontoManager()

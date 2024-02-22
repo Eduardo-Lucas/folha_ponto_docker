@@ -22,6 +22,7 @@ class PontoAdmin(ImportExportModelAdmin):
             }
         ),
     )
+    search_fields = ["usuario__username"]
 
 class TipoReceitaResource(resources.ModelResource):
     """Resource class for TipoReceita."""

@@ -16,9 +16,11 @@ from .views import (
     folha_ponto,
     folha_ponto_sem_form,
     get_30_min_break_list,
+    historico_com_datas,
     historico_com_usuario,
     historico_sem_form,
     open_task_list,
+    over_10_hour_validation,
     over_10_hours_list,
 )
 
@@ -64,14 +66,23 @@ urlpatterns = [
     path("historico/", HistoricoListView.as_view(), name="historico"),
     path("historico_com_usuario/", historico_com_usuario, name="historico_com_usuario"),
     path(
+        "historico_com_datas/<date:data_inicial>/<date:data_final>/<int:user_id>",
+        historico_com_datas,
+        name="historico_com_datas",
+    ),
+    path(
         "historico_sem_form/<int:user_id>",
         historico_sem_form,
         name="historico_sem_form",
     ),
-    path("validate_over_10_hours/", over_10_hours_list, name="validate_over_10_hours"),
     path("ajuste_ponto/", ajuste_ponto, name="ajuste_ponto"),
     # Reports
     path("get_30_min_break_list", get_30_min_break_list, name="get_30_min_break_list"),
     path("over_10_hours_list/", over_10_hours_list, name="over_10_hours_list"),
+    path(
+        "over_10_hour_validation/<date:day>/<int:user_id>",
+        over_10_hour_validation,
+        name="over_10_hour_validation",
+    ),
     path("open_task_list", open_task_list, name="open_task_list"),
 ]
