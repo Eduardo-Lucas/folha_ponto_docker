@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home(request):
     """Home Page"""
-    users = User.objects.all().order_by("username")
+    users = User.objects.filter(is_active=True)
     pontos = []
     for user in users:
         ponto = Ponto.objects.filter(usuario=user).last()
