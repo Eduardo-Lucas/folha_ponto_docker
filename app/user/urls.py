@@ -1,7 +1,15 @@
 """Module providing a function pathing python version."""
-from django.urls import path
+
 from django.contrib.auth import views as auth_views
-from .views import PasswordsChangeView, sign_in, logout_view, success_password
+from django.urls import path
+
+from .views import (
+    PasswordsChangeView,
+    ProfileUpdateView,
+    logout_view,
+    sign_in,
+    success_password,
+)
 
 app_name = "user"
 
@@ -42,4 +50,5 @@ urlpatterns = [
         name="password",
     ),
     path("success_password/", success_password, name="success_password"),
+    path("profile/<int:user_id>", ProfileUpdateView.as_view(), name="profile"),
 ]

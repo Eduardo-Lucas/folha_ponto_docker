@@ -5,9 +5,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.views.generic import UpdateView
 from apontamento.models import Ponto
 from apontamento.views import fecha_tarefa
-from .forms import LoginForm
+from .forms import LoginForm, UserProfileform
+from .models import UserProfile
+
 
 def sign_in(request):
     """View for signing in a user."""
@@ -64,3 +69,20 @@ def verificar_tarefas_abertas(request):
             fecha_tarefa(request, task.id)
         return True
     return False
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """View for a user's profile."""
+
+    template_name = "registration/profile.html"
+    model = UserProfile
+    form_class = UserProfileform
+
+    def get_object(self, queryset=None):
+        """Get the user's profile."""
+        return get_object_or_404(UserProfile, user=self.request.user)
+
+    def form_valid(self, form):
+        """Save the user's profile."""
+        form.instance.user = self.request.user
+        return super().form_valid(form)

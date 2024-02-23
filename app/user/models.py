@@ -1,21 +1,70 @@
-from django.db import models
+from apontamento.models import TipoReceita
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    situacaoentidade = models.IntegerField()
-    contato_id = models.IntegerField()
-    bateponto = models.BooleanField()
-    cargahoraria = models.TimeField(default="00:00:00")
-    departamento = models.IntegerField(default=0)
-    semintervaloalmoco = models.BooleanField(default=False)
+    """User Profile Model"""
+
+    sem_intervalo_almoco_choices = (
+        ("Não", "Não"),
+        ("Sim", "Sim"),
+    )
+    bate_ponto_choices = (
+        ("Não", "Não"),
+        ("Sim", "Sim"),
+    )
+    almoco_choices = (
+        ("TODO DIA", "Todo Dia"),
+        ("NÃO ALMOÇA", "Não Almoça"),
+        ("EVENTUAL", "Eventual"),
+    )
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="userprofile"
+    )
+    situacaoentidade = models.IntegerField(default=0, help_text="Situação Entidade")
+    contato_id = models.IntegerField(default=0, help_text="Informe o Contato")
+    bateponto = models.CharField(
+        bate_ponto_choices,
+        default="Sim",
+        max_length=3,
+        help_text="Marque se bate ponto.",
+    )
+    cargahoraria = models.IntegerField(default=8)
+    departamento = models.IntegerField(default=0, help_text="Informe seu Departamento")
+    semintervaloalmoco = models.CharField(
+        sem_intervalo_almoco_choices,
+        default="Sim",
+        max_length=10,
+        help_text="Marque se não tiver intervalo para almoço.",
+    )
+    nome = models.CharField(
+        max_length=100, default="", db_index=True, help_text="Informe seu Nome Completo"
+    )
+    email = models.EmailField(
+        max_length=100, default="", db_index=True, help_text="Informe seu E-mail"
+    )
+    tipo_receita = models.ForeignKey(
+        TipoReceita,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        help_text="Escolha o Tipo de Receita mais utilizado.",
+    )
+    almoco = models.CharField(
+        almoco_choices,
+        max_length=10,
+        default="Não Almoça",
+        help_text="Informe rotina do almoço",
+    )
 
     def __str__(self) -> str:
-        return f"{self.user.username} - Bate ponto: {self.bateponto}, carga horária: {self.cargahoraria}"
+        return f"{self.user}"
 
     class Meta:
+        """User Meta Class"""
+
         ordering = ("user",)
-        db_table = "userprofiles"
-        verbose_name = "UserProfile"
-        verbose_name_plural = "UserProfiles"
+        db_table = "user_profiles"
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
