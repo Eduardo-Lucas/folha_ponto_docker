@@ -3,6 +3,26 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Departamento(models.Model):
+    """Departamento Model"""
+
+    id = models.AutoField(primary_key=True)
+    nome = models.CharField(
+        max_length=100, default="", db_index=True, help_text="Nome do Departamento"
+    )
+
+    def __str__(self) -> str:
+        return f"{self.nome}"
+
+    class Meta:
+        """Departamento Meta Class"""
+
+        ordering = ("nome",)
+        db_table = "departamentos"
+        verbose_name = "Departamento"
+        verbose_name_plural = "Departamentos"
+
+
 class UserProfile(models.Model):
     """User Profile Model"""
 
