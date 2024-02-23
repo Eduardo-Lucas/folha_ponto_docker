@@ -11,3 +11,4 @@ class Command(BaseCommand):
         for user in users:
             # create a user profile for each user
             UserProfile.objects.create(user=user)
+        print("User Profiles have been successfully created.")
