@@ -3,6 +3,7 @@
 python manage.py collectstatic --no-input
 python manage.py makemigrations
 python manage.py migrate
+python manage.py createdepartmento # Departamento
 python manage.py createuser # normal user
 python manage.py createprofile # Profile
 python manage.py createsu # super user
