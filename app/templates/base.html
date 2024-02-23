@@ -87,7 +87,7 @@
               {{ request.user.username|capfirst }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+              <li><a class="dropdown-item" href=" # ">Meu Perfil</a></li>
               <li><a class="dropdown-item" href="{% url 'user:password' %}">Troca Senha</a></li>
               {% if request.user.is_staff %}
               <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
