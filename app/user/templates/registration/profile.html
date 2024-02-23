@@ -8,6 +8,9 @@
     <h3 class="text-info">Perfil de {{user|capfirst}}</h3>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <div class="row d-none"> <!-- this is a hidden field -->
+            <div class="col-md-6">{{form.user|as_crispy_field}}</div>
+        </div>
         <div class="row">
             <div class="form-group"></div>
             <div class="col-md-6">{{form.nome|as_crispy_field}}</div>

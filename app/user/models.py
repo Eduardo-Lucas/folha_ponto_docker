@@ -51,7 +51,7 @@ class UserProfile(models.Model):
         help_text="Marque se bate ponto.",
     )
     cargahoraria = models.IntegerField(default=8)
-    departamento = models.IntegerField(default=0, help_text="Informe seu Departamento")
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1)
     semintervaloalmoco = models.CharField(
         sem_intervalo_almoco_choices,
         default="Sim",

@@ -1,16 +1,17 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
-from django.urls import reverse_lazy  # type: ignore
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
-from django.views.generic import UpdateView
 from apontamento.models import Ponto
 from apontamento.views import fecha_tarefa
-from .forms import LoginForm, UserProfileform
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordChangeView
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy  # type: ignore
+from django.views.generic.edit import UpdateView
+from user.forms import LoginForm, UserProfileform
+
 from .models import UserProfile
 
 
@@ -75,14 +76,22 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     """View for a user's profile."""
 
     template_name = "registration/profile.html"
-    model = UserProfile
+    model = User
     form_class = UserProfileform
+    success_url = reverse_lazy("core:home")
 
     def get_object(self, queryset=None):
         """Get the user's profile."""
         return get_object_or_404(UserProfile, user=self.request.user)
 
+
     def form_valid(self, form):
         """Save the user's profile."""
+        # check carga horaria between 1 and 8 hours
+        carga_horaria = form.cleaned_data["cargahoraria"]
+        if carga_horaria < 1 or carga_horaria > 8:
+            messages.error(self.request, "Carga horária deve ser entre 1 e 8 horas.")
+            return self.form_invalid(form)
+        messages.success(self.request, "Seu perfil foi atualizado com sucesso.")
         form.instance.user = self.request.user
         return super().form_valid(form)

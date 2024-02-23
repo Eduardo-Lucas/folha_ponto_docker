@@ -50,5 +50,5 @@ urlpatterns = [
         name="password",
     ),
     path("success_password/", success_password, name="success_password"),
-    path("profile/<int:user_id>", ProfileUpdateView.as_view(), name="profile"),
+    path("profile/", ProfileUpdateView.as_view(), name="profile"),
 ]
