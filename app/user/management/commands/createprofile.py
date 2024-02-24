@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "Create a user profile for each user record"
 
     def handle(self, *args, **options):
-        users = User.objects.all()
+        users = User.objects.filter(is_active=True)
         for user in users:
             # create a user profile for each user
             UserProfile.objects.create(user=user)
