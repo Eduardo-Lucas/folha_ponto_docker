@@ -38,7 +38,7 @@ class FolhaPontoForm(forms.Form):
     entrada = forms.DateField(widget=DateInput, label="Início", required=True)
     saida = forms.DateField(widget=DateInput, label="Fim", required=True)
     usuario = forms.ModelChoiceField(
-        queryset=User.objects.all().order_by("username"),
+        queryset=User.objects.filter(is_active=True).order_by("username"),
         required=True,
     )
 
