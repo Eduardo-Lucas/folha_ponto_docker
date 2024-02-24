@@ -42,27 +42,31 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="userprofile"
     )
-    situacaoentidade = models.IntegerField(default=0, help_text="Situação Entidade")
-    contato_id = models.IntegerField(default=0, help_text="Informe o Contato")
+    situacaoentidade = models.IntegerField(default=0, help_text="Situação Entidade", null=True, blank=True)
+    contato_id = models.IntegerField(default=0, help_text="Informe o Contato", null=True, blank=True)
     bateponto = models.CharField(
         bate_ponto_choices,
         default="Sim",
         max_length=3,
         help_text="Marque se bate ponto.",
+        null=True,
+        blank=True,
     )
-    cargahoraria = models.IntegerField(default=8)
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1)
+    cargahoraria = models.IntegerField(default=8, null=True, blank=True)
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1, null=True, blank=True)
     semintervaloalmoco = models.CharField(
         sem_intervalo_almoco_choices,
         default="Sim",
         max_length=10,
         help_text="Marque se não tiver intervalo para almoço.",
+        null=True,
+        blank=True,
     )
     nome = models.CharField(
-        max_length=100, default="", db_index=True, help_text="Informe seu Nome Completo"
+        max_length=100, default="", db_index=True, help_text="Informe seu Nome Completo", null=True, blank=True
     )
     email = models.EmailField(
-        max_length=100, default="", db_index=True, help_text="Informe seu E-mail"
+        max_length=100, default="", db_index=True, help_text="Informe seu E-mail", null=True, blank=True
     )
     tipo_receita = models.ForeignKey(
         TipoReceita,
@@ -70,12 +74,16 @@ class UserProfile(models.Model):
         null=True,
         blank=True,
         help_text="Escolha o Tipo de Receita mais utilizado.",
+        null=True,
+        blank=True
     )
     almoco = models.CharField(
         almoco_choices,
         max_length=10,
         default="Não Almoça",
         help_text="Informe rotina do almoço",
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:

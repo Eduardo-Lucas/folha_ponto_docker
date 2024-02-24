@@ -78,12 +78,11 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "registration/profile.html"
     model = User
     form_class = UserProfileform
-    success_url = reverse_lazy("core:home")
+    success_url = reverse_lazy("user:profile")
 
     def get_object(self, queryset=None):
         """Get the user's profile."""
         return get_object_or_404(UserProfile, user=self.request.user)
-
 
     def form_valid(self, form):
         """Save the user's profile."""
