@@ -74,8 +74,6 @@ class UserProfile(models.Model):
         null=True,
         blank=True,
         help_text="Escolha o Tipo de Receita mais utilizado.",
-        null=True,
-        blank=True
     )
     almoco = models.CharField(
         almoco_choices,
