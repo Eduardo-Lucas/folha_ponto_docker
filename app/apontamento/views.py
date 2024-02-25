@@ -68,10 +68,17 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     form_class = AppointmentCreateForm
     template_name = "apontamento/appointment_form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({"user": self.request.user})
+        return kwargs
+
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["usuario"] = self.request.user
         context["dia"] = datetime.now().date()
+        
         context["fechar_tarefa"] = (
             True
             if Ponto.objects.filter(

@@ -1,5 +1,8 @@
+"""
+User Forms
+"""
 from django import forms
-
+from apontamento.models import TipoReceita
 from .models import UserProfile
 
 
@@ -12,9 +15,9 @@ class LoginForm(forms.Form):
 
 class UserProfileform(forms.ModelForm):
     """User Profile Form"""
-
-    situacaoentidade = forms.CharField(label="Situação Entidade")
-    contato_id = forms.CharField(label="Contato")
+    # Bruno pediu para comentar esses campos
+    # situacaoentidade = forms.CharField(label="Situação Entidade")
+    # contato_id = forms.CharField(label="Contato")
     bateponto = forms.CharField(
         label="Bate Ponto",
         required=False,
@@ -38,8 +41,8 @@ class UserProfileform(forms.ModelForm):
         model = UserProfile
         fields = (
             "user",
-            "situacaoentidade",
-            "contato_id",
+            # "situacaoentidade",
+            # "contato_id",
             "bateponto",
             "cargahoraria",
             "departamento",
@@ -49,3 +52,7 @@ class UserProfileform(forms.ModelForm):
             "tipo_receita",
             "almoco",
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()

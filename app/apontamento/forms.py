@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from user.models import UserProfile
 from .models import Ponto, TipoReceita
 
 
@@ -133,11 +134,17 @@ class AppointmentCreateForm(forms.ModelForm):
             "cliente",
         )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
         # tipo_receita
         self.fields["tipo_receita"].required = True
         self.fields["tipo_receita"].initial = 1
+        # get the user profile
+        user_profile = UserProfile.objects.get(user=self.user.id)
+        self.fields["tipo_receita"].initial = TipoReceita.objects.get(
+            id=user_profile.tipo_receita_id
+        )
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()
         # cliente
         self.fields["cliente"].required = True
