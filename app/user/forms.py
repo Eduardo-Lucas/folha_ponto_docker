@@ -28,7 +28,9 @@ class UserProfileform(forms.ModelForm):
         required=False,
         widget=forms.Select(choices=UserProfile.sem_intervalo_almoco_choices),
     )
-    cargahoraria = forms.IntegerField(label="Carga Horária")
+    cargahoraria = forms.IntegerField(
+        label="Carga Horária", help_text="Entre 4 e 8 horas. Só Admin altera."
+    )
     almoco = forms.CharField(
         label="Almoço",
         required=False,
@@ -55,4 +57,5 @@ class UserProfileform(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["cargahoraria"].widget.attrs["readonly"] = True
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()
