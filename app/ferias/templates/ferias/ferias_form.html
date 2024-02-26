@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container border border-dark">
+    <h3 class="text-info">Cadastro de Férias</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row"> <!-- this is a hidden field -->
+            <div class="col-md-6">{{form.user|as_crispy_field}}</div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                {{ form.periodo|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+                {{ form.data_inicial|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+                {{ form.data_final|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+                {{ form.cumpriu|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row border-top border-dark">
+            <div class="col-md-12 mt-1 mb-1 text-center">
+                <button type="submit" class="btn btn-success btn-block btn-lg">
+                    <i class="fas fa-database"></i>
+                    Gravar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

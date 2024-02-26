@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Confirmação</h1>
+<div class="container">
+    <div class="row">
+        <p>Tem certeza que quer apagar o registro de Férias: "{{ object.data_inicial|date:'d/m/Y' }}" -
+            "{{ object.data_final|date:'d/m/Y' }}"
+            do perído
+            "{{object.periodo }}"?</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, apaga</button>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'ferias:ferias_list' %}" class="btn btn-primary">Não,
+                volta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

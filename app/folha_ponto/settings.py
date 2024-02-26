@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "apontamento",
     "cliente",
     "contato",
+    "ferias",
     "feriado",
     "user",
     # third party libraries

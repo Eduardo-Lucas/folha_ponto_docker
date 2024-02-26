@@ -88,6 +88,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{% url 'user:profile' %}">Meu Perfil</a></li>
+              <li><a class="dropdown-item" href="{% url 'ferias:ferias_list' %}">Férias</a></li>
               <li><a class="dropdown-item" href="{% url 'user:password' %}">Troca Senha</a></li>
               {% if request.user.is_staff %}
               <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
