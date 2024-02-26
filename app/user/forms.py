@@ -21,6 +21,7 @@ class UserProfileform(forms.ModelForm):
     bateponto = forms.CharField(
         label="Bate Ponto",
         required=False,
+        help_text="Só ADM altera.",
         widget=forms.Select(choices=UserProfile.bate_ponto_choices),
     )
     semintervaloalmoco = forms.CharField(
@@ -29,7 +30,7 @@ class UserProfileform(forms.ModelForm):
         widget=forms.Select(choices=UserProfile.sem_intervalo_almoco_choices),
     )
     cargahoraria = forms.IntegerField(
-        label="Carga Horária", help_text="Entre 4 e 8 horas. Só Admin altera."
+        label="Carga Horária", help_text="Entre 4 e 8 horas. Só ADM altera."
     )
     almoco = forms.CharField(
         label="Almoço",
@@ -57,5 +58,11 @@ class UserProfileform(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # bate ponto disabled
+        self.fields["bateponto"].widget.attrs["disabled"] = "disabled"
+        self.fields["bateponto"].widget.attrs["readonly"] = True
+
+        # carga horaria disabled
+        self.fields["cargahoraria"].widget.attrs["disabled"] = "disabled"
         self.fields["cargahoraria"].widget.attrs["readonly"] = True
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()
