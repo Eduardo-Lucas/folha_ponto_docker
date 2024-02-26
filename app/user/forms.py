@@ -63,6 +63,6 @@ class UserProfileform(forms.ModelForm):
         self.fields["bateponto"].widget.attrs["readonly"] = True
 
         # carga horaria disabled
-        self.fields["cargahoraria"].widget.attrs["disabled"] = "disabled"
+        # self.fields["cargahoraria"].widget.attrs["disabled"] = "disabled"
         self.fields["cargahoraria"].widget.attrs["readonly"] = True
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()

@@ -49,3 +49,5 @@ id,username,password,situacaoentidade,contato_id,bateponto,cargahoraria,departam
 62,Aryene,GMSk53T7hwqYq52,1,3844,True,08:00:00,0,False
 63,Labooptica-2,GMSk53T7hwqYq53,2,3855,False,00:00:00,1,False
 64,jair,GMSk53T7hwqYq54,1,3912,True,08:00:00,0,False
+65,marcelo,GMSk53T7hwqYq55,1,3912,True,08:00:00,0,False
+66,amanda,GMSk53T7hwqYq56,1,3912,True,08:00:00,0,False

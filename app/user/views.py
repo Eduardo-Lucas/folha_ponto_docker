@@ -29,7 +29,14 @@ def sign_in(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f"Hi {username.title()}, welcome back!")
+                # get nome from UserProfile
+                user_profile = UserProfile.objects.get(user=user)
+                if user_profile.nome is None:
+                    messages.warning(request, "Por favor, atualize seu perfil.")
+                else:
+                    messages.success(
+                        request, f"Olá {user_profile.nome}, seja bem-vindo de volta!"
+                    )
                 return redirect("core:home")
 
         # form is not valid or user is not authenticated
@@ -43,7 +50,7 @@ def logout_view(request):
     verificar_tarefas_abertas(request)
 
     logout(request)
-    messages.success(request, "You have been logged out.")
+    messages.success(request, "Você foi desconectado.")
     return redirect("user:login")
 
 
