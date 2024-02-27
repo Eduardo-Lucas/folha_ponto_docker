@@ -1,10 +1,11 @@
-from apontamento.models import Ponto
-from django.contrib.auth.models import User
 from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist  # Import ObjectDoesNotExist
 
-from django.shortcuts import render
+from apontamento.models import Ponto
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import render
+
 
 @login_required
 def home(request):
