@@ -1,4 +1,4 @@
-from apontamento.models import Ponto
+from apontamento.models import Ponto, TipoReceita
 from apontamento.views import fecha_tarefa
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -7,6 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy  # type: ignore
 from django.views.generic.edit import UpdateView
@@ -29,9 +30,15 @@ def sign_in(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                # get nome from UserProfile
-                user_profile = UserProfile.objects.get(user=user)
-                if user_profile.nome is None:
+                # get name from UserProfile
+                try:
+                    user_profile = UserProfile.objects.get(user=user)
+                except ObjectDoesNotExist:
+                    user_profile = UserProfile(user=user)
+                    user_profile.tipo_receita = TipoReceita.objects.get(id=1)
+                    user_profile.save()
+
+                if user_profile.nome is None or user_profile.nome == "":
                     messages.warning(request, "Por favor, atualize seu perfil.")
                 else:
                     messages.success(

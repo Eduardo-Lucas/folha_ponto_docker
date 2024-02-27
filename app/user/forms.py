@@ -1,8 +1,10 @@
 """
 User Forms
 """
-from django import forms
+
 from apontamento.models import TipoReceita
+from django import forms
+
 from .models import UserProfile
 
 
@@ -15,6 +17,7 @@ class LoginForm(forms.Form):
 
 class UserProfileform(forms.ModelForm):
     """User Profile Form"""
+
     # Bruno pediu para comentar esses campos
     # situacaoentidade = forms.CharField(label="Situação Entidade")
     # contato_id = forms.CharField(label="Contato")
@@ -65,4 +68,6 @@ class UserProfileform(forms.ModelForm):
         # carga horaria disabled
         # self.fields["cargahoraria"].widget.attrs["disabled"] = "disabled"
         self.fields["cargahoraria"].widget.attrs["readonly"] = True
+        # tipo_receita cannot be null or None
+        self.fields["tipo_receita"].required = True
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()
