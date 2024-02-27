@@ -46,6 +46,7 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             )
             return self.form_invalid(form)
 
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
