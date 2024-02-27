@@ -29,6 +29,12 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
     form_class = FeriasForm
     template_name = "ferias/ferias_form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super(FeriasCreateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
+
+
     def form_valid(self, form):
         """Se o formulário for válido, salva o objeto e redireciona para a URL de sucesso."""
         form.instance.user = self.request.user

@@ -1,6 +1,11 @@
-from django import forms
-from ferias.models import Ferias
+"""
+Module docstring describing the purpose of the module.
+"""
 
+from django import forms
+from django.contrib.auth.models import User
+
+from ferias.models import Ferias
 
 class DateInput(forms.DateInput):
     """DateInput."""
@@ -26,3 +31,10 @@ class FeriasForm(forms.ModelForm):
             "data_inicial": forms.DateInput(),
             "data_final": forms.DateInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(FeriasForm, self).__init__(*args, **kwargs)
+        self.fields["user"].initial = User.objects.get(
+            id=self.request.session.get("user_id")
+        )
