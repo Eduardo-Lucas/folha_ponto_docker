@@ -28,8 +28,8 @@ class FeriasForm(forms.ModelForm):
         model = Ferias
         fields = ("user", "periodo", "data_inicial", "data_final", "cumpriu")
         widgets = {
-            "data_inicial": forms.DateInput(),
-            "data_final": forms.DateInput(),
+            "data_inicial": DateInput(),
+            "data_final": DateInput(),
         }
 
     def __init__(self, *args, **kwargs):
