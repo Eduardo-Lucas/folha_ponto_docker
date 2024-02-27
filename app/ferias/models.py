@@ -29,6 +29,16 @@ class Ferias(models.Model):
             return "Sim"
         return "Não"
 
+    @property
+    def dias_corridos(self):
+        """Retorna a quantidade de dias corridos."""
+        return (self.data_final - self.data_inicial).days + 1
+
+    @property
+    def saldo_dias(self):
+        """Retorna o saldo de dias de férias."""
+        return 20 - self.dias_corridos
+
     class Meta:
         """Meta definition for Ferias."""
 

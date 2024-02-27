@@ -1,7 +1,7 @@
 """
  Cadastro pare registro de Férias
 """
-
+from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -45,10 +45,23 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             )
             return self.form_invalid(form)
 
-        if form.instance.user is None:
+        if (form.instance.data_final - form.instance.data_inicial) + timedelta(days=1) > timedelta(days=20):
+            # ferias can not be more than 20 days
             form.add_error(
-                None,
-                "Usuário não informado.",
+                "data_final",
+                "O período de férias não pode ser maior que 20 dias.",
+            )
+            return self.form_invalid(form)
+
+        # check if there is any other vacation in the same period
+        if Ferias.objects.filter(
+            user=self.request.user,
+            data_inicial__lte=form.instance.data_final,
+            data_final__gte=form.instance.data_inicial,
+        ).exists():
+            form.add_error(
+                "data_inicial",
+                "Já existe um registro de férias para este período.",
             )
             return self.form_invalid(form)
 
