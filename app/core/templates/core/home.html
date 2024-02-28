@@ -27,7 +27,8 @@
                         <td>{{ ponto.tarefa }}</td>
                         <td>{{ ponto.total_dia }}</td>
                         <td scope="row" class="text-center">
-                            <a href="{% url 'apontamento:historico_sem_form' ponto.usuario.id %}">
+                            <a
+                                href="{% url 'apontamento:historico_com_datas' data_inicial=dia.day data_final=dia.day user_id=dia.user.id %}">
                                 <i class="fas fa-eye" style="color:blue"></i>
                         </td>
                     </tr>
