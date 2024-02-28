@@ -217,10 +217,10 @@ class PontoManager(models.Manager):
             else:
                 carga_horaria = timedelta(hours=8)
 
-            if horas_trabalhadas > carga_horaria and feriado:
+            if horas_trabalhadas > carga_horaria:
                 credor = horas_trabalhadas - carga_horaria
                 devedor = timedelta(hours=0)
-            elif horas_trabalhadas <= carga_horaria and not feriado:
+            elif horas_trabalhadas <= carga_horaria:
                 credor = timedelta(hours=0)
                 devedor = carga_horaria - horas_trabalhadas
 
@@ -265,7 +265,6 @@ class PontoManager(models.Manager):
         # turn end in datetime object
         end = datetime.strptime(end, "%Y-%m-%d")
 
-
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
             horas_trabalhadas = self.total_day_time(day, user)
@@ -284,10 +283,10 @@ class PontoManager(models.Manager):
                 # if it is a regular day
                 carga_horaria = timedelta(hours=8)
 
-            if horas_trabalhadas > carga_horaria and feriado:
+            if horas_trabalhadas >= carga_horaria:
                 # if the user worked more than the regular hours
                 total_credor += horas_trabalhadas - carga_horaria
-            elif horas_trabalhadas < carga_horaria and not feriado:
+            elif horas_trabalhadas < carga_horaria:
                 # if the user worked less than the regular hours
                 total_devedor += carga_horaria - horas_trabalhadas
 
@@ -371,8 +370,7 @@ class Ponto(models.Model):
         default=False, verbose_name="Atraso Autorizado"
     )
     over_10_hours_authorization = models.BooleanField(
-        default=False, verbose_name="Autorização de +10 horas de jornada",
-        db_index=True
+        default=False, verbose_name="Autorização de +10 horas de jornada", db_index=True
     )
 
     objects = PontoManager()
