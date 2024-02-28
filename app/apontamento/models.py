@@ -215,7 +215,8 @@ class PontoManager(models.Manager):
             elif feriado:
                 carga_horaria = timedelta(hours=0)
             else:
-                carga_horaria = timedelta(hours=8)
+                user_carga_horaria = self.get_carga_horaria(user)
+                carga_horaria = timedelta(hours=user_carga_horaria)
 
             if horas_trabalhadas > carga_horaria:
                 credor = horas_trabalhadas - carga_horaria
@@ -280,8 +281,8 @@ class PontoManager(models.Manager):
                 # if it is a holiday
                 carga_horaria = timedelta(hours=0)
             else:
-                # if it is a regular day
-                carga_horaria = timedelta(hours=8)
+                user_carga_horaria = self.get_carga_horaria(user)
+                carga_horaria = timedelta(hours=user_carga_horaria)
 
             if horas_trabalhadas > carga_horaria:
                 # if the user worked more than the regular hours
@@ -345,6 +346,10 @@ class PontoManager(models.Manager):
                             }
                         )
         return break_list
+
+    def get_carga_horaria(self, user=None):
+        """get UserProfile  carga horaria"""
+        return User.objects.get(username=user).userprofile.cargahoraria
 
 
 class Ponto(models.Model):
