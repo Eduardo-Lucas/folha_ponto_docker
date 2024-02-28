@@ -27,10 +27,10 @@ class FeriasForm(forms.ModelForm):
 
         model = Ferias
         fields = ("user", "periodo", "data_inicial", "data_final", "cumpriu")
-        widgets = {
-            "data_inicial": DateInput(),
-            "data_final": DateInput(),
-        }
+        # widgets = {
+        #     "data_inicial": DateInput(),
+        #     "data_final": DateInput(),
+        # }
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
