@@ -1,56 +1,51 @@
-id,password,last_login,is_superuser,groups,user_permissions,username,first_name,last_name,email,is_staff,is_active,date_joined
-70,pbkdf2_sha256$600000$c3aadmgJThyPxYV2Y7cwBx$87UC7nNCg1C7NQSxShQE9zwhoPWXdaMVyC9EJAPovtA=,2024-02-27 21:10:08,1,,,eduardo,,,eduardolucas40@gmail.com,1,1,2024-02-14 19:21:49
-68,pbkdf2_sha256$600000$6klelawZNaW3TRypJvqNqm$vNPYsq7TM58XzbJELtzy/oWIGrZONwF6G/eWqHNeZHc=,2024-02-27 17:16:44,0,,,Ary,,,,0,1,2024-02-27 16:58:18
-67,pbkdf2_sha256$600000$b4AimmzUZpqXPZw9lIbIBT$Zkh2yNmroR9WkurJqS8QsFUa0PtLf+RpYZMpwaGDRR4=,2024-02-27 10:33:13,0,,,taynara,,,,0,1,2024-02-27 10:12:58
-66,pbkdf2_sha256$600000$TSTwkWLLfTeUqFZBrEbGmO$9tQbFkwTGJZKWr8bIKdY9y+spi8u3VeWq4fvlt0eIFE=,2024-02-27 10:12:23,0,,,amanda,,,,0,1,2024-02-26 21:24:45
-65,pbkdf2_sha256$600000$cRtEeEMfnR3QCtvxfcbIay$DTPzihweDoOz3ZFHAYz8pWcpYzU+kA84auJNuHm5cbk=,,0,,,marcelo,,,,0,1,2024-02-26 21:24:45
-64,pbkdf2_sha256$600000$kttgSOrZZQq0Nlkyc0F1BH$ZsxSxcIS7FTKiV8NzwAZbtXsbv3L0oBfCMv6nz7Ev80=,2024-02-27 11:01:58,0,,,jair,,,,0,1,2024-02-14 19:21:25
-63,pbkdf2_sha256$600000$6fdnCdSmG6gKcr1fyAo5cp$BHN9g3vkbd0LYX1zG64hBxSqZUgfdzI/AASjn//SZq8=,,0,,,Labooptica-2,,,,0,0,2024-02-14 19:21:24
-62,pbkdf2_sha256$600000$2D1Ekfryk7ZIJJFMoJhyiv$pEWxoIvnRbsHgrcf6VWJ8/N5v7v4hQ0s1enJZ91H+nA=,,0,,,Aryene,,,,0,1,2024-02-14 19:21:22
-61,pbkdf2_sha256$600000$L7GWeaArLjXnGjXZxCeiF9$n6IP0aLjObZHKWi03TYk/dl4gksfb+e5YaRQWQ4nuVM=,2024-02-27 14:05:52,0,,,lydia,,,,0,1,2024-02-14 19:21:21
-60,pbkdf2_sha256$600000$yIu0CRACqi5zrHQ9riPeUu$2J4UAh5s/9bF6s1rc3YHXiWcJo2nGiFFJ0w8A+CHbzM=,,0,,,Labooptica,,,,0,0,2024-02-14 19:21:20
-59,pbkdf2_sha256$600000$x9pezq8PHiFnCYhQJCW7dD$j4Q237Z3jY70xyYAAaZhI1vVmfZYlYH9w/70fySPKuA=,,0,,,Gabriela,,,,0,0,2024-02-14 19:21:18
-58,pbkdf2_sha256$600000$rGAsBa40djvSxFMMVDjJho$7+XvB8Qq2ZmxMNJCxUGYTz0oNWxi+7tDLSkpHG8TXB4=,2024-02-27 09:38:23,0,,,Adryely,,,,0,1,2024-02-14 19:21:16
-57,pbkdf2_sha256$600000$3oCwWz2flyn1KH4FRORtN8$r22sBDvDvD2HTTeP40yMPl/D9hBC1jMi2tYqMDA27qk=,,0,,,Carol-2,,,,0,0,2024-02-14 19:21:15
-56,pbkdf2_sha256$600000$85DA0qzun4GNA1PvdSFyv7$le0AGDbKXYVC5J6vBKeElkDsZGjhWMPw8ZuUWb3i5Wk=,2024-02-27 16:58:10,0,,,carol,,,,0,1,2024-02-14 19:21:14
-55,pbkdf2_sha256$600000$b4l9p6wJt6EUB7hn858Mii$EAruP85ISYE6oMSSeFR7KFlaW/31ocub7yM7QVLXWaA=,2024-02-23 16:02:11,0,,,caio,,,,0,1,2024-02-14 19:21:13
-54,pbkdf2_sha256$600000$oM79e0enZzaQBjTXSG2DZV$RLC/40yxlOaMYnoacOueHPNmcyidSvPJykOSXW5vTeo=,,0,,,Geiza,,,,0,1,2024-02-14 19:21:11
-53,pbkdf2_sha256$600000$XFGIcDmMati0xy6mKgaCSE$s/kCpoA2jNdUNPkTajyOmZoFoylbNo8amd0o+4JIE4g=,,0,,,GBV,,,,0,0,2024-02-14 19:21:10
-52,pbkdf2_sha256$600000$qzBgAY9yRwcVphHYx6VsM1$Cnyfr00y8bzZIyFyu7g39YRie/eK/cnwxvmASDsE7r8=,,0,,,Adrieli-2,,,,0,0,2024-02-14 19:21:08
-51,pbkdf2_sha256$600000$W7pTbJz0FIRd1TIS0ezBeh$Hr37rv0JXeH/Qgums24Y0JUWQQRYIk/IkgFO2ZYlrZU=,,0,,,adrieli,,,,0,1,2024-02-14 19:21:07
-50,pbkdf2_sha256$600000$QjJTkz4V5Z96idrMMjWJPt$AMEueriONDSvF9Zl9Rj6HsxViQb71I0/INh7+cF4+8Q=,2024-02-27 20:31:30,0,,,gabriely,,,,0,1,2024-02-14 19:21:05
-49,pbkdf2_sha256$600000$xTPyN3iAwhTHVv4C39NIzZ$tZOVRUCCVeXAx0xcZeiG/GN5m64a5kDf0Y34NoLuyrg=,,0,,,elizangela,,,,0,0,2024-02-14 19:21:04
-48,pbkdf2_sha256$600000$QbisEq2ZOaF7sfQ2e9nBYC$jZYpZ6P/ZWFD6Kmtid7KcT9+nP+fh2/tRF2WmCnPO5g=,,0,,,alessandra,,,,0,0,2024-02-14 19:21:01
-47,pbkdf2_sha256$600000$C8AGzvF42G1IN02xtwOZAu$3uxqiQGvngjDeAf5Rc/9cw8kYUajyoAfuKMe9QA0HVw=,2024-02-27 13:37:38,0,,,beatriz,,,,0,1,2024-02-14 19:21:00
-46,pbkdf2_sha256$600000$qeH9lBOsO5alR0fTRT7uLr$RNNPn+z6mrl2uJDzl8CEvMVw1qf278DjIYRbcXXXhBw=,,0,,,michelle,,,,0,0,2024-02-14 19:20:58
-45,pbkdf2_sha256$600000$9Vkl58LKHwZhpMXBakVU79$gHAkKcGiBFnDlb0eoWe2lwWLM/MTCHayAP+PeZtSXOc=,,0,,,wendy,,,,0,0,2024-02-14 19:20:56
-44,pbkdf2_sha256$600000$4x9i7Fg7VkBNjJr1F254ah$ZKaecwT/op1vCbX/zU5jqX6n9eHjiW1mbaLNg6kOFgE=,,0,,,alexandra,,,,0,0,2024-02-14 19:20:54
-43,pbkdf2_sha256$600000$VUaeQpVJxFSQpUydNVBiR6$JTo0hVpkOQ7TZKx5Vx5u8ZIPX4bipuxcQqxg1feQVvg=,,0,,,samanta,,,,0,0,2024-02-14 19:20:52
-42,pbkdf2_sha256$600000$77voITuOjIaL8e5OtowlmD$sZiOZ+gFU0oYKChF6Tl00gFk+K0lAQP4FpubNJdBwzI=,,0,,,gilcidete,,,,0,0,2024-02-14 19:20:50
-41,pbkdf2_sha256$600000$6u2KmgA2DzcwCSwYXNZ1I1$KxE/h3VeccZM6MC6Y3B8BiKjLMDUrDYClq5tvWOdcEg=,,0,,,Simone_dos_Santos,,,,0,0,2024-02-14 19:20:49
-40,pbkdf2_sha256$600000$VvtoSpjNJPU86Vq4nRGlRH$f5g/2KdXTN62qeucppSvLjMdoG9zqKsU9ydi32eloGc=,,0,,,juniorbv,,,,0,0,2024-02-14 19:20:48
-39,pbkdf2_sha256$600000$ynudpWq5GKYXLYDfTSPYqW$4w5pffZt8YxKI/12aEfHHL/9lz98y67QlU/N65otnHQ=,,0,,,christiane.rodrigues,,,,0,0,2024-02-14 19:20:46
-38,pbkdf2_sha256$600000$EWVkfgH2ZTuG56k17Eppfy$1g4eo2MT845XZ5Gw3q4bUTDpZF9qcdV1AVg99kOJxMs=,2024-02-27 16:43:20,0,,,carla,,,,0,1,2024-02-14 19:20:45
-36,pbkdf2_sha256$600000$43zqijNf9dTrHqTpVOMxXh$IUUIYYlwChjCLpK9XrPhScGKMp22e+OjDaDBIUKNqBI=,,0,,,erika.amaral,,,,0,0,2024-02-14 19:20:42
-35,pbkdf2_sha256$600000$vj849Tb9Ug72iLHXAzDfRi$Vn3+VW+ASkiU3TWowjGmgkfjjnEq7pt5RyS+0q7NZ7k=,,0,,,carin,,,,0,0,2024-02-14 19:20:41
-34,pbkdf2_sha256$600000$0Og8LAi3v37cdgnth1VHig$F0sGZaqRNWshIExA42nNcQw7e7tEo1G5+OiR8592yYE=,,0,,,sara.oliveira,,,,0,0,2024-02-14 19:20:39
-33,pbkdf2_sha256$600000$Qb7cwFESlCIBLuhI8kE6ZC$BJQYwG0bsxZyDWYAORpKMi5WBiVacx5EBHME4p8mib0=,2024-02-27 11:11:45,0,,,aline,,,,0,1,2024-02-14 19:20:37
-32,pbkdf2_sha256$600000$oZJOGM3N6wQ3paFhXm5C1o$cq/56yLOzu8eNqRsfkCi7FTGHMZbvfsBdWmDfqmRFR8=,,0,,,janaina,,,,0,0,2024-02-14 19:20:33
-31,pbkdf2_sha256$600000$bqmVseXliG78zZsxoI5dEx$p/4877NHq/4w3DBm4R/Zo6OoWdUKXJxUGdv7XdCZ7dI=,,0,,,francisco,,,,0,0,2024-02-14 19:20:30
-17,pbkdf2_sha256$600000$KBu6h34zMUF5CCF7iZZntx$LjwYXywivEvrf+T5A8msxF2JaQCY8VMr6O20qpNy4Sk=,,0,,,eneida,,,,0,0,2024-02-14 19:20:26
-16,pbkdf2_sha256$600000$GfsBWWQTabVKWt60lWb9TY$/u9U7JcHcpAyShKTMVGvLw15nElkbqKaVmNurdHaWnA=,,0,,,test,,,,0,0,2024-02-14 19:20:24
-15,pbkdf2_sha256$600000$uweIVu0BmTobFgbgvqMrl3$lgno3cpEMoeHjZswEXVOZiS3Dc9+QUZvgdXDBTnuBj4=,,0,,,junior,,,,0,0,2024-02-14 19:20:22
-14,pbkdf2_sha256$600000$3jxDzQuiZMB2LXjHGK3wpf$g88haBS9JhxcEFIUGXNYyTJjk3g48edcOBRmFXXt3zk=,,0,,,aline_inativa,,,,0,0,2024-02-14 19:20:19
-13,pbkdf2_sha256$600000$9LHZ57VTPkXK6rqqj0hEv9$gEptIqKxqt7x7dDWrKChpdDcUtPv40EAcHbZFAbx2m4=,2024-02-27 20:40:54,0,,,hugo,,,,0,1,2024-02-14 19:20:16
-12,pbkdf2_sha256$600000$Vfya8xKcYfgFaG94Fk2LwE$RW3R9LWKD3dAfJNK1MF0tAW7PgDzp22zmYa9JrcF9So=,,0,,,joao,,,,0,0,2024-02-14 19:20:12
-11,pbkdf2_sha256$600000$FEE6bmBRXX6ulnrOzN7sSD$1yLEnqifQPfW9NqG6P21VLDxs5ZFaCgqfwf0j8tyjZw=,2024-02-27 12:42:52,0,,,marcos,,,,0,1,2024-02-14 19:20:10
-10,pbkdf2_sha256$600000$NbY7D6y4BU9ebGbka8N1c0$qt5YHgZUc2l7CCFhQJtvo7nJBTFX0qPxdGVKXkniBtQ=,2024-02-27 09:43:44,0,,,tamires,,,,0,1,2024-02-14 19:20:08
-9,pbkdf2_sha256$600000$AYD2XI86aAJaKjpzgR7E4w$gMYDFJoYig+QpZfBh5sDQ7J5KKLMBLYp3b3R7nbryqM=,2024-02-27 12:53:34,0,,,sara,,,,0,1,2024-02-14 19:20:07
-8,pbkdf2_sha256$600000$P5ses05YHD7vjMI0GPcAL3$m8hFfQLEpzxoznRQhgvSUXBaXSO4gvRgGAYasRrVS3w=,2024-02-27 09:24:16,1,,,bruno,,,,1,1,2024-02-14 19:20:05
-7,pbkdf2_sha256$600000$WOwhfhmHw74phvjRhixyEH$s6HnEkTkg9t8zVJ8hDZrDphqJSMesMAJUyghKsGJSjI=,,0,,,raissa,,,,0,0,2024-02-14 19:20:04
-6,pbkdf2_sha256$600000$KXr1NpMUjD5vH7RFoMiOY8$E2wbq9i8WT9dJ0VdrZi/CsU0vQlb4kE+HFR/ztPo6SQ=,,0,,,rubia,,,,0,0,2024-02-14 19:20:02
-5,pbkdf2_sha256$600000$8hkpn5MnrOtzG2pJ43ZfCV$d1+ltROF4SEY+U9/TDXPXQkuEecYE9atGlH4V6vXcpw=,2024-02-27 16:14:36,0,,,enderson,,,,0,1,2024-02-14 19:20:01
-4,pbkdf2_sha256$600000$S1wHUL5biPTyR3vFrvBksH$eUVOWBbJy0/ePd7EoggaiHGQ21ihYOFIWA1H7BUKwJw=,2024-02-27 12:06:25,0,,,leticia,,,,0,1,2024-02-14 19:20:00
-3,pbkdf2_sha256$600000$Kob0LhmL5iKR12W8FyqZsu$nfuf3+zXJ/p3i9mh0HSSzCj1lEtPJJUMwWQRfxexC7w=,2024-02-27 06:36:59,0,,,cristiane,,,,0,1,2024-02-14 19:19:58
-2,pbkdf2_sha256$600000$7nY3b8B92pGVTsMuTqcyHl$kIL+7VzuyXM8q6GO/nWoF/SScfmROrCT4m0Ux9C23go=,,0,,,luana,,,,0,1,2024-02-14 19:19:57
-1,pbkdf2_sha256$600000$Arj0xkvX8f5uiad41izIY5$NsvXssZg7KOCFkW/cmuIbJjOBXKoFCBh5tiHqj+VriU=,,0,,,Admin,,,,0,1,2024-02-14 19:19:56
+id,username,password,situacaoentidade,contato_id,bateponto,cargahoraria,departamento,semintervaloalmoco
+1,Admin,GMSk53T7hwqYq5,1,130,False,00:00:00,0,False
+2,luana,GMSk53T7hwqYq6,1,7,True,08:00:00,0,False
+3,cristiane,GMSk53T7hwqYq7,1,12,True,08:00:00,256,False
+4,leticia,GMSk53T7hwqYq8,1,16,True,08:00:00,2048,False
+5,enderson,GMSk53T7hwqYq9,1,18,True,08:00:00,256,False
+6,rubia,GMSk53T7hwqYq10,1,11,True,08:00:00,512,False
+7,raissa,GMSk53T7hwqYq11,2,17,False,06:00:00,0,False
+8,bruno,GMSk53T7hwqYq12,1,19,False,00:00:00,0,False
+9,sara,GMSk53T7hwqYq13,1,10,True,08:00:00,2048,False
+10,tamires,GMSk53T7hwqYq14,1,9,True,08:00:00,0,False
+11,marcos,GMSk53T7hwqYq15,1,15,True,08:00:00,1024,False
+12,joao,GMSk53T7hwqYq16,2,13,True,08:00:00,0,False
+13,hugo,GMSk53T7hwqYq17,1,14,True,08:00:00,4,False
+14,aline,GMSk53T7hwqYq18,2,20,True,00:00:00,0,False
+15,junior,GMSk53T7hwqYq19,1,342,False,00:00:00,0,False
+16,test,GMSk53T7hwqYq20,2,130,False,08:00:00,0,False
+17,eneida,GMSk53T7hwqYq21,2,102,False,00:00:00,0,False
+31,francisco,GMSk53T7hwqYq22,2,3406,False,00:00:00,0,False
+32,janaina,GMSk53T7hwqYq23,2,3439,True,08:00:00,0,False
+33,alinec,GMSk53T7hwqYq24,1,6,True,08:00:00,0,False
+34,sara.oliveira,GMSk53T7hwqYq25,2,3484,True,08:00:00,0,False
+35,carin,GMSk53T7hwqYq26,2,261,False,00:00:00,0,False
+36,erika.amaral,GMSk53T7hwqYq27,2,104,False,00:00:00,0,False
+38,carla,GMSk53T7hwqYq28,1,3533,True,08:00:00,4,False
+39,christiane.rodrigues,GMSk53T7hwqYq29,2,3489,False,00:00:00,0,False
+40,juniorbv,GMSk53T7hwqYq30,2,342,False,00:00:00,0,False
+41,Simone dos Santos,GMSk53T7hwqYq31,2,3432,False,00:00:00,0,False
+42,gilcidete,GMSk53T7hwqYq32,2,3552,True,08:00:00,0,False
+43,samanta,GMSk53T7hwqYq33,2,3564,True,06:00:00,0,False
+44,alexandra,GMSk53T7hwqYq34,2,3579,True,06:00:00,1,False
+45,wendy,GMSk53T7hwqYq35,2,3581,True,04:00:00,1,False
+46,michelle,GMSk53T7hwqYq36,2,3582,True,04:00:00,1,False
+47,beatriz,GMSk53T7hwqYq37,1,3603,True,08:00:00,1,False
+48,alessandra,GMSk53T7hwqYq38,2,3644,True,08:00:00,0,False
+49,elizangela,GMSk53T7hwqYq39,2,3666,False,00:00:00,0,False
+50,gabriely,GMSk53T7hwqYq40,1,3717,True,08:00:00,0,False
+51,adrieli,GMSk53T7hwqYq41,2,3719,True,08:00:00,0,False
+52,Adrieli-2,GMSk53T7hwqYq42,2,3719,True,08:00:00,0,False
+53,GBV,GMSk53T7hwqYq43,1,3752,False,00:00:00,0,False
+54,Geiza,GMSk53T7hwqYq44,1,3772,False,00:00:00,7,False
+55,caio,GMSk53T7hwqYq45,1,3799,False,00:00:00,7,False
+56,carol,GMSk53T7hwqYq46,2,3800,True,00:00:00,0,False
+57,Carol-2,GMSk53T7hwqYq47,1,3800,True,08:00:00,0,False
+58,Adryely,GMSk53T7hwqYq48,1,3808,True,08:00:00,0,False
+59,Gabriela,GMSk53T7hwqYq49,2,3810,False,00:00:00,0,False
+60,Labooptica,GMSk53T7hwqYq50,1,3666,False,00:00:00,0,False
+61,lydia,GMSk53T7hwqYq51,1,3847,True,06:00:00,0,False
+62,Aryene,GMSk53T7hwqYq52,1,3844,True,08:00:00,0,False
+63,Labooptica-2,GMSk53T7hwqYq53,2,3855,False,00:00:00,1,False
+64,jair,GMSk53T7hwqYq54,1,3912,True,08:00:00,0,False
