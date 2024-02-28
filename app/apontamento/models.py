@@ -283,7 +283,7 @@ class PontoManager(models.Manager):
                 # if it is a regular day
                 carga_horaria = timedelta(hours=8)
 
-            if horas_trabalhadas >= carga_horaria:
+            if horas_trabalhadas > carga_horaria:
                 # if the user worked more than the regular hours
                 total_credor += horas_trabalhadas - carga_horaria
             elif horas_trabalhadas < carga_horaria:
