@@ -68,15 +68,12 @@
               Relatórios
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Over 10 hours list</a>
+              <li><a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Lista de Pontos com +10 horas</a></li>
+              <li><a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">Lista de Invervalo de 30-min</a>
               </li>
-              <li>
-                <a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">30-min-break list</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Open task list</a>
-              </li>
+              <li><a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Lista de Tarefas Abertas</a></li>
+              <li><a class="dropdown-item" href="{% url 'apontamento:tarefas_fechadas_automaticamente' %}">Tarefas Fechadas
+                  Automaticamente</a></li>
 
             </ul>
           </li>
