@@ -65,8 +65,10 @@ class Cliente(models.Model):
     objects = ClienteManager()
 
     def __str__(self) -> str:
-        return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
-
+        if self.codigosistema is not None:
+            return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
+        return self.nomerazao
+    
     class Meta:
         """Meta definition for Cliente."""
 
