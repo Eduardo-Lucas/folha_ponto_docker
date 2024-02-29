@@ -73,12 +73,11 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         kwargs.update({"user": self.request.user})
         return kwargs
 
-
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["usuario"] = self.request.user
         context["dia"] = datetime.now().date()
-        
+
         context["fechar_tarefa"] = (
             True
             if Ponto.objects.filter(
@@ -150,7 +149,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             instance.fechado = False
 
         instance.save()
-        messages.success(self.request, "Appointment created successfully")
+        messages.success(self.request, "O ponto foi marcado com sucesso!")
         return super().form_valid(form)
 
 
@@ -313,14 +312,25 @@ class HistoricoListView(LoginRequiredMixin, ListView):
 
 @login_required
 def fecha_tarefa(request, pk):
-    """Fecha a tarefa do último ponto do usuário"""
+    """Fecha a tarefa do último ponto do usuário
+    Se usuario for o dono da tarefa OU se o usuario for superuser
+    """
 
     ponto = get_object_or_404(Ponto, pk=pk)
-    ponto.saida = datetime.now().replace(microsecond=0)
-    ponto.fechado = True
-    ponto.save()
-    messages.info(request, "The last appointment was closed.")
-    return redirect("apontamento:appointment_create")
+
+    if ponto.usuario == request.user or request.user.is_superuser:
+        ponto.saida = datetime.now().replace(microsecond=0)
+        ponto.fechado = True
+        ponto.save()
+        messages.info(request, "A tarefa foi fechada.")
+        return redirect("apontamento:appointment_create")
+
+    else:
+        messages.error(
+            request,
+            f"Olá {request.user}! Você não tem permissão para fechar a tarefa de {ponto.usuario}.",
+        )
+        return redirect("core:home")
 
 
 @login_required
@@ -500,6 +510,7 @@ def over_10_hour_validation(request, day, user_id):
             ponto.save()
         messages.info(request, "Pontos com mais de 10 horas validados")
     return redirect("apontamento:over_10_hours_list")
+
 
 @login_required
 def get_30_min_break_list(request):
