@@ -37,7 +37,7 @@
                         </td>
                         <td scope="row" class="text-center">
                             <a
-                                href="{% url 'apontamento:historico_com_datas' data_inicial=dia.day data_final=dia.day user_id=dia.user.id %}">
+                                href="{% url 'apontamento:historico_com_datas' data_inicial=ponto.last_interaction data_final=ponto.last_interaction user_id=ponto.usuario.id %}">
                                 <i class="fas fa-eye" data-toggle="tooltip" title="Histórico do dia"
                                     style="color:blue"></i>
                         </td>
