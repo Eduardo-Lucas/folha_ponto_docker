@@ -10,10 +10,6 @@
                     <th>Id</th>
                     <th>Data</th>
                     <th>Usuario</th>
-
-                    <th></th>
-
-
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +34,7 @@
             </tbody>
         </table>
     </table>
+    {% if pontos %}
     <div class="text-center">
         Fechar todos os pontos do dia à meia-noite:
         <a href="{% url 'apontamento:fechar_todas_tarefas' %}" class="btn btn-danger">
@@ -45,5 +42,6 @@
         </a>
 
     </div>
+    {% endif %}
 </div>
 {% endblock %}
