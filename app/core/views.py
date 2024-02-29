@@ -35,6 +35,7 @@ def home(request):
                     "cliente": cliente,
                     "tarefa": tarefa,
                     "total_dia": total_dia,
+                    "tarefa_aberta": Ponto.objects.get_open_pontos(user),
                 }
             )
 
