@@ -24,7 +24,8 @@
                     <td>{{ ponto.username|capfirst }}</td>
                     <td class="text-center">
                         <a href="{% url 'apontamento:fecha_tarefa' ponto.ponto_id %}">
-                            <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar essa Tarefa" style="color:orange"></i>
+                            <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar essa Tarefa"
+                                style="color:orange"></i>
                         </a>
                     </td>
 
@@ -37,5 +38,12 @@
             </tbody>
         </table>
     </table>
+    <div class="text-center">
+        Fechar todos os pontos do dia à meia-noite:
+        <a href="{% url 'apontamento:fechar_todas_tarefas' %}" class="btn btn-danger">
+            <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar todas as Tarefas"></i>
+        </a>
+
+    </div>
 </div>
 {% endblock %}

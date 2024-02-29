@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db.models import Max
 from django.db.models.base import Model
 from django.db.models.query import QuerySet
@@ -582,3 +583,28 @@ def open_task_list(request):
         "pontos": pontos,
     }
     return render(request, "apontamento/open_task_list.html", context)
+
+@login_required
+def fechar_todas_tarefas(request):
+    """Fecha todas as tarefas abertas"""
+    pontos = Ponto.objects.get_open_task_list()
+    for ponto in pontos:
+        ponto_obj = Ponto.objects.get(id=ponto["ponto_id"])
+        ponto_obj.saida = ponto["entrada"].replace(hour=23, minute=59, second=59)
+        ponto_obj.fechado = True
+        ponto_obj.save()
+    messages.info(request, "Todas as tarefas foram fechadas.")
+    return redirect(to="apontamento:open_task_list")
+
+@login_required
+def get_automatically_closed_tasks(request):
+    """Get all tasks that were automatically closed"""
+    pontos_list = Ponto.objects.get_automatically_closed_tasks()
+    paginator = Paginator(pontos_list, 10)
+
+    page_number = request.GET.get("page")
+    pontos = paginator.get_page(page_number)
+
+    return render(
+        request, "apontamento/tarefas_fechadas_automaticamente.html", {"pontos": pontos}
+    )

@@ -351,6 +351,10 @@ class PontoManager(models.Manager):
         """get UserProfile  carga horaria"""
         return User.objects.get(username=user).userprofile.cargahoraria
 
+    def get_automatically_closed_tasks(self):
+        """Automatically close tasks are those with saida = 23:59:59"""
+        return self.filter(entrada__year__gte=2024, saida__time=time(23, 59, 59))
+
 
 class Ponto(models.Model):
     """

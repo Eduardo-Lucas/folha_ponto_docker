@@ -1,7 +1,6 @@
 from django.urls import path, register_converter
 
 from .converters.custom_date_converter import DateConverter
-
 from .views import (
     AppointmentCreateView,
     AppointmentDeleteView,
@@ -13,9 +12,11 @@ from .views import (
     ajuste_ponto,
     apontamento_list,
     fecha_tarefa,
+    fechar_todas_tarefas,
     folha_ponto,
     folha_ponto_sem_form,
     get_30_min_break_list,
+    get_automatically_closed_tasks,
     historico_com_datas,
     historico_com_usuario,
     historico_sem_form,
@@ -85,4 +86,10 @@ urlpatterns = [
         name="over_10_hour_validation",
     ),
     path("open_task_list", open_task_list, name="open_task_list"),
+    path("fechar_todas_tarefas", fechar_todas_tarefas, name="fechar_todas_tarefas"),
+    path(
+        "tarefas_fechadas_automaticamente",
+        get_automatically_closed_tasks,
+        name="tarefas_fechadas_automaticamente",
+    ),
 ]
