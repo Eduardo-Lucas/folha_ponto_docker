@@ -4,6 +4,7 @@ from apontamento.models import Ponto
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator
 from django.shortcuts import render
 
 
@@ -41,6 +42,11 @@ def home(request):
 
             # sort pontos by last_interaction desc
             pontos = sorted(pontos, key=lambda k: k["last_interaction"], reverse=True)
+
+    paginator = Paginator(pontos, 10)
+
+    page = request.GET.get("page")
+    pontos = paginator.get_page(page)
 
     # Carrega as datas iniciais e finais na sessão
     carrega_datas_session(request)
