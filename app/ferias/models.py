@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
+from folha_on_docker.settings import FERIAS_BUSINESS_DAYS  # 20 Days
+import numpy as np
 
 
 class Ferias(models.Model):
@@ -30,14 +32,14 @@ class Ferias(models.Model):
         return "Não"
 
     @property
-    def dias_corridos(self):
+    def dias_uteis(self):
         """Retorna a quantidade de dias corridos."""
-        return (self.data_final - self.data_inicial).days + 1
+        return np.busday_count(self.data_inicial, self.data_final)
 
     @property
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
-        return 20 - self.dias_corridos
+        return FERIAS_BUSINESS_DAYS - self.dias_uteis
 
     class Meta:
         """Meta definition for Ferias."""

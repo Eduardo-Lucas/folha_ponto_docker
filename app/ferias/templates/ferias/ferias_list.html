@@ -22,7 +22,7 @@
                             <th class="align-middle">Período</th>
                             <th class="align-middle">Data Inicial</th>
                             <th class="align-middle">Data Final</th>
-                            <th class="text-center">Dias<br>Corridos</th>
+                            <th class="text-center">Dias<br>Úteis</th>
                             <th class="text-center">Saldo<br>em Dias</th>
                             <th class="align-middle text-center">Período<br>Gozado</th>
                             <th class="align-middle text-center">Opções</th>
@@ -34,7 +34,7 @@
                             <td class="align-middle">{{ ferias.periodo }}</td>
                             <td class="align-middle">{{ ferias.data_inicial|date:"d/m/Y"}}</td>
                             <td class="align-middle">{{ ferias.data_final|date:"d/m/Y" }}</td>
-                            <td class="align-middle text-center">{{ ferias.dias_corridos }}</td>
+                            <td class="align-middle text-center">{{ ferias.dias_úteis }}</td>
                             <td class="align-middle text-center">{{ ferias.saldo_dias }}</td>
                             <td class="align-middle" id="status_ferias">
                                 {% if ferias.cumpriu %}

@@ -14,8 +14,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from celery.schedules import crontab
 import dj_database_url
+from celery.schedules import crontab
 from dotenv import load_dotenv  # render config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -78,7 +78,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -106,7 +105,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-
             ],
         },
     },
@@ -156,7 +154,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
-
 ]
 
 
@@ -306,3 +303,5 @@ EMAIL_PORT = os.environ.get("EMAIL_PORT")
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", default="")
+
+FERIAS_BUSINESS_DAYS = 20
