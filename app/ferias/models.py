@@ -1,8 +1,10 @@
+from datetime import timedelta
+
+import numpy as np
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
-from folha_on_docker.settings import FERIAS_BUSINESS_DAYS  # 20 Days
-import numpy as np
+from folha_ponto.settings import FERIAS_BUSINESS_DAYS  # 20 Days
 
 
 class Ferias(models.Model):
@@ -34,7 +36,7 @@ class Ferias(models.Model):
     @property
     def dias_uteis(self):
         """Retorna a quantidade de dias corridos."""
-        return np.busday_count(self.data_inicial, self.data_final)
+        return np.busday_count(self.data_inicial, self.data_final + timedelta(days=1))
 
     @property
     def saldo_dias(self):
