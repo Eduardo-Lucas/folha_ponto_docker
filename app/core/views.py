@@ -62,11 +62,11 @@ def home(request):
                 pontos_fechados, key=lambda k: k["last_interaction"], reverse=True
             )
 
-    paginator_pontos_abertos = Paginator(pontos_abertos, 5)
-    paginator_pontos_fechados = Paginator(pontos_fechados, 5)
+    paginator_pontos_abertos = Paginator(pontos_abertos, 10)
+    paginator_pontos_fechados = Paginator(pontos_fechados, 10)
 
     page = request.GET.get("page")
-    
+
     pontos_abertos = paginator_pontos_abertos.get_page(page)
     pontos_fechados = paginator_pontos_fechados.get_page(page)
 

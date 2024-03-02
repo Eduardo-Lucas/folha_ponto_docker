@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from .views import (
+    AtualizaPerfil,
     PasswordsChangeView,
     ProfileUpdateView,
     logout_view,
@@ -51,4 +52,5 @@ urlpatterns = [
     ),
     path("success_password/", success_password, name="success_password"),
     path("profile/", ProfileUpdateView.as_view(), name="profile"),
+    path("atualiza_perfil/<int:pk>", AtualizaPerfil.as_view(), name="atualiza_perfil"),
 ]

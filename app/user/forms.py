@@ -64,10 +64,14 @@ class UserProfileform(forms.ModelForm):
         # bate ponto disabled
         self.fields["bateponto"].widget.attrs["disabled"] = "disabled"
         self.fields["bateponto"].widget.attrs["readonly"] = True
+        self.fields["cargahoraria"].initial = 8
 
         # carga horaria disabled
         # self.fields["cargahoraria"].widget.attrs["disabled"] = "disabled"
         self.fields["cargahoraria"].widget.attrs["readonly"] = True
         # tipo_receita cannot be null or None
         self.fields["tipo_receita"].required = True
+        self.fields["tipo_receita"].initial = TipoReceita.objects.get(
+            id=1
+        )  # default = Contábil
         self.fields["tipo_receita"].queryset = TipoReceita.objects.get_active()

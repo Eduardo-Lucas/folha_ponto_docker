@@ -108,3 +108,27 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, "Seu perfil foi atualizado com sucesso.")
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+class AtualizaPerfil(LoginRequiredMixin, UpdateView):
+    """View for a user's profile."""
+
+    template_name = "registration/profile.html"
+    model = User
+    form_class = UserProfileform
+    success_url = reverse_lazy("core:home")
+
+    def get_object(self, queryset=None):
+        """Get the user's profile."""
+        # get the user id from url
+        user_id = self.kwargs.get("pk")
+        return get_object_or_404(UserProfile, user=user_id)
+
+    def form_valid(self, form):
+        carga_horaria = form.cleaned_data["cargahoraria"]
+        if carga_horaria < 1 or carga_horaria > 8:
+            messages.error(self.request, "Carga horária deve ser entre 1 e 8 horas.")
+            return self.form_invalid(form)
+        messages.success(self.request, "Seu perfil foi atualizado com sucesso.")
+
+        return super().form_valid(form)
