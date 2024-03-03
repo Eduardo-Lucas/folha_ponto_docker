@@ -1,12 +1,13 @@
 from datetime import datetime
 
 from apontamento.models import Ponto
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
-
+@login_required
 def home(request):
     """Home Page"""
     users = User.objects.filter(is_active=True)
