@@ -24,15 +24,15 @@
 
                         <tr style="vertical-align: middle;">
                             <td>{% if ponto.usuario.userprofile.nome %}
-                                {{ ponto.usuario.userprofile.nome }}
+                                {{ ponto.usuario.userprofile.nome|slice:21 }}
                                 {% else %}
-                                    {% if request.user == ponto.usuario %}
-                                            <a href="{% url 'user:atualiza_perfil' ponto.usuario.userprofile.user_id %}">
-                                        {{ ponto.usuario.username }}, favor atualizar o seu perfil</a>
-                                    {% else %}
-                                    <a href="#">
-                                        {{ ponto.usuario.username }}, favor atualizar o seu perfil</a>
-                                    {% endif %}
+                                {% if request.user == ponto.usuario %}
+                                <a href="{% url 'user:atualiza_perfil' ponto.usuario.userprofile.user_id %}">
+                                    {{ ponto.usuario.username }}, favor atualizar o seu perfil</a>
+                                {% else %}
+                                <a href="#">
+                                    {{ ponto.usuario.username }}, favor atualizar o seu perfil</a>
+                                {% endif %}
                                 {% endif %}
                             </td>
                             <td>{{ ponto.last_interaction|date:"d/m/y H:i - l" }}</td>
@@ -105,7 +105,7 @@
 
                         <tr style="vertical-align: middle;">
                             <td>{% if ponto.usuario.userprofile.nome %}
-                                {{ ponto.usuario.userprofile.nome }}
+                                {{ ponto.usuario.userprofile.nome|slice:21 }}
                                 {% else %}
                                 {% if request.user == ponto.usuario %}
                                 <a href="{% url 'user:atualiza_perfil' ponto.usuario.userprofile.user_id %}">
