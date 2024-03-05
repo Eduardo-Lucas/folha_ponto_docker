@@ -7,6 +7,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from user.models import UserProfile
+
 from .models import Ponto, TipoReceita
 
 
@@ -39,7 +40,9 @@ class FolhaPontoForm(forms.Form):
     entrada = forms.DateField(widget=DateInput, label="Início", required=True)
     saida = forms.DateField(widget=DateInput, label="Fim", required=True)
     usuario = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_active=True).order_by("username"),
+        queryset=User.objects.filter(
+            is_active=True, userprofile_bateponto="Sim"
+        ).order_by("username"),
         required=True,
     )
 
