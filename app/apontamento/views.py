@@ -362,14 +362,19 @@ def folha_ponto(request):
             start=data_inicial, end=data_final, user=usuario
         )
 
+        total_credor = dict_total_credor_devedor["total_credor"]
+        total_devedor = dict_total_credor_devedor["total_devedor"]
+        saldo = total_credor - total_devedor
+
         context = {
             "form": form,
             "query": query,
             "total_trabalhado": Ponto.objects.total_range_days_time(
                 data_inicial, data_final, usuario
             ),
-            "total_credor": dict_total_credor_devedor["total_credor"],
-            "total_devedor": dict_total_credor_devedor["total_devedor"],
+            "total_credor": total_credor,
+            "total_devedor": total_devedor,
+            "saldo": saldo,
             "usuario_id": User.objects.filter(username=request.user).first().id,
         }
     return render(request, "apontamento/folha-ponto.html", context)
@@ -584,6 +589,7 @@ def open_task_list(request):
     }
     return render(request, "apontamento/open_task_list.html", context)
 
+
 @login_required
 def fechar_todas_tarefas(request):
     """Fecha todas as tarefas abertas"""
@@ -595,6 +601,7 @@ def fechar_todas_tarefas(request):
         ponto_obj.save()
     messages.info(request, "Todas as tarefas foram fechadas.")
     return redirect(to="apontamento:open_task_list")
+
 
 @login_required
 def get_automatically_closed_tasks(request):
