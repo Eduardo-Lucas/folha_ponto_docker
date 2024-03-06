@@ -70,7 +70,11 @@
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <span class="badge rounded-pill text-bg-success">Não</span>
+                        {% if dia.ferias == "Sim" %}
+                        <span class="badge rounded-pill text-bg-danger">{{dia.ferias}}</span>
+                        {%else%}
+                        <span class="badge rounded-pill text-bg-success">{{dia.ferias}}</span>
+                        {% endif %}
                     </td>
                     <td class="text-center">{{dia.total_hours}}</td>
                     <td class="text-center text-success">{{dia.credor}}</td>

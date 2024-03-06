@@ -2,9 +2,11 @@ from datetime import datetime, time, timedelta
 
 from cliente.models import Cliente
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
 from feriado.models import Feriado
+from ferias.models import Ferias
 
 
 class TipoReceitaManager(models.Manager):
@@ -210,9 +212,20 @@ class PontoManager(models.Manager):
                     year=day.year, month=day.month, day=day.day
                 )
 
+            try:
+                ferias = Ferias.objects.get_ferias(
+                    data_inicial=day.date(),
+                    data_final=day.date(),
+                    user=user.id,
+                )
+            except ObjectDoesNotExist:
+                ferias = "Não"
+
             if day.weekday() >= 5:
                 carga_horaria = timedelta(hours=0)
             elif feriado:
+                carga_horaria = timedelta(hours=0)
+            elif ferias == "Sim":
                 carga_horaria = timedelta(hours=0)
             else:
                 user_carga_horaria = self.get_carga_horaria(user)
@@ -233,6 +246,7 @@ class PontoManager(models.Manager):
                     "total_hours": horas_trabalhadas,
                     "atrasado": self.get_status_atrasado(day, user),
                     "feriado": feriado,
+                    "ferias": ferias,
                     "nome_feriado": nome_feriado if feriado else "",
                     "credor": credor,
                     "devedor": devedor,
@@ -274,11 +288,23 @@ class PontoManager(models.Manager):
                 year=day.year, month=day.month, day=day.day
             )
 
+            try:
+                ferias = Ferias.objects.get_ferias(
+                    data_inicial=day.date(),
+                    data_final=day.date(),
+                    user=user.id,
+                )
+            except ObjectDoesNotExist:
+                ferias = "Não"
+
             if day.weekday() >= 5:
                 # if it is a weekend
                 carga_horaria = timedelta(hours=0)
             elif feriado:
                 # if it is a holiday
+                carga_horaria = timedelta(hours=0)
+            elif ferias == "Sim":
+                # if it is a vacation day
                 carga_horaria = timedelta(hours=0)
             else:
                 user_carga_horaria = self.get_carga_horaria(user)
@@ -349,7 +375,7 @@ class PontoManager(models.Manager):
 
     def get_carga_horaria(self, user=None):
         """get UserProfile  carga horaria"""
-        return User.objects.get(username=user).userprofile.cargahoraria
+        return User.objects.filter(username=user).first().userprofile.cargahoraria
 
     def get_automatically_closed_tasks(self):
         """Automatically close tasks are those with saida = 23:59:59"""

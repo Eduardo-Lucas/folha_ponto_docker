@@ -362,6 +362,7 @@ def folha_ponto(request):
             start=data_inicial, end=data_final, user=usuario
         )
 
+
         total_credor = dict_total_credor_devedor["total_credor"]
         total_devedor = dict_total_credor_devedor["total_devedor"]
         saldo = total_credor - total_devedor
@@ -376,6 +377,7 @@ def folha_ponto(request):
             "total_devedor": total_devedor,
             "saldo": saldo,
             "usuario_id": User.objects.filter(username=request.user).first().id,
+
         }
     return render(request, "apontamento/folha-ponto.html", context)
 

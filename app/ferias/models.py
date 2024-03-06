@@ -7,6 +7,27 @@ from django.db import models
 from folha_ponto.settings import FERIAS_BUSINESS_DAYS  # 20 Days
 
 
+class FeriasManager(models.Manager):
+    """Manager for Ferias."""
+
+    def get_ferias(self, data_inicial=None, data_final=None, user=None):
+        """Get ferias within the range of date for an user
+        Return the days of the period that the user is on vacation
+        """
+        if data_inicial and data_final and user:
+
+            # query the days within the range of a given date
+            query = self.filter(
+                user=user,
+                data_inicial__lte=data_final,
+                data_final__gte=data_inicial,
+            )
+
+            if query:
+                return "Sim"
+            return "Não"
+
+
 class Ferias(models.Model):
     """Model definition for Ferias."""
 
@@ -24,7 +45,7 @@ class Ferias(models.Model):
 
     def __str__(self):
         """Unicode representation of Ferias."""
-        return f"{self.user.username} - {self.periodo}"
+        return f"{self.user.username} - {self.periodo} - {self.data_inicial} - {self.data_final}"
 
     @property
     def status_ferias(self):
@@ -42,6 +63,8 @@ class Ferias(models.Model):
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
         return FERIAS_BUSINESS_DAYS - self.dias_uteis
+
+    objects = FeriasManager()
 
     class Meta:
         """Meta definition for Ferias."""
