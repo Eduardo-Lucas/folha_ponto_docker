@@ -41,7 +41,7 @@ class FolhaPontoForm(forms.Form):
     saida = forms.DateField(widget=DateInput, label="Fim", required=True)
     usuario = forms.ModelChoiceField(
         queryset=User.objects.filter(
-            is_active=True, userprofile_bateponto="Sim"
+            is_active=True, userprofile__bateponto="Sim"
         ).order_by("username"),
         required=True,
     )
