@@ -36,6 +36,7 @@
                     <th class="text-center align-middle">Data</th>
                     <th class="text-center align-middle">Feriado</th>
                     <th class="text-center align-middle">Atrasado</th>
+                    <th class="text-center align-middle">Férias</th>
                     <th class="text-center">Trabalhadas:<br> {{ total_trabalhado|format_timedelta }}</th>
                     <th class="text-center text-success">Credor:<br> {{total_credor|format_timedelta}}</th>
                     <th class="text-center text-danger">Devedor:<br> {{total_devedor|format_timedelta}}</th>
@@ -67,6 +68,9 @@
                         {%else%}
                         <span class="badge rounded-pill text-bg-success">Não</span>
                         {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <span class="badge rounded-pill text-bg-success">Não</span>
                     </td>
                     <td class="text-center">{{dia.total_hours}}</td>
                     <td class="text-center text-success">{{dia.credor}}</td>
