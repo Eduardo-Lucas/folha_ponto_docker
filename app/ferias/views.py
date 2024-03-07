@@ -21,6 +21,9 @@ class FeriasListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Retorna o queryset de férias do usuário logado."""
+        # if superuser, return all vacations
+        if self.request.user.is_superuser:
+            return Ferias.objects.all()
         return Ferias.objects.filter(user=self.request.user)
 
 

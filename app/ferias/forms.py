@@ -27,10 +27,15 @@ class FeriasForm(forms.ModelForm):
 
         model = Ferias
         fields = ("user", "periodo", "data_inicial", "data_final", "cumpriu")
-        # widgets = {
-        #     "data_inicial": DateInput(),
-        #     "data_final": DateInput(),
-        # }
+        widgets = {
+            "data_inicial": DateInput(format="%Y-%m-%d"),
+            "data_final": DateInput(format="%Y-%m-%d"),
+        }
+
+    def get_object(self):
+        """get_object."""
+        return self.instance
+
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
