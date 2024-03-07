@@ -42,8 +42,12 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="userprofile"
     )
-    situacaoentidade = models.IntegerField(default=0, help_text="Situação Entidade", null=True, blank=True)
-    contato_id = models.IntegerField(default=0, help_text="Informe o Contato", null=True, blank=True)
+    situacaoentidade = models.IntegerField(
+        default=0, help_text="Situação Entidade", null=True, blank=True
+    )
+    contato_id = models.IntegerField(
+        default=0, help_text="Informe o Contato", null=True, blank=True
+    )
     bateponto = models.CharField(
         bate_ponto_choices,
         default="Sim",
@@ -53,7 +57,9 @@ class UserProfile(models.Model):
         blank=True,
     )
     cargahoraria = models.IntegerField(default=8, null=True, blank=True)
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, default=1, null=True, blank=True)
+    departamento = models.ForeignKey(
+        Departamento, on_delete=models.CASCADE, default=1, null=True, blank=True
+    )
     semintervaloalmoco = models.CharField(
         sem_intervalo_almoco_choices,
         default="Sim",
@@ -63,10 +69,20 @@ class UserProfile(models.Model):
         blank=True,
     )
     nome = models.CharField(
-        max_length=100, default="", db_index=True, help_text="Informe seu Nome Completo", null=True, blank=True
+        max_length=20,
+        default="",
+        db_index=True,
+        help_text="Informe seu Nome Completo  em até 20 posições",
+        null=True,
+        blank=True,
     )
     email = models.EmailField(
-        max_length=100, default="", db_index=True, help_text="Informe seu E-mail", null=True, blank=True
+        max_length=100,
+        default="",
+        db_index=True,
+        help_text="Informe seu E-mail",
+        null=True,
+        blank=True,
     )
     tipo_receita = models.ForeignKey(
         TipoReceita,
