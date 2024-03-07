@@ -72,7 +72,7 @@ class UserProfile(models.Model):
         max_length=20,
         default="",
         db_index=True,
-        help_text="Informe seu Nome Completo  em até 20 posições",
+        help_text="Informe seu Nome em até 20 posições",
         null=True,
         blank=True,
     )
