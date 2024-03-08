@@ -40,7 +40,7 @@
                     <th class="text-center">Trabalhadas:<br> {{ total_trabalhado|format_timedelta }}</th>
                     <th class="text-center text-success">Credor:<br> {{total_credor|format_timedelta}}</th>
                     <th class="text-center text-danger">Devedor:<br> {{total_devedor|format_timedelta}}</th>
-                    {% if saldo > 0%}
+                    {% if total_credor >= total_devedor %}
                     <th class="text-center text-success">Saldo:<br> {{saldo|format_timedelta}}</th>
                     {% else %}
                     <th class="text-center text-danger">Saldo:<br> {{saldo|format_timedelta}}</th>
