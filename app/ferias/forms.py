@@ -1,7 +1,7 @@
 """
 Module docstring describing the purpose of the module.
 """
-
+from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
 
@@ -43,3 +43,4 @@ class FeriasForm(forms.ModelForm):
         self.fields["user"].initial = User.objects.get(
             id=self.request.session.get("user_id")
         )
+        self.fields["periodo"].initial = datetime.now().year
