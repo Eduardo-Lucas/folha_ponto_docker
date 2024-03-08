@@ -146,7 +146,6 @@ class PontoManager(models.Manager):
         return self.filter(
             usuario=user,
             entrada__year__gte=2024,
-            entrada__lte=datetime.now() - timedelta(days=1),
             saida=None,
         )
 
