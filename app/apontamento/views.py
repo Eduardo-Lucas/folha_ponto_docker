@@ -320,6 +320,12 @@ def fecha_tarefa(request, pk):
     ponto = get_object_or_404(Ponto, pk=pk)
 
     if ponto.usuario == request.user or request.user.is_superuser:
+
+        if ponto.entrada.date() == datetime.now().date():
+            ponto.saida = datetime.now().replace(microsecond=0)
+        else:
+            ponto.saida = ponto.entrada.replace(hour=23, minute=59, second=59)
+
         ponto.saida = datetime.now().replace(microsecond=0)
         ponto.fechado = True
         ponto.save()
