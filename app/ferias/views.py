@@ -3,6 +3,7 @@
 """
 
 from datetime import timedelta
+import numpy as np
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
@@ -10,6 +11,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from ferias.forms import FeriasForm
 from ferias.models import Ferias
+from folha_on_docker.settings import FERIAS_BUSINESS_DAYS
 
 
 class FeriasListView(LoginRequiredMixin, ListView):
@@ -42,6 +44,8 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Se o formulário for válido, salva o objeto e redireciona para a URL de sucesso."""
         form.instance.user = self.request.user
+
+        # 1. check if data_inicial is greater than data_final
         if form.instance.data_inicial > form.instance.data_final:
             form.add_error(
                 "data_inicial",
@@ -49,17 +53,7 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             )
             return self.form_invalid(form)
 
-        if (form.instance.data_final - form.instance.data_inicial) + timedelta(
-            days=1
-        ) > timedelta(days=20):
-            # ferias can not be more than 20 days
-            form.add_error(
-                "data_final",
-                "O período de férias não pode ser maior que 20 dias.",
-            )
-            return self.form_invalid(form)
-
-        # check if there is any other vacation in the same period
+        # 2. check if there is any other vacation in the same period
         if Ferias.objects.filter(
             user=self.request.user,
             data_inicial__lte=form.instance.data_final,
@@ -71,7 +65,35 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             )
             return self.form_invalid(form)
 
+        # 3. check if the vacation period is greater than 20 days
+        dias_uteis = np.busday_count(
+            form.instance.data_inicial, form.instance.data_final + timedelta(days=1)
+        )
+        dias_uteis = int(dias_uteis)
+        if timedelta(days=dias_uteis) > timedelta(days=FERIAS_BUSINESS_DAYS):
+            # ferias can not be more than 20 days
+            form.add_error(
+                "data_final",
+                f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias úteis.",
+            )
+            return self.form_invalid(form)
+
+        # 4. check if there is a previous vacation and there is still days to take
+        ferias_anteriores = Ferias.objects.filter(
+            user=self.request.user,
+            data_final__lt=form.instance.data_inicial,
+        )
+        if ferias_anteriores.exists():
+            saldo_dias = FERIAS_BUSINESS_DAYS - ferias_anteriores.last().dias_uteis
+            if saldo_dias < dias_uteis:
+                form.add_error(
+                    "data_inicial",
+                    f"O saldo de dias de férias é insuficiente. Saldo: {saldo_dias} dias.",
+                )
+                return self.form_invalid(form)
+
         form.instance.user = self.request.user
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -85,10 +107,6 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
     model = Ferias
     form_class = FeriasForm
     template_name = "ferias/ferias_form.html"
-
-    def get_success_url(self):
-        """Retorna a URL de sucesso."""
-        return reverse("ferias:ferias_list")
 
     def get_form_kwargs(self):
         kwargs = super(FeriasUpdateView, self).get_form_kwargs()
@@ -108,13 +126,15 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             )
             return self.form_invalid(form)
 
-        if (form.instance.data_final - form.instance.data_inicial) + timedelta(
-            days=1
-        ) > timedelta(days=20):
+        dias_uteis = np.busday_count(
+            form.instance.data_inicial, form.instance.data_final + timedelta(days=1)
+        )
+        dias_uteis = int(dias_uteis)
+        if timedelta(days=dias_uteis) > timedelta(days=FERIAS_BUSINESS_DAYS):
             # ferias can not be more than 20 days
             form.add_error(
                 "data_final",
-                "O período de férias não pode ser maior que 20 dias.",
+                f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias úteis.",
             )
             return self.form_invalid(form)
 
@@ -135,6 +155,23 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
         return super().form_valid(form)
+
+        # check if there is any other vacation in the same period and sum up more than 20 days
+        ferias_no_periodo = Ferias.objects.filter(
+            user=self.request.user,
+            data_inicial__lte=form.instance.data_final,
+            data_final__gte=form.instance.data_inicial,
+        )
+        if ferias_no_periodo.exists():
+            if (
+                ferias_no_periodo.dias_uteis + form.instance.dias_uteis
+                > FERIAS_BUSINESS_DAYS
+            ):
+                form.add_error(
+                    "data_inicial",
+                    f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias.",
+                )
+                return self.form_invalid(form)
 
 
 class FeriasDeleteView(LoginRequiredMixin, DeleteView):

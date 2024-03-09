@@ -5,7 +5,7 @@
     <div class="row border-bottom border-dark">
         {% if user.is_superuser %}
         <div class="col-md-6 align-middle">
-            <h3 class="text-info">Lista de Férias de Cadastradas</h3>
+            <h3 class="text-info">Lista de Férias Cadastradas</h3>
         </div>
         {% else %}
         <div class="col-md-6 align-middle">
@@ -47,7 +47,7 @@
                             {% endif %}
                             <td class="align-middle">{{ ferias.data_inicial|date:"Y-m-d"}}</td>
                             <td class="align-middle">{{ ferias.data_final|date:"Y-m-d" }}</td>
-                            <td class="align-middle text-center">{{ ferias.dias_úteis }}</td>
+                            <td class="align-middle text-center">{{ ferias.dias_uteis }}</td>
                             <td class="align-middle text-center">{{ ferias.saldo_dias }}</td>
                             {% if user.is_superuser %}
                             <td class="text-center">
@@ -73,16 +73,5 @@
                 </table>
             </table>
         </div>
-        <script>
-            var table = document.querySelector('table');
-            // check if the row has a id="status_ferias"
-            // if it has, check if the textContent is "Sim"
-            // if it is, disbale the edit and delete buttons
-            for (var i = 1; i < table.rows.length; i++) {
-                if (table.rows[i].querySelector('#status_ferias').textContent == "Sim") {
-                    table.rows[i].querySelector('#edit-button').disabled = true;
-                    table.rows[i].querySelector('#delete-button').disabled = true;
-                }
-            }
-        </script>
+
         {% endblock %}

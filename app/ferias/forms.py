@@ -1,11 +1,13 @@
 """
 Module docstring describing the purpose of the module.
 """
+
 from datetime import datetime
+
 from django import forms
 from django.contrib.auth.models import User
-
 from ferias.models import Ferias
+
 
 class DateInput(forms.DateInput):
     """DateInput."""
@@ -26,7 +28,15 @@ class FeriasForm(forms.ModelForm):
         """Meta definition for FeriasForm."""
 
         model = Ferias
-        fields = ("user", "periodo", "data_inicial", "data_final", "cumpriu")
+        fields = (
+            "user",
+            "periodo",
+            "data_inicial",
+            "data_final",
+            "dias_uteis",
+            "cumpriu",
+        )
+
         widgets = {
             "data_inicial": DateInput(format="%Y-%m-%d"),
             "data_final": DateInput(format="%Y-%m-%d"),
@@ -36,7 +46,6 @@ class FeriasForm(forms.ModelForm):
         """get_object."""
         return self.instance
 
-
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super(FeriasForm, self).__init__(*args, **kwargs)
@@ -44,3 +53,4 @@ class FeriasForm(forms.ModelForm):
             id=self.request.session.get("user_id")
         )
         self.fields["periodo"].initial = datetime.now().year
+        self.fields["dias_uteis"].initial = 1

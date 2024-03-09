@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import numpy as np
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from folha_ponto.settings import FERIAS_BUSINESS_DAYS  # 20 Days
 
@@ -38,6 +38,10 @@ class Ferias(models.Model):
     )
     data_inicial = models.DateField()
     data_final = models.DateField()
+    dias_uteis = models.IntegerField(
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(FERIAS_BUSINESS_DAYS)],
+    )
     cumpriu = models.BooleanField(default=False)
     cadastrado_em = models.DateTimeField(
         auto_now_add=True
@@ -53,11 +57,6 @@ class Ferias(models.Model):
         if self.cumpriu:
             return "Sim"
         return "Não"
-
-    @property
-    def dias_uteis(self):
-        """Retorna a quantidade de dias corridos."""
-        return np.busday_count(self.data_inicial, self.data_final + timedelta(days=1))
 
     @property
     def saldo_dias(self):
