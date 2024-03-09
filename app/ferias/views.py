@@ -11,7 +11,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from ferias.forms import FeriasForm
 from ferias.models import Ferias
-from folha_on_docker.settings import FERIAS_BUSINESS_DAYS
+from folha_ponto.settings import FERIAS_BUSINESS_DAYS
 
 
 class FeriasListView(LoginRequiredMixin, ListView):
