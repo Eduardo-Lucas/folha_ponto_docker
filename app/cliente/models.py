@@ -4,15 +4,19 @@ from django.db import models
 class ClienteManager(models.Manager):
     """Manager definition for Cliente."""
 
-    def get_queryset(self):
+    def cliente_ativo(self):
         """Queryset definition for Cliente."""
         return super().get_queryset().filter(situacaoentidade=1)
+
+    def get_queryset(self):
+        """Queryset definition for Cliente."""
+        return super().get_queryset().all()
 
 
 class Cliente(models.Model):
     """Model definition for Cliente."""
 
-    id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True, auto_created=True)
     tipodocumento = models.IntegerField(
         null=True,
         blank=True,
@@ -68,7 +72,7 @@ class Cliente(models.Model):
         if self.codigosistema is not None:
             return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
         return self.nomerazao
-    
+
     class Meta:
         """Meta definition for Cliente."""
 

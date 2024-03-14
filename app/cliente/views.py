@@ -13,9 +13,13 @@ def cliente_autocomplete(request):
         query = request.GET.get("term", "")
 
         if query.isdigit():
-            clientes = Cliente.objects.filter(Q(codigosistema=int(query)))
+            clientes = Cliente.objects.filter(
+                codigosistema__exact=int(query), situacaoentidade=1
+            )
         else:
-            clientes = Cliente.objects.filter(Q(nomerazao__icontains=query))
+            clientes = Cliente.objects.filter(
+                nomerazao__icontains=query, situacaoentidade=1
+            )
 
         results = []
         for cliente in clientes:
