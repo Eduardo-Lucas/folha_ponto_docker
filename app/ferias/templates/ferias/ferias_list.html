@@ -45,8 +45,8 @@
                             {% if user.is_superuser %}
                             <th class="align-middle">{{ferias.user.username|capfirst}}</th>
                             {% endif %}
-                            <td class="align-middle">{{ ferias.data_inicial|date:"Y-m-d"}}</td>
-                            <td class="align-middle">{{ ferias.data_final|date:"Y-m-d" }}</td>
+                            <td class="align-middle">{{ ferias.data_inicial|date:"d/m/Y"}}</td>
+                            <td class="align-middle">{{ ferias.data_final|date:"d/m/Y" }}</td>
                             <td class="align-middle text-center">{{ ferias.dias_uteis }}</td>
                             <td class="align-middle text-center">{{ ferias.saldo_dias }}</td>
                             {% if user.is_superuser %}
