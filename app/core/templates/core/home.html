@@ -35,10 +35,27 @@
                                 {% endif %}
                                 {% endif %}
                             </td>
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.last_interaction|date:"d/m/y H:i - l" }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.cliente }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.tarefa }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td></td>
+                            {% else %}
                             <td>{{ ponto.total_dia }}</td>
+                            {% endif %}
+
                             <td>
                                 {% if ponto.tarefa_aberta.count > 0 %}
                                 <i class="fas fa-exclamation-triangle" data-toggle="tooltip"
@@ -47,6 +64,7 @@
                                 <i class="fas fa-check" data-toggle="tooltip" title="Ok" style="color:green"></i>
                                 {% endif %}
                             </td>
+
                             <td scope="row" class="text-center">
                                 <a
                                     href="{% url 'apontamento:historico_com_datas' data_inicial=ponto.last_interaction data_final=ponto.last_interaction user_id=ponto.usuario.id %}">
@@ -116,10 +134,26 @@
                                 {% endif %}
                                 {% endif %}
                             </td>
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.last_interaction|date:"d/m/y H:i - l" }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.cliente }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td class="text-danger"><strong>Férias</strong> </td>
+                            {% else %}
                             <td>{{ ponto.tarefa }}</td>
+                            {% endif %}
+                            {% if ponto.ferias == "Sim" %}
+                            <td></td>
+                            {% else %}
                             <td>{{ ponto.total_dia }}</td>
+                            {% endif %}
                             <td>
                                 {% if ponto.tarefa_aberta.count > 0 %}
                                 <i class="fas fa-exclamation-triangle" data-toggle="tooltip"

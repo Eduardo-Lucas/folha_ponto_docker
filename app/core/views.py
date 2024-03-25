@@ -1,11 +1,13 @@
 from datetime import datetime
 
+from ferias.models import Ferias
 from apontamento.models import Ponto
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.shortcuts import render
+
 
 @login_required
 def home(request):
@@ -30,10 +32,17 @@ def home(request):
                 last_interaction = ponto.entrada
 
             ponto_status = Ponto.objects.get_open_pontos(user)
+
+            ferias = Ferias.objects.get_ferias(
+                last_interaction.date(), last_interaction.date(), user
+            )
+
             if ponto_status.count() > 0:
+
                 pontos_abertos.append(
                     {
                         "usuario": user,
+                        "ferias": ferias,
                         "last_interaction": last_interaction,
                         "day": last_interaction.date(),
                         "cliente": cliente,
@@ -43,9 +52,11 @@ def home(request):
                     }
                 )
             else:
+
                 pontos_fechados.append(
                     {
                         "usuario": user,
+                        "ferias": ferias,
                         "last_interaction": last_interaction,
                         "day": last_interaction.date(),
                         "cliente": cliente,
