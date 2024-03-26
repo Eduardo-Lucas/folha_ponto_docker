@@ -69,7 +69,7 @@ class Ferias(models.Model):
         """Meta definition for Ferias."""
 
         ordering = [
-            "-periodo",
+            "-periodo", "-data_inicial",
         ]
         verbose_name = "Férias"
         verbose_name_plural = "Férias"
