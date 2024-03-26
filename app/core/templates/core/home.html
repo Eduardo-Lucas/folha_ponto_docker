@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="container border border-dark">
+    <!-- Pontos Abertos -->
     <div class="row">
         <div class="col">
             <h5 class="text-info mt-3">Última Interação com Pontos Abertos</h5>
@@ -197,6 +198,48 @@
             <a href="?page={{ pontos_fechados.paginator_pontos_fechados.num_pages }}">&raquo; última</a>
             {% endif %}
         </span>
+    </div>
+
+    <!-- Próximas Férias -->
+    <div class="row border-top border-dark mt-3">
+        <div class="col">
+            <h5 class="text-info mt-3">Próximas Férias</h5>
+            <table class="table-responsive">
+                <table class="table table-bordered table-striped table-hover table-sm">
+                    <thead style="background-color: orangered; vertical-align: middle;">
+
+                        <th>Período</th>
+                        <th>Nome</th>
+                        <th>Data Inicial</th>
+                        <th>Data Final</th>
+                        <th>Dias Úteis</th>
+                        <th>Saldo em Dias</th>
+                    </thead>
+
+                    <tbody>
+
+                        {% for ponto in proximas_ferias %}
+
+                        <tr style="vertical-align: middle;">
+                            <td>{{ ponto.periodo}}</td>
+                            <td>
+                                {{ ponto.user.userprofile.nome }}
+                            </td>
+                            <td>{{ ponto.data_inicial|date:"d/m/Y" }}</td>
+                            <td>{{ ponto.data_final|date:"d/m/Y" }}</td>
+                            <td>{{ ponto.dias_uteis }}</td>
+                            <td>{{ ponto.saldo_dias }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Nenhum registro encontrado</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </table>
+
+        </div>
     </div>
 
 </div>

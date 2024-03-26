@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import numpy as np
 from django.contrib.auth.models import User
@@ -26,6 +26,12 @@ class FeriasManager(models.Manager):
             if query:
                 return "Sim"
             return "Não"
+
+    def get_proximas_ferias(self):
+        """Get the next vacation period"""
+        return self.filter(
+            data_inicial__gte=datetime.now().date() + timedelta(days=30)
+        ).order_by("-data_inicial")
 
 
 class Ferias(models.Model):

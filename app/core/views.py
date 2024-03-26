@@ -82,9 +82,13 @@ def home(request):
     pontos_abertos = paginator_pontos_abertos.get_page(page)
     pontos_fechados = paginator_pontos_fechados.get_page(page)
 
+    # proximas ferias a serem tiradas
+    proximas_ferias = Ferias.objects.get_proximas_ferias()
+
     context = {
         "pontos_abertos": pontos_abertos,
         "pontos_fechados": pontos_fechados,
+        "proximas_ferias": proximas_ferias,
     }
 
     # Carrega as datas iniciais e finais na sessão
