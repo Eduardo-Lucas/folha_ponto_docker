@@ -6,7 +6,7 @@ python manage.py migrate
 # python manage.py createdepartamento # Departamento
 python manage.py createuser # normal user
 python manage.py createsu # super user
-# python manage.py load_tipo_receita # Tipo Receita
+python manage.py load_tipo_receita # Tipo Receita
 # python manage.py load_contato # Contatos not needed anymore
 # python manage.py load_feriado # Feriados
 # python manage.py load_clientes # Clientes
