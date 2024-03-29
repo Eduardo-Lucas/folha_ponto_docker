@@ -3,9 +3,10 @@
 """
 
 from datetime import timedelta
-import numpy as np
 
+import numpy as np
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.urls import reverse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
@@ -16,6 +17,7 @@ from folha_ponto.settings import FERIAS_BUSINESS_DAYS
 
 class FeriasListView(LoginRequiredMixin, ListView):
     """View para listar as férias."""
+
     paginate_by = 10
     model = Ferias
     template_name = "ferias/ferias_list.html"
@@ -138,6 +140,23 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             )
             return self.form_invalid(form)
 
+        # check if there is any other vacation in the same period and sum up more than 20 days
+        ferias_no_periodo = Ferias.objects.filter(
+            user=self.request.user,
+            data_inicial__lte=form.instance.data_final,
+            data_final__gte=form.instance.data_inicial,
+        )
+        if ferias_no_periodo.exists():
+            if (
+                ferias_no_periodo.dias_uteis + form.instance.dias_uteis
+                > FERIAS_BUSINESS_DAYS
+            ):
+                form.add_error(
+                    "data_inicial",
+                    f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias.",
+                )
+                return self.form_invalid(form)
+
         # check if there is any other vacation in the same period
         if (
             Ferias.objects.filter(
@@ -156,23 +175,6 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
 
         return super().form_valid(form)
 
-        # check if there is any other vacation in the same period and sum up more than 20 days
-        ferias_no_periodo = Ferias.objects.filter(
-            user=self.request.user,
-            data_inicial__lte=form.instance.data_final,
-            data_final__gte=form.instance.data_inicial,
-        )
-        if ferias_no_periodo.exists():
-            if (
-                ferias_no_periodo.dias_uteis + form.instance.dias_uteis
-                > FERIAS_BUSINESS_DAYS
-            ):
-                form.add_error(
-                    "data_inicial",
-                    f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias.",
-                )
-                return self.form_invalid(form)
-
 
 class FeriasDeleteView(LoginRequiredMixin, DeleteView):
     """View para exclusão de férias."""
@@ -183,3 +185,21 @@ class FeriasDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         """Retorna a URL de sucesso."""
         return reverse("ferias:ferias_list")
+
+
+class SearchFeriasResultsView(ListView):
+    """View para listar as férias filtradas."""
+
+    paginate_by = 10
+    model = Ferias
+    template_name = "ferias/ferias_list.html"
+    context_object_name = "ferias"
+
+    def get_queryset(self):  # new
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get("q")
+            ferias = Ferias.objects.filter(Q(user__username__icontains=query))
+        else:  # pragma: no cover
+            ferias = Ferias.objects.all()
+
+        return ferias

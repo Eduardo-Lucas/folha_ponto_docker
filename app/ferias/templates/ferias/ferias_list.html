@@ -2,21 +2,26 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container border border-dark">
-    <div class="row border-bottom border-dark">
+    <div class="row border-bottom border-dark align-middle">
         {% if user.is_superuser %}
-        <div class="col-md-6 align-middle">
+        <div class="col-md-5 align-middle">
             <h3 class="text-info">Lista de Férias Cadastradas</h3>
         </div>
         {% else %}
-        <div class="col-md-6 align-middle">
+        <div class="col-md-3 align-middle">
             <h3 class="text-info">Lista de Férias de {{request.user|capfirst}}</h3>
         </div>
         {% endif %}
-        <div class="col-md-6 mt-1 mb-1">
+        <div class="col-md-3 mt-1 mb-1">
             <a href="{% url 'ferias:ferias_create' %}" class="btn btn-success">
                 <i class="fas fa-plus"></i>
                 Adicionar Férias
             </a>
+        </div>
+        <div class="col-md-4 mt-1 mb-1 align-middle">
+            <form action="{% url 'ferias:search_ferias_results' %}" method="get">
+                <input name="q" type="text" placeholder="Pesquisa...">
+            </form>
         </div>
     </div>
     <div class="row">
@@ -41,7 +46,7 @@
                     <tbody id="table">
                         {% for feria in ferias %}
                         <tr>
-                            
+
                             {% if user.is_superuser %}
                             <th class="align-middle">{{feria.user.username|capfirst}}</th>
                             {% endif %}

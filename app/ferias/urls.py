@@ -17,4 +17,9 @@ urlpatterns = [
         views.FeriasDeleteView.as_view(),
         name="ferias_delete",
     ),
+    path(
+        "search_ferias_results/",
+        views.SearchFeriasResultsView.as_view(),
+        name="search_ferias_results",
+    ),
 ]
