@@ -16,7 +16,7 @@ from folha_ponto.settings import FERIAS_BUSINESS_DAYS
 
 class FeriasListView(LoginRequiredMixin, ListView):
     """View para listar as férias."""
-
+    paginate_by = 10
     model = Ferias
     template_name = "ferias/ferias_list.html"
     context_object_name = "ferias"

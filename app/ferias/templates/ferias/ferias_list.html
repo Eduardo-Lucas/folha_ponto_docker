@@ -39,23 +39,23 @@
                         </tr>
                     </thead>
                     <tbody id="table">
-                        {% for ferias in ferias %}
+                        {% for feria in ferias %}
                         <tr>
-                            <td class="align-middle">{{ ferias.periodo }}</td>
+                            <td class="align-middle">{{ feria.periodo }}</td>
                             {% if user.is_superuser %}
-                            <th class="align-middle">{{ferias.user.username|capfirst}}</th>
+                            <th class="align-middle">{{feria.user.username|capfirst}}</th>
                             {% endif %}
-                            <td class="align-middle">{{ ferias.data_inicial|date:"d/m/Y"}}</td>
-                            <td class="align-middle">{{ ferias.data_final|date:"d/m/Y" }}</td>
-                            <td class="align-middle text-center">{{ ferias.dias_uteis }}</td>
-                            <td class="align-middle text-center">{{ ferias.saldo_dias }}</td>
+                            <td class="align-middle">{{ feria.data_inicial|date:"d/m/Y"}}</td>
+                            <td class="align-middle">{{ feria.data_final|date:"d/m/Y" }}</td>
+                            <td class="align-middle text-center">{{ feria.dias_uteis }}</td>
+                            <td class="align-middle text-center">{{ feria.saldo_dias }}</td>
                             {% if user.is_superuser %}
                             <td class="text-center">
-                                <a href="{% url 'ferias:ferias_update' ferias.id %}" class="btn btn-warning btn-sm"
+                                <a href="{% url 'ferias:ferias_update' feria.id %}" class="btn btn-warning btn-sm"
                                     id="edit-button">
                                     <i class="fas fa-edit"></i>
                                     Editar</a>
-                                <a href="{% url 'ferias:ferias_delete' ferias.id %}" class="btn btn-danger btn-sm"
+                                <a href="{% url 'ferias:ferias_delete' feria.id %}" class="btn btn-danger btn-sm"
                                     id="delete-button">
                                     <i class="fas fa-trash"></i>
                                     Excluir</a>
@@ -73,5 +73,24 @@
                 </table>
             </table>
         </div>
+    </div>
+    <div class="pagination mb-2">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+            {% endif %}
 
-        {% endblock %}
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+</div>
+{% endblock %}
