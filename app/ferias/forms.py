@@ -54,3 +54,4 @@ class FeriasForm(forms.ModelForm):
         )
         self.fields["periodo"].initial = datetime.now().year
         self.fields["dias_uteis"].initial = 1
+        self.fields["dias_uteis"].widget.attrs["readonly"] = True
