@@ -57,9 +57,9 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
 
         # 2. check if there is any other vacation in the same period
         if Ferias.objects.filter(
-                user=self.request.user,
-                data_inicial__lte=form.instance.data_final,
-                data_final__gte=form.instance.data_inicial,
+            user=self.request.user,
+            data_inicial__lte=form.instance.data_final,
+            data_final__gte=form.instance.data_inicial,
         ).exists():
             form.add_error(
                 "data_inicial",
@@ -69,10 +69,15 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
 
         # 3. check if the vacation period is greater than 20 days
         dias_uteis = np.busday_count(
-            form.instance.data_inicial,
-            form.instance.data_final + timedelta(days=1))
+            form.instance.data_inicial, form.instance.data_final + timedelta(days=1)
+        )
         dias_uteis = int(dias_uteis)
-        if timedelta(days=dias_uteis) > timedelta(days=FERIAS_BUSINESS_DAYS):
+        saldo_anterior = Ferias.objects.get_ferias_anteriores(
+            form.instance.periodo, form.instance.data_inicial, self.request.user
+        )
+        if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
+            days=FERIAS_BUSINESS_DAYS
+        ):
             # ferias can not be more than 20 days
             form.add_error(
                 "data_final",
@@ -86,12 +91,11 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             data_final__lt=form.instance.data_inicial,
         )
         if ferias_anteriores.exists():
-            saldo_dias = FERIAS_BUSINESS_DAYS - ferias_anteriores.last(
-            ).dias_uteis
-            if saldo_dias < dias_uteis:
+
+            if saldo_anterior + dias_uteis > FERIAS_BUSINESS_DAYS:
                 form.add_error(
                     "data_inicial",
-                    f"O saldo de dias de férias é insuficiente. Saldo: {saldo_dias} dias.",
+                    f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias úteis.",
                 )
                 return self.form_invalid(form)
 
@@ -131,10 +135,16 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
         dias_uteis = np.busday_count(
-            form.instance.data_inicial,
-            form.instance.data_final + timedelta(days=1))
+            form.instance.data_inicial, form.instance.data_final + timedelta(days=1)
+        )
         dias_uteis = int(dias_uteis)
-        if timedelta(days=dias_uteis) > timedelta(days=FERIAS_BUSINESS_DAYS):
+        saldo_anterior = Ferias.objects.get_ferias_anteriores(
+            form.instance.periodo, form.instance.data_inicial, self.request.user
+        )
+
+        if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
+            days=FERIAS_BUSINESS_DAYS
+        ):
             # ferias can not be more than 20 days
             form.add_error(
                 "data_final",
@@ -150,10 +160,9 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
         )
         if ferias_no_periodo.exists():
             saldo_anterior = Ferias.objects.get_ferias_anteriores(
-                form.instance.periodo, form.instance.data_inicial,
-                self.request.user)
-            if (saldo_anterior + form.instance.dias_uteis
-                    > FERIAS_BUSINESS_DAYS):
+                form.instance.periodo, form.instance.data_inicial, self.request.user
+            )
+            if saldo_anterior + form.instance.dias_uteis > FERIAS_BUSINESS_DAYS:
                 form.add_error(
                     "data_inicial",
                     f"O período de férias não pode ser maior que {FERIAS_BUSINESS_DAYS} dias.",
@@ -161,18 +170,21 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
                 return self.form_invalid(form)
 
         # check if there is any other vacation in the same period
-        if (Ferias.objects.filter(
+        if (
+            Ferias.objects.filter(
                 user=self.request.user,
                 data_inicial__lte=form.instance.data_final,
                 data_final__gte=form.instance.data_inicial,
-        ).exclude(id=self.object.id).exists()):
+            )
+            .exclude(id=self.object.id)
+            .exists()
+        ):
             form.add_error(
                 "data_inicial",
                 "Já existe um registro de férias para este período.",
             )
             return self.form_invalid(form)
 
-        form.instance.user = self.request.user
         form.instance.dias_uteis = dias_uteis
 
         return super().form_valid(form)
