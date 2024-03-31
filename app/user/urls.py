@@ -10,6 +10,7 @@ from .views import (
     logout_view,
     sign_in,
     success_password,
+    usuario_autocomplete,
 )
 
 app_name = "user"
@@ -53,4 +54,5 @@ urlpatterns = [
     path("success_password/", success_password, name="success_password"),
     path("profile/", ProfileUpdateView.as_view(), name="profile"),
     path("atualiza_perfil/<int:pk>", AtualizaPerfil.as_view(), name="atualiza_perfil"),
+    path("usuario_autocomplete/", usuario_autocomplete, name="usuario_autocomplete"),
 ]

@@ -18,9 +18,9 @@
                 Adicionar Férias
             </a>
         </div>
-        <div class="col-md-4 mt-1 mb-1 align-middle">
+        <div class="col-md-4 mt-1 ui-widget">
             <form action="{% url 'ferias:search_ferias_results' %}" method="get">
-                <input name="q" type="text" placeholder="Pesquisa...">
+                <input type="text" id="usuario" name="q" class="form-control" placeholder="Pesquisa...">
             </form>
         </div>
     </div>
@@ -96,6 +96,14 @@
             {% endif %}
         </span>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#usuario").autocomplete({
+                source: "{% url 'user:usuario_autocomplete' %}",
+                minLength: 2,
+            });
+        });
+    </script>
 
 </div>
 {% endblock %}

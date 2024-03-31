@@ -1,3 +1,5 @@
+import json
+
 from apontamento.models import Ponto, TipoReceita
 from apontamento.views import fecha_tarefa
 from django.contrib import messages
@@ -8,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy  # type: ignore
 from django.views.generic.edit import UpdateView
@@ -132,3 +135,22 @@ class AtualizaPerfil(LoginRequiredMixin, UpdateView):
         messages.success(self.request, "Seu perfil foi atualizado com sucesso.")
 
         return super().form_valid(form)
+
+
+def usuario_autocomplete(request):
+    """Autocomplete for Usuario"""
+    data = None
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        query = request.GET.get("term", "")
+
+        usuarios = User.objects.filter(username__icontains=query, is_active=True)
+
+        results = []
+        for usuario in usuarios:
+            place_json = usuario.username
+
+            results.append(place_json)
+
+        data = json.dumps(results)
+    mimetype = "application/json"
+    return HttpResponse(data, mimetype)
