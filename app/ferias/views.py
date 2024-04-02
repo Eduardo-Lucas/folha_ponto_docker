@@ -47,6 +47,14 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
         """Se o formulário for válido, salva o objeto e redireciona para a URL de sucesso."""
         form.instance.user = self.request.user
 
+        # 0. check if the period is equal or greater then the current year
+        if form.instance.data_inicial.year < form.instance.periodo:
+            form.add_error(
+                "data_inicial",
+                "O período de férias não pode ser menor que o ano atual.",
+            )
+            return self.form_invalid(form)
+
         # 1. check if data_inicial is greater than data_final
         if form.instance.data_inicial > form.instance.data_final:
             form.add_error(
@@ -73,7 +81,7 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
         )
         dias_uteis = int(dias_uteis)
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            form.instance.periodo, form.instance.data_inicial, self.request.user
+            form.instance.data_inicial, self.request.user
         )
         if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
             days=FERIAS_BUSINESS_DAYS
@@ -134,12 +142,20 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             )
             return self.form_invalid(form)
 
+        # 0. check if the period is equal or greater then the current year
+        if form.instance.data_inicial.year < form.instance.periodo:
+            form.add_error(
+                "data_inicial",
+                "O período de férias não pode ser menor que o ano atual.",
+            )
+            return self.form_invalid(form)
+
         dias_uteis = np.busday_count(
             form.instance.data_inicial, form.instance.data_final + timedelta(days=1)
         )
         dias_uteis = int(dias_uteis)
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            form.instance.periodo, form.instance.data_inicial, self.request.user
+            form.instance.data_inicial, self.request.user
         )
 
         if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
@@ -160,7 +176,7 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
         )
         if ferias_no_periodo.exists():
             saldo_anterior = Ferias.objects.get_ferias_anteriores(
-                form.instance.periodo, form.instance.data_inicial, self.request.user
+                form.instance.data_inicial, self.request.user
             )
             if saldo_anterior + form.instance.dias_uteis > FERIAS_BUSINESS_DAYS:
                 form.add_error(
@@ -184,6 +200,21 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
                 "Já existe um registro de férias para este período.",
             )
             return self.form_invalid(form)
+
+        # check  if there is still balance for that period
+        if (
+            form.instance.data_inicial.date().year != form.instance.periodo
+            or form.instance.data_final.date().year != form.instance.periodo
+        ):
+            # check if the previous vacation has balance yet
+            if dias_uteis + saldo_anterior > FERIAS_BUSINESS_DAYS:
+                form.add_error(
+                    "data_inicial",
+                    f"O período de {form.instance.periodo} não possui mais saldo!",
+                )
+                return self.form_invalid(form)
+
+        form.instance.periodo = form.instance.data_inicial.year
 
         form.instance.dias_uteis = dias_uteis
 

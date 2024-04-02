@@ -33,9 +33,11 @@ class FeriasManager(models.Manager):
             "data_inicial"
         )
 
-    def get_ferias_anteriores(self, periodo=None, data_inicial=None, user=None):
+    def get_ferias_anteriores(self, data_inicial=None, user=None):
         """Get the previous vacation period"""
-        query = self.filter(periodo=periodo, user=user, data_inicial__lt=data_inicial)
+        query = self.filter(
+            periodo=data_inicial.year, user=user, data_inicial__lt=data_inicial
+        )
         # sum dias_uteis from query
         dias_uteis = sum(ferias.dias_uteis for ferias in query)
         return dias_uteis
@@ -88,6 +90,6 @@ class Ferias(models.Model):
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            self.periodo, self.data_inicial, self.user
+            self.data_inicial, self.user
         )
         return FERIAS_BUSINESS_DAYS - saldo_anterior - self.dias_uteis
