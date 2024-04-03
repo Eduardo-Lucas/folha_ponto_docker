@@ -219,8 +219,8 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
 
         # check  if there is still balance for that period
         if (
-            form.instance.data_inicial.date().year != form.instance.periodo
-            or form.instance.data_final.date().year != form.instance.periodo
+            form.instance.data_inicial.year != form.instance.periodo
+            or form.instance.data_final.year != form.instance.periodo
         ):
             # check if the previous vacation has balance yet
             if dias_uteis + saldo_anterior > FERIAS_BUSINESS_DAYS:
