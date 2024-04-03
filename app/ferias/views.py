@@ -47,6 +47,14 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
         """Se o formulário for válido, salva o objeto e redireciona para a URL de sucesso."""
         form.instance.user = self.request.user
 
+        # check if the year between data_inicial and data_final is the same
+        if form.instance.data_inicial.year != form.instance.data_final.year:
+            form.add_error(
+                "data_inicial",
+                "O período de férias deve ser no mesmo ano.",
+            )
+            return self.form_invalid(form)
+
         # 0. check if the period is equal or greater then the current year
         if form.instance.data_inicial.year < form.instance.periodo:
             form.add_error(
@@ -139,6 +147,14 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
             form.add_error(
                 "data_inicial",
                 "A data inicial não pode ser maior que a data final.",
+            )
+            return self.form_invalid(form)
+
+        # check if the year between data_inicial and data_final is the same
+        if form.instance.data_inicial.year != form.instance.data_final.year:
+            form.add_error(
+                "data_inicial",
+                "O período de férias deve ser no mesmo ano.",
             )
             return self.form_invalid(form)
 
