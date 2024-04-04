@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Any
 
-from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm
+from apontamento.forms import (AjustePontoForm, AppointmentCreateForm,
+                               FolhaPontoForm)
 from apontamento.models import Ponto
 from cliente.models import Cliente
 from django.contrib import messages
@@ -516,13 +517,25 @@ def over_10_hours_list(request):
 @login_required
 def over_10_hour_validation(request, day, user_id):
     """Validação de ponto com mais de 10 horas"""
-    # filter ponto by the day and user_id and update over_10_hours field to True
-    pontos = Ponto.objects.filter(entrada__date=day, saida__date=day, usuario=user_id)
-    if pontos:
+
+    data_inicial = day.strftime("%Y-%m-%d")
+    data_final = data_inicial
+
+    usuario = User.objects.get(id=user_id)
+
+    pontos = Ponto.objects.for_range_days(data_inicial, data_final, user_id)
+    if pontos.exists():
         for ponto in pontos:
             ponto.over_10_hours_authorization = True
             ponto.save()
-        messages.info(request, "Pontos com mais de 10 horas validados")
+        dia = day.strftime("%d/%m/%Y")
+        messages.info(
+            request,
+            f"Os registros de Ponto que somam mais de 10 horas do usuário \
+                {usuario.username.capitalize()} do dia \
+                    {dia} foram autorizados!",
+        )
+
     return redirect("apontamento:over_10_hours_list")
 
 

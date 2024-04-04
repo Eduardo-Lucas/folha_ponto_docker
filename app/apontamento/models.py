@@ -73,7 +73,7 @@ class PontoManager(models.Manager):
         # start should be the day itself and the day before
         start = datetime.combine(day, time.min)  # - timedelta(days=1)
         end = datetime.combine(day, time.max)
-        return self.filter(entrada__range=(start, end), usuario=user)
+        return self.filter(entrada__range=(start, end), usuario=user, over_10_hours_authorization=False)
 
     def for_day_unauthorized(self, day=None, user=None):
         """
@@ -330,7 +330,7 @@ class PontoManager(models.Manager):
         """return a list of dictionaries with the days that the user worked more than 10 hours using the following format:
         {user: user, day: date, total_hours: total_hours}"""
         over_10_hours_list = []
-        users = User.objects.all()
+        users = User.objects.filter(is_active=True)
         for day in range(30):
             day = datetime.now().date() - timedelta(days=day)
             # loop through users
