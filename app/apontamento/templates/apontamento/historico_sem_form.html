@@ -31,6 +31,7 @@
                         {% for ponto in historico %}
                         <tr>
 
+                            {% if ponto.allow_update %}
                             <td class="text-center">
                                 <a href="{% url 'apontamento:appointment_update' ponto.id %}">
                                     <i class="fas fa-edit" data-toggle="tooltip" title="Alterar a Marcação"
@@ -43,6 +44,21 @@
                                         style="color:red"></i>
                                 </a>
                             </td>
+                            {% else %}
+                            <td class="text-center">
+                                <a href="#">
+                                    <i class="fas fa-edit" data-toggle="tooltip" title="Não pode Alterar a Marcação"
+                                        style="color:red"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#">
+                                    <i class="fas fa-times-circle" data-toggle="tooltip"
+                                        title="Não pode Apagar a Marcação" style="color:red"></i>
+                                </a>
+                            </td>
+                            {% endif %}
+
                             {% if not ponto.saida %}
                             <td class="text-center">
                                 <a href="{% url 'apontamento:fecha_tarefa' ponto.id %}">

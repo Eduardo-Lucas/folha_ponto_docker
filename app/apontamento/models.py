@@ -433,6 +433,18 @@ class Ponto(models.Model):
             return self.saida - self.entrada
         return timedelta(hours=0)
 
+    @property
+    def allow_update(self):
+        """
+        Returns True if the Ponto object can be updated.
+        """
+        current_date = datetime.now().date()
+        diff_days = current_date - self.entrada.date()
+        if diff_days.days <= 1:
+            return True
+        return False
+
+
     def __str__(self) -> str:
         """
         Returns a string representation of the Ponto object.
