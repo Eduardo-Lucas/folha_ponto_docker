@@ -31,7 +31,7 @@
                         {% for ponto in historico %}
                         <tr>
 
-                            {% if ponto.allow_update %}
+                            {% if ponto.allow_update or user.is_superuser %}
                             <td class="text-center">
                                 <a href="{% url 'apontamento:appointment_update' ponto.id %}">
                                     <i class="fas fa-edit" data-toggle="tooltip" title="Alterar a Marcação"

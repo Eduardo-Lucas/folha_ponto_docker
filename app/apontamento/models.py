@@ -440,10 +440,19 @@ class Ponto(models.Model):
         """
         current_date = datetime.now().date()
         diff_days = current_date - self.entrada.date()
-        if diff_days.days <= 1:
-            return True
-        return False
 
+        if diff_days.days <= 3 and current_date.weekday() == 0:
+            # Allow update if the difference between the current date
+            # and the date of the Ponto object is less than 3 days AND
+            # if the current date is Monday.
+            return True
+
+        if diff_days.days <= 1:
+            # Allow update if the difference between the current date
+            # and the date of the Ponto object is less than 1 day.
+            return True
+        else:
+            return False
 
     def __str__(self) -> str:
         """
