@@ -80,12 +80,13 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
+# !! CORS AND CSRF VALUES CHANGED TO THE TEST URL !!
 CORS_ALLOWED_ORIGINS = [
-    "https://bv-contabilidade.onrender.com",
+    "https://bv-contabilidade-v2.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://bv-contabilidade.onrender.com",
+    "https://bv-contabilidade-v2.onrender.com",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
