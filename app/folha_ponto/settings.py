@@ -33,9 +33,15 @@ DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-# ALLOWED_HOSTS - add the test url (folha-ponto-docker-v2.onrender.com).
-ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS", "bv-contabilidade.onrender.com").split(" ")
+# ALLOWED_HOSTS - added the test url (folha-ponto-docker-v2.onrender.com) to the env file.
+# ALLOWED_HOSTS - fixed split method to accept many values.
+if 'DJANGO_ALLOWED_HOSTS' in os.environ:
+    # get the values from env file
+    allowed_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
+    # split the values based in white space
+    ALLOWED_HOSTS = allowed_hosts.split()
+else:
+    ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
