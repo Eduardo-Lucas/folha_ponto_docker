@@ -73,7 +73,21 @@ class PontoManager(models.Manager):
         # start should be the day itself and the day before
         start = datetime.combine(day, time.min)  # - timedelta(days=1)
         end = datetime.combine(day, time.max)
-        return self.filter(entrada__range=(start, end), usuario=user, over_10_hours_authorization=False)
+        return self.filter(
+            entrada__range=(start, end), usuario=user, over_10_hours_authorization=False
+        )
+
+    def for_day_resumo(self, day=None, user=None):
+        """
+        Returns all Ponto objects for a given day and user.
+        """
+        if day is None:
+            day = datetime.now().date()
+        # start should the day itself and the day before
+        start = datetime.combine(day, time.min)  # - timedelta(days=1)
+        # start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        return self.filter(entrada__range=(start, end), usuario=user)
 
     def for_day_unauthorized(self, day=None, user=None):
         """
@@ -160,7 +174,7 @@ class PontoManager(models.Manager):
         Returns the total time for a given day and user.
         """
         total = timedelta(0)
-        for ponto in self.for_day(day, user):
+        for ponto in self.for_day_resumo(day, user):
             total += ponto.difference
         return total
 
@@ -220,7 +234,7 @@ class PontoManager(models.Manager):
                 ferias = Ferias.objects.get_ferias(
                     data_inicial=day.date(),
                     data_final=day.date(),
-                    user=user.id,
+                    user=user,
                 )
             except ObjectDoesNotExist:
                 ferias = "Não"
