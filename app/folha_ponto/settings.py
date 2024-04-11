@@ -80,14 +80,14 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
-# CORS ALLOWED ORIGINS AND CSRF TRUSTED ORIGINS - changed original ulr to the test one(bv-contabilidade-v2.onrender.com).
+# CORS ALLOWED ORIGINS AND CSRF TRUSTED ORIGINS - changed original ulr to the test one(https://folha-ponto-docker-v2.onrender.com).
 
 CORS_ALLOWED_ORIGINS = [
-    "https://bv-contabilidade-v2.onrender.com",
+    "https://folha-ponto-docker-v2.onrender.com/",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://bv-contabilidade-v2.onrender.com",
+    "https://folha-ponto-docker-v2.onrender.com/",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
