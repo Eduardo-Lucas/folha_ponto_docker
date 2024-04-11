@@ -4,5 +4,5 @@
     3. Changed DATABASE_URL original value for the bv-contabilidade-v2(test dabatase) internal link (postgres://bv_contabilidade_v2_user:NCmSanz0wV40tyBVcXxlisZH3i36A04M@dpg-cobhv8djm4es739q6l70-a/bv_contabilidade_v2)
 
 settings.py
-    1. Changed CORS_ALLOWED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version)
-    2. Changed CSRF_TRUSTED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version)
+    1. Changed CORS_ALLOWED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version url)
+    2. Changed CSRF_TRUSTED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version url)
