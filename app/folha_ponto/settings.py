@@ -33,8 +33,9 @@ DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+# ALLOWED_HOSTS - add the test url (folha-ponto-docker-v2.onrender.com).
 ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS", "bv-contabilidade.onrender.com"
+    "DJANGO_ALLOWED_HOSTS", "bv-contabilidade.onrender.com", "folha-ponto-docker-v2.onrender.com"
 ).split(" ")
 
 

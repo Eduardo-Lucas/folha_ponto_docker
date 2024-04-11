@@ -12,4 +12,6 @@ python manage.py load_tipo_receita # Tipo Receita
 # python manage.py load_clientes # Clientes
 # python manage.py createprofile # UserProfile
 # python manage.py load_pontos_pandas # Pontos-2023
+
+# CHANGED THE HTTP PORT TO RENDER DEFAULT {0.0.0.0:80}. The original one is 0.0.0.0:10000
 gunicorn folha_ponto.wsgi:application --bind 0.0.0.0:10000

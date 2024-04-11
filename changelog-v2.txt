@@ -1,8 +1,9 @@
 .env.dev
-    1. DEBUG setted to FALSE - Now the project will connect to the database up on render.com (bv-contabilidade-v2.onrender.com)
+    1. DEBUG setted to FALSE - Now the project will connect to the database up on render.com (folha-ponto-docker-v2.onrender.com)
     2. DJANGO_ALLOWED_HOSTS - changed the original url to the test one.
     3. DATABASE_URL - changed the original url to the test one.
 
 settings.py
-    1. CORS_ALLOWED_ORIGINS - changed the original url to the test one.
-    2. CSRF_TRUSTED_ORIGINS - changed the original url to the test one.
+    1. DJANGO_ALLOWED_HOSTS - add the test url.
+    2. CORS_ALLOWED_ORIGINS - changed the original url to the test one.
+    3. CSRF_TRUSTED_ORIGINS - changed the original url to the test one.
