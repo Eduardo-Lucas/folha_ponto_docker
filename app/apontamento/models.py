@@ -284,9 +284,13 @@ class PontoManager(models.Manager):
             year=day.year, month=day.month, day=day.day
         )
         if ponto:
+            # check if ponto.entrada is a weekend
+            if day.weekday() >= 5:
+                return False
+
             if ponto.entrada.time() > time(9, 15) and not feriado:
                 return True
-        return False
+            return False
 
     def get_credor_devedor(self, start, end, user=None):
         """return a dictionary with total_credor in hours and total_devedor in hours for a given range of days and user"""
