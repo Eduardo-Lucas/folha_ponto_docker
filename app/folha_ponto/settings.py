@@ -83,11 +83,11 @@ MIDDLEWARE = [
 # CORS ALLOWED ORIGINS AND CSRF TRUSTED ORIGINS - changed original ulr to the test one(https://folha-ponto-docker-v2.onrender.com).
 
 CORS_ALLOWED_ORIGINS = [
-    "https://folha-ponto-docker-v2.onrender.com/",
+    "https://folha-ponto-docker-v2.onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://folha-ponto-docker-v2.onrender.com/",
+    "https://folha-ponto-docker-v2.onrender.com",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
