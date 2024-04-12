@@ -1,8 +1,12 @@
+geral
+    1.docker-compose.yml has been deleted.
+
 .env.dev 
     1. DEBUG setted to zero (same as False)
     2. Changed DJANGO_ALLOWED_HOSTS original value for bv-contabilidade-v2.onrender.com (test version)
     3. Changed DATABASE_URL original value for the bv-contabilidade-v2(test dabatase) internal link (postgres://bv_contabilidade_v2_user:NCmSanz0wV40tyBVcXxlisZH3i36A04M@dpg-cobhv8djm4es739q6l70-a/bv_contabilidade_v2)
     4. Deleted SQLite settings. Now only bv-contabilidade-v2(test database) will be connected.
+
 settings.py
     1. Changed CORS_ALLOWED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version url)
     2. Changed CSRF_TRUSTED_ORIGINS to http://bv-contabilidade-v2.onrender.com (test version url)

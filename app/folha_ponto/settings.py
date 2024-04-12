@@ -161,12 +161,12 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-# STATIC_ROOT - Setted to BASE_DIR / "static" 
-STATIC_ROOT = BASE_DIR / "static"
+# STATIC_ROOT - add os.path.join() trying to fix static files bug at production.
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, "static")
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
