@@ -449,7 +449,10 @@ class Ponto(models.Model):
         """
         if self.saida is not None:
             return self.saida - self.entrada
-        return timedelta(hours=0)
+
+        diff = datetime.now() - self.entrada
+        seconds = round(diff.total_seconds())
+        return timedelta(seconds=seconds)
 
     @property
     def allow_update(self):
