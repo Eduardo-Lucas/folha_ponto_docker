@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('situacaoentidade', models.IntegerField()),
                 ('contato_id', models.IntegerField()),
                 ('bateponto', models.BooleanField()),
-                ('cargahoraria', models.TimeField(default='00:00:00')),
+                ('cargahoraria', models.IntegerField(default='00:00:00')), #changed timefield() to integerfield().
                 ('departamento', models.IntegerField(default=0)),
                 ('semintervaloalmoco', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
