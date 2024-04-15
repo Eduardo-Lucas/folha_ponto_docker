@@ -80,6 +80,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
+# !! CORS AND CSRF VALUES HAS BEEN CHANGED TO THE TEST URL !!
 CORS_ALLOWED_ORIGINS = [
     "https://bv-contabilidade.onrender.com",
 ]
@@ -115,23 +116,11 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-            "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-            "USER": os.environ.get("SQL_USER", "user"),
-            "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-            "HOST": os.environ.get("SQL_HOST", "localhost"),
-            "PORT": os.environ.get("SQL_PORT", "5432"),
-        }
-    }
-else:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            os.environ.get("DATABASE_URL"), conn_max_age=600
-        ),
-    }
+DATABASES = {
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL"), conn_max_age=600
+    ),
+}
 
 PASSWORD_HASHERS = [
     # Use the default password hasher
@@ -172,12 +161,12 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_ROOT - add os.path.join() trying to fix static files bug at production.
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, "static")
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
