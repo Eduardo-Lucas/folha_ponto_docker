@@ -13,3 +13,5 @@ settings.py
 
 ./app/user/models.py
     1. Class UserProfile - changed db_table name to "userprofiles". The old one ("user_profiles") didn't match in the database.
+
+./app/user/migrations/0001_initial.py - into Migration / operations, changed 'cargahoraria' timefield to integerfield.
