@@ -176,7 +176,7 @@ class PontoManager(models.Manager):
         Returns the total time for a given day and user.
         """
         total = timedelta(0)
-        for ponto in self.for_day_resumo(day, user):
+        for ponto in self.for_day(day, user):
             total += ponto.difference
         return total
 
