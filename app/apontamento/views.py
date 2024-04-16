@@ -1,8 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from apontamento.forms import (AjustePontoForm, AppointmentCreateForm,
-                               FolhaPontoForm)
+from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm
 from apontamento.models import Ponto
 from cliente.models import Cliente
 from django.contrib import messages
@@ -355,6 +354,7 @@ def folha_ponto(request):
             data_inicial = str(form.cleaned_data["entrada"])
             data_final = str(form.cleaned_data["saida"])
             usuario = form.cleaned_data["usuario"]
+            user = User.objects.filter(username=usuario).first()
 
             if data_inicial > data_final:
                 messages.error(
@@ -362,13 +362,12 @@ def folha_ponto(request):
                 )
 
         query = Ponto.objects.get_total_hours_by_day_by_user(
-            start=data_inicial, end=data_final, user=usuario
+            start=data_inicial, end=data_final, user=user
         )
 
         dict_total_credor_devedor = Ponto.objects.get_credor_devedor(
             start=data_inicial, end=data_final, user=usuario
         )
-
 
         total_credor = dict_total_credor_devedor["total_credor"]
         total_devedor = dict_total_credor_devedor["total_devedor"]
@@ -384,7 +383,6 @@ def folha_ponto(request):
             "total_devedor": total_devedor,
             "saldo": saldo,
             "usuario_id": User.objects.filter(username=request.user).first().id,
-
         }
     return render(request, "apontamento/folha-ponto.html", context)
 

@@ -67,13 +67,29 @@ class PontoManager(models.Manager):
     def for_day(self, day=None, user=None):
         """
         Returns all Ponto objects for a given day and user.
+        Funciona dentro do relatório de +10 horas
         """
         if day is None:
             day = datetime.now().date()
         # start should be the day itself and the day before
         start = datetime.combine(day, time.min)  # - timedelta(days=1)
         end = datetime.combine(day, time.max)
-        return self.filter(entrada__range=(start, end), usuario=user, over_10_hours_authorization=False)
+        return self.filter(
+            entrada__range=(start, end), usuario=user, over_10_hours_authorization=False
+        )
+
+    def for_day_resumo(self, day=None, user=None):
+        """
+        Returns all Ponto objects for a given day and user.
+        Esse método funciona para o resumo (folha-ponto)
+        """
+        if day is None:
+            day = datetime.now().date()
+        # start should the day itself and the day before
+        start = datetime.combine(day, time.min)  # - timedelta(days=1)
+        # start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        return self.filter(entrada__range=(start, end), usuario=user)
 
     def for_day_unauthorized(self, day=None, user=None):
         """
@@ -160,7 +176,16 @@ class PontoManager(models.Manager):
         Returns the total time for a given day and user.
         """
         total = timedelta(0)
-        for ponto in self.for_day(day, user):
+        for ponto in self.for_day_resumo(day, user):
+            total += ponto.difference
+        return total
+
+    def total_day_time_resumo(self, day=None, user=None):
+        """
+        Returns the total time for a given day and user.
+        """
+        total = timedelta(0)
+        for ponto in self.for_day_resumo(day, user):
             total += ponto.difference
         return total
 
@@ -205,7 +230,7 @@ class PontoManager(models.Manager):
 
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
-            horas_trabalhadas = self.total_day_time(day, user)
+            horas_trabalhadas = self.total_day_time_resumo(day, user)
 
             feriado = Feriado.objects.is_holiday(
                 year=day.year, month=day.month, day=day.day
@@ -220,7 +245,7 @@ class PontoManager(models.Manager):
                 ferias = Ferias.objects.get_ferias(
                     data_inicial=day.date(),
                     data_final=day.date(),
-                    user=user.id,
+                    user=user,
                 )
             except ObjectDoesNotExist:
                 ferias = "Não"
@@ -270,9 +295,13 @@ class PontoManager(models.Manager):
             year=day.year, month=day.month, day=day.day
         )
         if ponto:
+            # check if ponto.entrada is a weekend
+            if day.weekday() >= 5:
+                return False
+
             if ponto.entrada.time() > time(9, 15) and not feriado:
                 return True
-        return False
+            return False
 
     def get_credor_devedor(self, start, end, user=None):
         """return a dictionary with total_credor in hours and total_devedor in hours for a given range of days and user"""
@@ -435,7 +464,6 @@ class Ponto(models.Model):
         diff = datetime.now() - self.entrada
         seconds = round(diff.total_seconds())
         return timedelta(seconds=seconds)
-
 
     @property
     def allow_update(self):
