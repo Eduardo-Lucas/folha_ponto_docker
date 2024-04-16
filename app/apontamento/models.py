@@ -67,6 +67,7 @@ class PontoManager(models.Manager):
     def for_day(self, day=None, user=None):
         """
         Returns all Ponto objects for a given day and user.
+        Funciona dentro do relatório de +10 horas
         """
         if day is None:
             day = datetime.now().date()
@@ -80,6 +81,7 @@ class PontoManager(models.Manager):
     def for_day_resumo(self, day=None, user=None):
         """
         Returns all Ponto objects for a given day and user.
+        Esse método funciona para o resumo (folha-ponto)
         """
         if day is None:
             day = datetime.now().date()
@@ -178,6 +180,15 @@ class PontoManager(models.Manager):
             total += ponto.difference
         return total
 
+    def total_day_time_resumo(self, day=None, user=None):
+        """
+        Returns the total time for a given day and user.
+        """
+        total = timedelta(0)
+        for ponto in self.for_day_resumo(day, user):
+            total += ponto.difference
+        return total
+
     def total_range_days_time(self, start=None, end=None, user=None):
         """
         Returns the total time for a given range of days and user.
@@ -219,7 +230,7 @@ class PontoManager(models.Manager):
 
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
-            horas_trabalhadas = self.total_day_time(day, user)
+            horas_trabalhadas = self.total_day_time_resumo(day, user)
 
             feriado = Feriado.objects.is_holiday(
                 year=day.year, month=day.month, day=day.day
