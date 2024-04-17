@@ -85,6 +85,9 @@ def home(request):
     # proximas ferias a serem tiradas
     proximas_ferias = Ferias.objects.get_proximas_ferias()
 
+    paginator_proximas_ferias = Paginator(proximas_ferias, 10)
+    proximas_ferias = paginator_proximas_ferias.get_page(page)
+
     context = {
         "pontos_abertos": pontos_abertos,
         "pontos_fechados": pontos_fechados,

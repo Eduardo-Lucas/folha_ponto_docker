@@ -241,6 +241,24 @@
 
         </div>
     </div>
+    <div class="pagination mb-3">
+        <span class="step-links">
+            {% if proximas_ferias.has_previous %}
+            <a href="?page=1">&laquo; primeira</a>
+            <a href="?page={{ proxiimas_ferias.previous_page_number }}">anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ proximas_ferias.number }} {{ proximas_ferias.paginator_proximas_ferias.num_pages }}
+            </span>
+
+            {% if proximas_ferias.has_next %}
+            <a href="?page={{ proximas_ferias.next_page_number }}">próxima</a>
+            <a href="?page={{ proximas_ferias.paginator_proximas_ferias.num_pages }}">&raquo; última</a>
+            {% endif %}
+        </span>
+    </div>
+
 
 </div>
 
