@@ -73,7 +73,15 @@
                             <td>{{ponto.id}}</td>
                             <td>{{ponto.entrada|date:"d/m/Y"}}</td>
                             <td>{{ponto.entrada|time:"H:i:s"}}</td>
+                            {% if ponto.get_intervalo %}
+                            <td>
+                                <span class="badge rounded-pill text-bg-warning">
+                                    {{ponto.saida|time:"H:i:s"}}
+                                </span>
+                            </td>
+                            {% else %}
                             <td>{{ponto.saida|time:"H:i:s"}}</td>
+                            {% endif %}
                             <td class="text-left">{{ponto.difference}}</td>
                             <td>{{ponto.tipo_receita}}</td>
                             <td>{{ponto.cliente_id}}</td>

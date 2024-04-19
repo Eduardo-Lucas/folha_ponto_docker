@@ -503,6 +503,15 @@ class Ponto(models.Model):
             return self.cliente_id
         return "-"
 
+    @property
+    def get_intervalo(self):
+        """check if saida betweem 11 and 13"""
+        if self.saida:
+            if self.saida.time() > time(11, 0) and self.saida.time() < time(13, 0):
+                return True
+            return False
+        return False
+
     def get_absolute_url(self):
         """Returns the url to access a particular instance of the model."""
         return reverse("apontamento:appointment_detail", args=[self.pk])
