@@ -23,8 +23,9 @@
                     <td>{{ apontamento.username|capfirst }}</td>
                     <td>{{ apontamento.total_hours }}</td>
                     <td scope="row" class="text-center">
-                        <a href="{% url 'apontamento:appointment_list' apontamento.day apontamento.user_id %}">
-                            <i class="fas fa-eye" data-toggle="tooltip" title="Mostrar detalhes" style="color:blue"></i>
+                        <a
+                            href="{% url 'apontamento:historico_com_datas' data_inicial=apontamento.day data_final=apontamento.day user_id=apontamento.user_id %}">
+                            <i class="fas fa-eye" data-toggle="tooltip" title="Histórico do dia" style="color:blue"></i>
                     </td>
                 </tr>
                 {% empty %}
