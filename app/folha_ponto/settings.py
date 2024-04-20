@@ -211,7 +211,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "your_site_name",
     "site_header": "your_site_header",
     "site_brand": "your_site_brand",
-    "site_icon": "images/favicon.png",
+    "site_icon": "assets/bv.ico",
     # Add your own branding here
     "site_logo": None,
     "welcome_sign": "Welcome to the your_site_name",
