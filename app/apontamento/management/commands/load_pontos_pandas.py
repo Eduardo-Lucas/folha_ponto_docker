@@ -56,9 +56,7 @@ def load_data_from_csv():
             segundo=row["segundo"],
             atraso=row["atraso"],
             saida=saida,
-            usuario=(
-                User.objects.get(id=row["usuario_id"]) if row["usuario_id"] else None
-            ),
+            usuario=(User.objects.get(id=row["usuario"]) if row["usuario"] else None),
             fechado=row["fechado"],
             cliente_id=cliente,
             tipo_receita=tipo_receita,
