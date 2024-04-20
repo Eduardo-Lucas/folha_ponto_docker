@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Reads a CSV file and inserts data into Departamento model"
 
     def handle(self, *args, **options):
-        with open("Departamento.csv", "r", encoding="utf-8") as file:
+        with open("Departamento-2024-04-20.csv", "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 Departamento.objects.create(
