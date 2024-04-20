@@ -34,7 +34,7 @@ def load_data_from_csv():
                 ),
                 logositebv=row["logositebv"],
                 iniciobv=row["iniciobv"] if row["iniciobv"] else None,
-                observacao=row["observação"],
+                observacao=row["observacao"],
                 codigosistema=row["codigosistema"] if row["codigosistema"] else None,
                 situacaoentidade=row["situacaoentidade"],
                 codigoterceiro=row["codigoterceiro"],
