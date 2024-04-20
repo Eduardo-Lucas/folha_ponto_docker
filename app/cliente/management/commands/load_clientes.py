@@ -15,17 +15,17 @@ class Command(BaseCommand):
 
 def load_data_from_csv():
     """Load data from csv file."""
-    with open("Cliente-2024-04-20.csv", "r", encoding="utf-8") as file:
+    with open("Cliente.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
 
             obj = Cliente(
                 id=row["id"],
                 tipodocumento=row["tipodocumento"],
-                documento=row["documento"],
+                documento=row["documento"] if row["documento"] else 0,
                 nomerazao=row["nomerazao"],
                 apelidofantazia=row["apelidofantazia"],
-                tipocertificado=row["tipocertificado"],
+                tipocertificado=row["tipocertificado"] if row["tipocertificado"] else 0,
                 senhacertificado=row["senhacertificado"],
                 vencimentocertificado=(
                     row["vencimentocertificado"]
@@ -40,7 +40,9 @@ def load_data_from_csv():
                 codigoterceiro=row["codigoterceiro"],
                 controlarvencimentocertificado=row["controlarvencimentocertificado"],
                 emiteboleto=row["emiteboleto"],
-                diavencimentoboleto=row["diavencimentoboleto"],
+                diavencimentoboleto=(
+                    row["diavencimentoboleto"] if row["diavencimentoboleto"] else 0
+                ),
                 grupoeconomico_id=(
                     row["grupoeconomico_id"] if row["grupoeconomico_id"] else None
                 ),
