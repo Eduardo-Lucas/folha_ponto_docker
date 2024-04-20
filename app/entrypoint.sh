@@ -1,8 +1,8 @@
 #!/bin/bash
 
 python manage.py collectstatic --no-input
-# python manage.py makemigrations
-# python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 # python manage.py createdepartamento # Departamento
 # python manage.py createuser # normal user
 # python manage.py createsu # super user
