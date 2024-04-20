@@ -10,6 +10,6 @@ python manage.py createsu # super user
 # python manage.py load_contato # Contatos not needed anymore
 # python manage.py load_feriado # Feriados
 # python manage.py load_clientes # Clientes
-# python manage.py createprofile # UserProfile
+python manage.py createprofile # UserProfile
 # python manage.py load_pontos_pandas # Pontos-2023
 gunicorn folha_ponto.wsgi:application --bind 0.0.0.0:10000
