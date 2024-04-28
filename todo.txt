@@ -1,0 +1,13 @@
+cargahoraria = IntegerField(default=0) em todos os arquivos alterados - forms.py, models.py e 0001__initial__migrations.py.
+
+
+ORDEM UPLOAD
+1. User - ok
+2. User profile - ok
+3. Tipos Receitas - ok
+FERIADOS - Ok
+5. Férias - ok
+6. Departamentos - ok
+7. Clientes -  ok
+
+8. Pontos -  ok

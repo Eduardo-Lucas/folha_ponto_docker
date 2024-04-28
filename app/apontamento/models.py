@@ -464,10 +464,7 @@ class Ponto(models.Model):
         diff = datetime.now() - self.entrada
         seconds = round(diff.total_seconds())
         return timedelta(seconds=seconds)
-<<<<<<< HEAD
-=======
 
->>>>>>> testversion
 
     @property
     def allow_update(self):

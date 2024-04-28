@@ -9,6 +9,8 @@ app/staticfiles/
 
 # Backup files #
 *.bak
+.localtest.txt
+.todo.txt
 
 # If you are using PyCharm #
 # User-specific stuff
