@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "contato",
     "ferias",
     "feriado",
+    "refeicao",
     "user",
     # third party libraries
     "crispy_forms",

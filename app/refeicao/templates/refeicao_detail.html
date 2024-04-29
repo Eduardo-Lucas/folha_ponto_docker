@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mt-1 mb-1">
+            <h3 class="text-info">Detalhe da Refeição</h3>
+        </div>
+        <div class="col-md-6 mt-1 mb-1">
+            <a href="{% url 'refeicao:refeicao_list' %}" class="btn btn-primary">
+                <i class="fas fa-undo"></i>
+                Voltar
+            </a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table-responsive table-sm">
+                <table class="table table-striped table-bordered table-hover table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+
+                            <th class="text-center align-middle">id</th>
+                            <th class="text-center align-middle">Data da Refeição</th>
+                            <th class="text-center align-middle">Almoçou?</th>
+                            <th class="text-center align-middle">Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center align-middle">{{refeicao.id}}</td>
+                            <td class="text-center align-middle">{{refeicao.data_refeicao|date:"d/m/Y - l"}}</td>
+                            <td class="text-center align-middle">{{refeicao.get_consumo}}</td>
+                            <td>{{refeicao.observacao}}</td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
