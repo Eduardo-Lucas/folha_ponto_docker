@@ -371,7 +371,11 @@ def folha_ponto(request):
 
         total_credor = dict_total_credor_devedor["total_credor"]
         total_devedor = dict_total_credor_devedor["total_devedor"]
-        saldo = total_credor - total_devedor
+        saldo = (
+            total_credor - total_devedor
+            if total_credor > total_devedor
+            else total_devedor - total_credor
+        )
 
         context = {
             "form": form,
