@@ -6,26 +6,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - POSTGRES_USER=folha_on_docker
+      - POSTGRES_PASSWORD=folha_on_docker
+      - POSTGRES_DB=folha_on_docker_dev
     ports:
-      - 5433:5433
+      - 5432:5432
 
   web-folha_ponto_on_docker:
     build: ./app
     environment:
       - DB_HOST=db
-      - DB_USER=hello_django
-      - DB_NAME=hello_django_dev
-      - DB_PASSWORD=hello_django
-      - REDIS_HOST=redis-folha_ponto_on_docker
-    command: python manage.py runserver 0.0.0.0:8000
+      - DB_USER=folha_on_docker
+      - DB_NAME=folha_on_docker_dev
+      - DB_PASSWORD=folha_on_docker
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - ./app/:/usr/src/app/
     ports:
       - 8001:8001
-      - 5676:5676
     env_file:
       - ./.env.dev
     depends_on:
