@@ -11,3 +11,6 @@ FERIADOS - Ok
 7. Clientes -  ok
 
 8. Pontos -  ok
+
+
+RODAR O PROJETO COM DOCKER COMPOSE
