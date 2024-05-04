@@ -20,6 +20,20 @@ class FeriadoManager(models.Manager):
 
         return False
 
+    def get_description(self, year=None, month=None, day=None):
+        """
+        Returns the description of the given holiday.
+        """
+        feriado = self.filter(dia=day, month=month).exists()
+        if feriado:
+            return self.filter(dia=day, month=month).first().descricao
+
+        feriado = self.filter(dia=day, month=month, ano=year).exists()
+        if feriado:
+            return self.filter(dia=day, month=month, ano=year).first().descricao
+
+        return None
+
 
 class Feriado(models.Model):
     """
