@@ -10,15 +10,29 @@ class FeriadoManager(models.Manager):
         """
         Returns True if the given day is a holiday.
         """
-        if year is None:
-            return self.filter(dia=day, month=month).exists()
-        return self.filter(dia=day, month=month, ano=year).exists()
+        feriado = self.filter(dia=day, month=month).exists()
+        if feriado:
+            return True
 
-    def get_description(self, year=None, month=None, day=None):
+        feriado = self.filter(dia=day, month=month, ano=year).exists()
+        if feriado:
+            return True
+
+        return False
+
+def get_description(self, year=None, month=None, day=None):
         """
         Returns the description of the given holiday.
         """
-        return self.filter(dia=day, month=month, ano=year).first().descricao
+        feriado = self.filter(dia=day, month=month).exists()
+        if feriado:
+            return self.filter(dia=day, month=month).first().descricao
+
+        feriado = self.filter(dia=day, month=month, ano=year).exists()
+        if feriado:
+            return self.filter(dia=day, month=month, ano=year).first().descricao
+
+        return None
 
 
 class Feriado(models.Model):

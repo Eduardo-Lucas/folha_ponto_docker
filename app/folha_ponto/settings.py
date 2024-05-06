@@ -28,7 +28,9 @@ load_dotenv(BASE_DIR / ".env")  # render config
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+
 DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
+
 
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
@@ -36,6 +38,7 @@ DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS", "bv-contabilidade-v2.onrender.com"
 ).split(" ")
+
 
 
 # Application definition
@@ -116,11 +119,21 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL"), conn_max_age=600
-    ),
-}
+# If DEBUG is set to True, Django will connect with the v2 database, if not it will be connect with the main database.
+if DEBUG:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            os.environ.get("LOCAL_DATABASE_URL"), conn_max_age=600
+        ),
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            os.environ.get("DATABASE_URL"), conn_max_age=600
+        ),
+    }
+
+
 
 PASSWORD_HASHERS = [
     # Use the default password hasher
