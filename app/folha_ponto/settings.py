@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "whitenoise.runserver_nostatic" #trying to fix the whitenoise issue during production
+    "whitenoise.runserver_nostatic", #trying to fix the whitenoise issue during production
     # apps
     "core",
     "apontamento",
