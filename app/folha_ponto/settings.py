@@ -31,6 +31,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
 
+# Add to find the issue at production - MUST BE SET TO FALSE OR DELETED AFTER THE ISSUE HAS BEEN FIXED!!!
+DEBUG_PROPAGATE_EXCEPTIONS = True
+
 
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
