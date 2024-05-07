@@ -28,13 +28,7 @@ load_dotenv(BASE_DIR / ".env")  # render config
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-
 DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
-
-# This setting will send an email to the admin account if any errors occur while the project is in production.
-ADMINS = [('devberenger', 'devberenger@gmail.com')]
-
-
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
@@ -177,8 +171,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-# STATIC_ROOT - add os.path.join() trying to fix static files bug at production.
-STATIC_ROOT = os.path.join(BASE_DIR / "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [

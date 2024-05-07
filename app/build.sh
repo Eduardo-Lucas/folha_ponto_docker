@@ -7,7 +7,7 @@ pip install -r requirements.txt
 
 # Convert static asset files
 python manage.py collectstatic --no-input
-python manage.py findstatic --verbosity 2 “[foo]”
+# python manage.py findstatic --verbosity 2 “[foo]”
 
 # Apply any outstanding database migrations
 python manage.py makemigrations
