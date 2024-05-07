@@ -186,9 +186,11 @@ STATICFILES_DIRS = [
 ]
 
 
-WHITENOISE_AUTOREFRESH = True
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" # Default value
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 MEDIA_URL = "/media/"
