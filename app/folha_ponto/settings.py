@@ -17,6 +17,7 @@ from pathlib import Path
 import dj_database_url
 from celery.schedules import crontab
 from dotenv import load_dotenv  # render config
+from django.test.utils import ignore_warnings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,6 +37,9 @@ DEBUG_PROPAGATE_EXCEPTIONS = True
 
 # This setting will send an email to the admin account if any errors occur while the project is in production.
 ADMINS = [('devberenger', 'devberenger@gmail.com')]
+
+# set django to ignore the warning message
+ignore_warnings(message="No directory at", module="whitenoise.base").enable()
 
 
 
