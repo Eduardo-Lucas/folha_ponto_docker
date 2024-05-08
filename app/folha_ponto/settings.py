@@ -41,6 +41,7 @@ ALLOWED_HOSTS = os.environ.get(
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic", #whitenoise
     "jazzmin",
     "corsheaders",
     "django.contrib.admin",
@@ -49,7 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "whitenoise.runserver_nostatic", #trying to fix the whitenoise issue during production
+
     # apps
     "core",
     "apontamento",
@@ -180,8 +181,6 @@ STATICFILES_DIRS = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'root')
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
