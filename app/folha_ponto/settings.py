@@ -181,7 +181,7 @@ STATICFILES_DIRS = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-WHITENOISE_ROOT = STATIC_ROOT / 'root' # testing whitenoise issue fix
+WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'root')
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
