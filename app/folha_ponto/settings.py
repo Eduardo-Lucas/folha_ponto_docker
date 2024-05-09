@@ -14,9 +14,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-
-import boto3
-from storages.backends.s3boto3 import S3Boto3Storage
 import dj_database_url
 from celery.schedules import crontab
 from dotenv import load_dotenv  # render config
@@ -76,7 +73,6 @@ USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    # "whitenoise.middleware.WhiteNoiseMiddleware",  # whitenoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -178,16 +174,11 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-if DEBUG:
-    STATIC_URL = "/static/"
-else:
-    STATIC_URL = f'https://{os.environ.get("AWS_STORAGE_BUCKET_NAME")}.s3.amazonaws.com/static/'
+STATIC_URL = "/static/"
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static")
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
