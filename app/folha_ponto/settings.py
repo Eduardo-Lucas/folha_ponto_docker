@@ -118,7 +118,7 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# If DEBUG is set to True, Django will connect with the v2 database, if not it will be connect with the main database.
+# If DEBUG is set to True, Django will connect with the v2 database, if not it will be connected with the main database.
 if DEBUG:
     DATABASES = {
         "default": dj_database_url.parse(
