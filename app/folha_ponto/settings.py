@@ -321,7 +321,7 @@ AWS_S3_CUSTOM_DOMAIN = os.environ.get("AWS_S3_CUSTOM_DOMAIN ")
 AWS_S3_FILE_OVERWRITE = os.environ.get("AWS_S3_FILE_OVERWRITE")
 
 AWS_LOCATION = 'static'
-STATIC_URL = f'https://{os.environ.get('AWS_S3_CUSTOM_DOMAIN')}/{os.environ.get('AWS_LOCATION')}/'
+STATIC_URL = f"https://{os.environ.get('AWS_S3_CUSTOM_DOMAIN')}/{os.environ.get('AWS_LOCATION')}/"
 STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE")
 
 # ADMIN style adjustment
