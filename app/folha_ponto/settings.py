@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_bootstrap5",
-    "smart_selects",
     "import_export",
     "fontawesomefree",
 ]
