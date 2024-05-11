@@ -28,7 +28,9 @@ load_dotenv(BASE_DIR / ".env")  # render config
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
+
 DEBUG = os.getenv("DEBUG", "0").lower() in ["true", "t", "1"]
+
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
@@ -38,10 +40,10 @@ ALLOWED_HOSTS = os.environ.get(
 
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
-    # "whitenoise.runserver_nostatic", #whitenoise
     "django.contrib.staticfiles",
     "jazzmin",
     "corsheaders",
@@ -66,13 +68,13 @@ INSTALLED_APPS = [
     "smart_selects",
     "import_export",
     "fontawesomefree",
-    "storages",
 ]
 
 USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # whitenoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -134,6 +136,7 @@ else:
 
 
 
+
 PASSWORD_HASHERS = [
     # Use the default password hasher
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
@@ -173,12 +176,6 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-# STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
@@ -305,24 +302,22 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", default="")
 FERIAS_BUSINESS_DAYS = 20
 
 
-# AWS Credentials:
+# AWS settings (STATIC FILES)
+use_s3 = True
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+if use_s3:
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_DEFAULT_ACL = os.environ.get("AWS_DEFAULT_ACL")
+    # s3 static settings
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-# S3 configuration settings
-
-AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
-
-DEFAULT_FILE_STORAGE = os.environ.get("DEFAULT_FILE_STORAGE")
-
-AWS_S3_CUSTOM_DOMAIN = os.environ.get("AWS_S3_CUSTOM_DOMAIN ")
-
-AWS_S3_FILE_OVERWRITE = os.environ.get("AWS_S3_FILE_OVERWRITE")
-
-AWS_LOCATION = 'static'
-STATIC_URL = f"https://{os.environ.get('AWS_S3_CUSTOM_DOMAIN')}/{os.environ.get('AWS_LOCATION')}/"
-STATICFILES_STORAGE = os.environ.get("STATICFILES_STORAGE")
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = BASE_DIR / 'static'
 
 # ADMIN style adjustment
 

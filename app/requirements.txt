@@ -8,7 +8,7 @@ django-jazzmin==2.6.0
 django-bootstrap5==23.1
 django-crispy-forms==2.0
 django-smart-selects==1.6.0
-django-storages==1.13.1
+django-storages[s3]==1.13.1
 fontawesomefree==6.0
 flower==2.0.1
 numpy==1.26.3
