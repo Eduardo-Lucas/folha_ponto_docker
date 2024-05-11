@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
 def load_data_from_csv():
     """Load data from csv file."""
-    df = pd.read_csv("Ponto-2024-04-20.csv")
+    df = pd.read_csv("Ponto-2024-05-10.csv")
 
     # pontos = []
     for index, row in df.iterrows():
