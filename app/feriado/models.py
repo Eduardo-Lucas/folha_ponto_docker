@@ -10,7 +10,7 @@ class FeriadoManager(models.Manager):
         """
         Returns True if the given day is a holiday.
         """
-        feriado = self.filter(dia=day, month=month).exists()
+        feriado = self.filter(dia=day, month=month, fixo=True).exists()
         if feriado:
             return True
 
@@ -24,7 +24,7 @@ def get_description(self, year=None, month=None, day=None):
         """
         Returns the description of the given holiday.
         """
-        feriado = self.filter(dia=day, month=month).exists()
+        feriado = self.filter(dia=day, month=month, fixo=True).exists()
         if feriado:
             return self.filter(dia=day, month=month).first().descricao
 
@@ -39,6 +39,7 @@ class Feriado(models.Model):
     """
     Model for the Feriado entity.
     """
+
     id = models.AutoField(primary_key=True)
     dia = models.IntegerField()
     month = models.IntegerField()
@@ -54,7 +55,8 @@ class Feriado(models.Model):
         return f"{str(self.id).zfill(4)}:{self.descricao}"
 
     class Meta:
-        """ Metadata for the Feriado model. """
+        """Metadata for the Feriado model."""
+
         ordering = ("descricao",)
         db_table = "feriados"
         verbose_name = "Feriado"

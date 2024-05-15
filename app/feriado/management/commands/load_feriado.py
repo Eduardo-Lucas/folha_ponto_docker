@@ -1,30 +1,34 @@
 import csv
-from feriado.models import Feriado
-from django.core.management.base import BaseCommand
 from datetime import datetime
 
+from django.core.management.base import BaseCommand
+from feriado.models import Feriado
+
+
 class Command(BaseCommand):
-    '''Load Feriado from a CSV file.'''
-    help = 'Loads Feriado.'
+    """Load Feriado from a CSV file."""
+
+    help = "Loads Feriado."
 
     def handle(self, *args, **options):
         load_data_from_csv()
 
+
 def load_data_from_csv():
-    """ Load data from csv file."""
-    with open('Feriado.csv', 'r', encoding='utf-8') as file:
+    """Load data from csv file."""
+    with open("Feriado-2024-05-10.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
 
             obj = Feriado(
-                id=row['id'],
-                dia=row['dia'],
-                month=row['month'],
-                ano=row['ano'],
-                descricao=row['descricao'],
-                fixo=row['fixo'],
-                situacaoentidade=row['situacaoentidade'],
-                importado=row['importado'],
+                id=row["id"],
+                dia=row["dia"],
+                month=row["month"],
+                ano=row["ano"],
+                descricao=row["descricao"],
+                fixo=row["fixo"],
+                situacaoentidade=row["situacaoentidade"],
+                importado=row["importado"],
             )
 
             obj.save()

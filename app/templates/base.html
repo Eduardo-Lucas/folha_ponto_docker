@@ -60,17 +60,24 @@
             <a href="{% url 'apontamento:historico_sem_form' request.user.id %}" class="btn btn-outline">Histórico</a>
           </li>
           {% endif %}
+          <li class="nav-item">
+            <a href="{% url 'refeicao:refeicao_list' %}" class="btn btn-outline">Refeição</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Relatórios
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Lista de Pontos com +10 horas</a></li>
-              <li><a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">Lista de Invervalo de 30-min</a>
+              <li><a class="dropdown-item" href="{% url 'apontamento:over_10_hours_list' %}">Lista de Pontos com +10
+                  horas</a></li>
+              <li><a class="dropdown-item" href="{% url 'apontamento:get_30_min_break_list' %}">Lista de Invervalo de
+                  30-min</a>
               </li>
-              <li><a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Lista de Tarefas Abertas</a></li>
-              <li><a class="dropdown-item" href="{% url 'apontamento:tarefas_fechadas_automaticamente' %}">Tarefas Fechadas
+              <li><a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Lista de Tarefas Abertas</a>
+              </li>
+              <li><a class="dropdown-item" href="{% url 'apontamento:tarefas_fechadas_automaticamente' %}">Tarefas
+                  Fechadas
                   Automaticamente</a></li>
 
             </ul>

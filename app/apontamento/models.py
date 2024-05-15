@@ -89,7 +89,9 @@ class PontoManager(models.Manager):
         start = datetime.combine(day, time.min)  # - timedelta(days=1)
         # start = datetime.combine(day, time.min)
         end = datetime.combine(day, time.max)
-        return self.filter(entrada__range=(start, end), usuario=user)
+        return self.filter(entrada__range=(start, end),
+                           usuario=user,
+        )
 
     def for_day_unauthorized(self, day=None, user=None):
         """
@@ -315,7 +317,7 @@ class PontoManager(models.Manager):
 
         for day in range((end - start).days + 1):
             day = start + timedelta(days=day)
-            horas_trabalhadas = self.total_day_time(day, user)
+            horas_trabalhadas = self.total_day_time_resumo(day, user)
 
             feriado = Feriado.objects.is_holiday(
                 year=day.year, month=day.month, day=day.day
@@ -501,6 +503,15 @@ class Ponto(models.Model):
         if self.cliente_id is not None:
             return self.cliente_id
         return "-"
+
+    @property
+    def get_intervalo(self):
+        """check if saida betweem 11 and 13"""
+        if self.saida:
+            if self.saida.time() > time(11, 0) and self.saida.time() < time(13, 0):
+                return True
+            return False
+        return False
 
     def get_absolute_url(self):
         """Returns the url to access a particular instance of the model."""

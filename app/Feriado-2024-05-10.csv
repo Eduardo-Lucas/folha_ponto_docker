@@ -1,0 +1,35 @@
+id,dia,month,ano,descricao,fixo,situacaoentidade,importado
+52,15,8,0,Adesão ao Império Brasileiro (PA),1,1,1
+57,12,1,0,Aniversário de Belém,1,2,1
+54,1,1,0,Ano Novo,1,1,1
+68,27,5,2027,Corpus Christi (Belém),0,1,0
+67,4,6,2026,Corpus Christi (Belém),0,1,0
+66,19,6,2025,Corpus Christi (Belém),0,1,0
+65,30,5,2024,Corpus Christi (Belém),0,1,0
+64,8,6,2023,Corpus Christi (Belém),0,1,0
+63,16,6,2022,Corpus Christi (Belém),0,1,0
+62,3,6,2021,Corpus Christi (Belém),0,1,0
+61,11,6,2020,Corpus Christi (Belém),0,1,0
+60,20,6,2019,Corpus Christi (Belém),0,1,0
+59,31,5,2018,Corpus Christi (Belém),0,1,0
+58,15,6,2017,Corpus Christi (Belém),0,1,0
+78,20,11,0,Dia da Consciência Negra,1,1,0
+45,2,11,0,Dia de Finados,1,1,1
+46,12,10,0,Dia de Nsa Sra Aparecida,1,1,1
+55,21,4,0,Dia de Tiradentes,1,1,1
+47,15,10,2017,Dia do Professor ,0,2,1
+48,28,10,2017,Dia do Servidor Público,0,2,1
+56,1,5,0,Dia do Trabalhador,1,1,1
+69,23,1,2018,Evento Teste de Sistema,0,2,0
+49,7,9,0,Independência do Brasil,1,1,1
+51,25,12,0,Natal,1,1,1
+53,8,12,0,Nossa Senhora da Conceição,1,1,1
+50,15,11,0,Proclamação da República,1,1,1
+71,30,3,2018,Semana Santa,0,1,0
+77,7,4,2023,Sexta Feira da Paixão,0,1,0
+76,15,4,2022,Sexta Feira da Paixão,0,1,0
+74,2,4,2021,Sexta Feira da Paixão,0,1,0
+73,10,4,2020,Sexta Feira da Paixão,0,1,0
+72,19,4,2019,Sexta Feira da Paixão,0,1,0
+75,27,8,2021,falecimento mãe Hugo,0,1,0
+70,28,2,2018,feriado teste de ponto,0,2,0

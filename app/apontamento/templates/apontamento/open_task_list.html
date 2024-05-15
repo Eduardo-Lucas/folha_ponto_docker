@@ -18,6 +18,11 @@
                     <td>{{ ponto.ponto_id }}</td>
                     <td>{{ ponto.entrada|date:"d/m/Y" }}</td>
                     <td>{{ ponto.username|capfirst }}</td>
+                    <td scope="row" class="text-center">
+                        <a
+                            href="{% url 'apontamento:historico_com_datas' data_inicial=ponto.entrada.date data_final=ponto.entrada.date user_id=ponto.user_id %}">
+                            <i class="fas fa-eye" data-toggle="tooltip" title="Histórico do dia" style="color:blue"></i>
+                    </td>
                     <td class="text-center">
                         <a href="{% url 'apontamento:fecha_tarefa' ponto.ponto_id %}">
                             <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar essa Tarefa"

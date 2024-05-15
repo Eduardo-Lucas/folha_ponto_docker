@@ -29,7 +29,9 @@ class FeriasManager(models.Manager):
 
     def get_proximas_ferias(self):
         """Get the next vacation period"""
-        return self.filter(data_inicial__gte=datetime.now().date()).order_by(
+        # query the begining ot the current month
+
+        return self.filter(data_final__gte=datetime.now().date()).order_by(
             "data_inicial"
         )
 

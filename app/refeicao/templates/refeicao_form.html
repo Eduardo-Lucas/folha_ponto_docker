@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container border border-dark">
+    <h3 class="text-info">Cadastro de Refeição</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="row align-items-center">
+            <div class="col-md-3 align-items-center">
+                {{ form.data_refeicao|as_crispy_field }}
+            </div>
+            <div class="col-md-3 align-items-center">
+                {{ form.consumo|as_crispy_field }}
+            </div>
+            <div class="col-md-3 align-items-center">
+                {{ form.observacao|as_crispy_field }}
+            </div>
+        </div>
+        <div class="row border-top border-dark">
+            <div class="col-md-6 mt-1 mb-1 text-center">
+                <button type="button" class="btn btn-primary btn-block btn-lg" onclick="goBack()">
+                    <i class="fas fa-undo"></i>
+                    Voltar
+                </button>
+            </div>
+            <div class="col-md-6 mt-1 mb-1 text-center">
+                <button type="submit" class="btn btn-success btn-block btn-lg">
+                    <i class="fas fa-database"></i>
+                    Gravar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+{% endblock %}
