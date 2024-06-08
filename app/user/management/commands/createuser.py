@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Load Users from CSV file."""
-        with open("Usuario.csv", "r", encoding="utf-8") as file:
+        with open("User-current.csv", "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 if not User.objects.filter(username=row["username"]).exists():
