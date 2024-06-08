@@ -107,6 +107,6 @@ class UserProfile(models.Model):
         """User Meta Class"""
 
         ordering = ("user",)
-        db_table = "user_profiles"
+        db_table = "userprofiles"
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
