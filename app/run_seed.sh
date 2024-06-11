@@ -11,7 +11,7 @@ python manage.py createuser # 3. normal user
 python manage.py createprofile # 4. UserProfile-current.csv
 python manage.py load_feriado # 5. Feriado-current.csv
 python manage.py load_ferias # 6. Ferias-current.csv
-python manage.py load_refeicao # 7. Refeicao-current.csv
+# python manage.py load_refeicao # 7. Refeicao-current.csv
 python manage.py load_clientes # 8. Cliente-current.csv
 python manage.py load_pontos # 9. Ponto-current.csv
 # get final time

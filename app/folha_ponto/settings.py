@@ -33,10 +33,8 @@ DEBUG = 1
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.environ.get(
-    "DJANGO_ALLOWED_HOSTS", "bv-contabilidade.onrender.com"
-).split(" ")
-
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'bv-contabilidadev2.onrender.com', 'bv-contabilidade.onrender.com']
 
 # Application definition
 
@@ -116,23 +114,25 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# if DEBUG:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": 'django.db.backends.postgresql',
-#             "NAME": 'folha_on_docker_dev',
-#             "USER": 'postgres',
-#             "PASSWORD":'postgres',
-#             "HOST": 'localhost',
-#             "PORT": '5432',
-#         }
-#     }
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": 'django.db.backends.postgresql',
+            "NAME": '',
+            "USER": '',
+            "PASSWORD":'',
+            "HOST": 'localhost',
+            "PORT": '5432',
+        }
+    }
 # else:
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL"), conn_max_age=600
-    ),
-}
+
+# DATABASES = {
+#     "default": dj_database_url.parse(
+#         "postgres://bv_contabilidade_v2:sYRMsLsNnowFwbC41N5h9FC4jiFDHyEJ@dpg-codegngl5elc73fmmbt0-a.ohio-postgres.render.com/bv_contabilidade_v2_dpfo",
+#         conn_max_age=600
+#     ),
+# }
 
 PASSWORD_HASHERS = [
     # Use the default password hasher

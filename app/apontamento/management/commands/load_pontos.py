@@ -22,6 +22,7 @@ class Command(BaseCommand):
 def load_data_from_csv():
     """Load data from csv file."""
     df = pd.read_csv("Ponto-current.csv")
+    # df = pd.read_csv("Ponto-current.csv")
 
     # pontos = []
     for index, row in df.iterrows():
@@ -66,4 +67,4 @@ def load_data_from_csv():
         # pontos.append(ponto)
 
     # Ponto.objects.bulk_create(pontos)
-    print("Pontos-2023 have been successfully uploaded using pandas.")
+    print("Pontos have been successfully uploaded using pandas.")
