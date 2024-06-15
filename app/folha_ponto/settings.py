@@ -114,25 +114,23 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-# if DEBUG:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": 'django.db.backends.postgresql',
-#             "NAME": '',
-#             "USER": '',
-#             "PASSWORD":'',
-#             "HOST": 'localhost',
-#             "PORT": '5432',
-#         }
-#     }
-# else:
-
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
-        conn_max_age=600
-    ),
-}
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgres"),
+            "NAME": os.environ.get("SQL_DATABASE", "folha_on_docker_dev"),
+            "USER": os.environ.get("SQL_USER", "folha_on_docker"),
+            "PASSWORD": os.environ.get("SQL_PASSWORD", "folha_on_docker"),
+            "HOST": os.environ.get("SQL_HOST", "localhost"),
+            "PORT": os.environ.get("SQL_PORT", "5432"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            os.environ.get("DATABASE_URL"), conn_max_age=600
+        ),
+    }
 
 PASSWORD_HASHERS = [
     # Use the default password hasher
