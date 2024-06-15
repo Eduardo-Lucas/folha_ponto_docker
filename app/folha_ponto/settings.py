@@ -34,7 +34,7 @@ DEBUG = 1
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'bv-contabilidadev2.onrender.com', 'bv-contabilidade.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'bv-contabilidade-v2-tkor.onrender.com', 'bv-contabilidade.onrender.com']
 
 # Application definition
 
