@@ -114,25 +114,25 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": 'django.db.backends.postgresql',
-            "NAME": '',
-            "USER": '',
-            "PASSWORD":'',
-            "HOST": 'localhost',
-            "PORT": '5432',
-        }
-    }
+# if DEBUG:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": 'django.db.backends.postgresql',
+#             "NAME": '',
+#             "USER": '',
+#             "PASSWORD":'',
+#             "HOST": 'localhost',
+#             "PORT": '5432',
+#         }
+#     }
 # else:
 
-# DATABASES = {
-#     "default": dj_database_url.parse(
-#         "postgres://bv_contabilidade_v2:sYRMsLsNnowFwbC41N5h9FC4jiFDHyEJ@dpg-codegngl5elc73fmmbt0-a.ohio-postgres.render.com/bv_contabilidade_v2_dpfo",
-#         conn_max_age=600
-#     ),
-# }
+DATABASES = {
+    "default": dj_database_url.parse(
+        "DATABASE_URL",
+        conn_max_age=600
+    ),
+}
 
 PASSWORD_HASHERS = [
     # Use the default password hasher
