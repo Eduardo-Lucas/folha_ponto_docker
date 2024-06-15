@@ -19,9 +19,9 @@ django-tables2==2.4.1
 
 # render config
 python-dotenv==0.21.0
-psycopg2==2.9.9
-# psycopg2-binary==2.9.6
-dj-database-url==1.2.0
+# psycopg2==2.9.9
+psycopg2-binary  # Render requires psycopg2-binary
+dj-database-url
 gunicorn==20.1.0
 whitenoise==6.2.0
 Brotli==1.0.9
