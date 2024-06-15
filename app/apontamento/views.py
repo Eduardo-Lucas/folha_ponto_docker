@@ -242,8 +242,8 @@ class AppointmentDetailView(LoginRequiredMixin, DetailView, UpdateView):
         "saida",
     ]
 
-    def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
-        return get_object_or_404(Ponto, pk=self.kwargs["pk"])
+    # def get_object(self, queryset: QuerySet[Any] | None = ...) -> Model:
+    #     return get_object_or_404(Ponto, pk=self.kwargs["pk"])
 
     def form_valid(self, form):
         """Muda a tarefa do último ponto do usuário"""
