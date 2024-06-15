@@ -117,7 +117,7 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 if DEBUG:
     DATABASES = {
         "default": {
-            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgres"),
+            "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
             "NAME": os.environ.get("SQL_DATABASE", "folha_on_docker_dev"),
             "USER": os.environ.get("SQL_USER", "folha_on_docker"),
             "PASSWORD": os.environ.get("SQL_PASSWORD", "folha_on_docker"),
