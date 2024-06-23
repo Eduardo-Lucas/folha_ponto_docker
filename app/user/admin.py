@@ -27,11 +27,21 @@ class UserProfileResource(resources.ModelResource):
         model = UserProfile
 
 
-class UserProfileAdmin(ImportExportModelAdmin):
+@admin.register(UserProfile)
+class UserProfileAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_classes = [UserProfileResource]
+    list_display = (
+        "user",
+        "nome",
+        "tipo_receita",
+        "cargahoraria",
+        "bateponto",
+        "semintervaloalmoco",
+        "almoco",
+    )
 
 
-admin.site.register(UserProfile, UserProfileAdmin)
+#admin.site.register(UserProfile, UserProfileAdmin)
 
 
 class DepartamentoResource(resources.ModelResource):

@@ -49,7 +49,7 @@ class UserProfile(models.Model):
         default=0, help_text="Informe o Contato", null=True, blank=True
     )
     bateponto = models.CharField(
-        bate_ponto_choices,
+        choices=bate_ponto_choices,
         default="Sim",
         max_length=3,
         help_text="Marque se bate ponto.",
@@ -61,7 +61,7 @@ class UserProfile(models.Model):
         Departamento, on_delete=models.CASCADE, default=1, null=True, blank=True
     )
     semintervaloalmoco = models.CharField(
-        sem_intervalo_almoco_choices,
+        choices=sem_intervalo_almoco_choices,
         default="Sim",
         max_length=10,
         help_text="Marque se não tiver intervalo para almoço.",
@@ -92,7 +92,7 @@ class UserProfile(models.Model):
         help_text="Escolha o Tipo de Receita mais utilizado.",
     )
     almoco = models.CharField(
-        almoco_choices,
+        choices=almoco_choices,
         max_length=10,
         default="Não Almoça",
         help_text="Informe rotina do almoço",

@@ -115,23 +115,34 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 # if DEBUG:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
-#             "NAME": os.environ.get("SQL_DATABASE", "folha_on_docker_dev"),
-#             "USER": os.environ.get("SQL_USER", "folha_on_docker"),
-#             "PASSWORD": os.environ.get("SQL_PASSWORD", "folha_on_docker"),
-#             "HOST": os.environ.get("SQL_HOST", "localhost"),
-#             "PORT": os.environ.get("SQL_PORT", "5432"),
-#         }
+# FIX ME: ESSA É A CONFIGURAÇÃO PARA O POSTGRES NO LOCALHOST!
+# DATABASES = {
+#     "default": {
+#         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
+#         "NAME": os.environ.get("SQL_DATABASE", "folha_on_docker_dev"),
+#         "USER": os.environ.get("SQL_USER", "postgres"),
+#         "PASSWORD": os.environ.get("SQL_PASSWORD", "postgres"),
+#         "HOST": os.environ.get("SQL_HOST", "localhost"),
+#         "PORT": os.environ.get("SQL_PORT", "5432"),
 #     }
+# }
 # else:
+
+# TO DO: ESSA É A CONFIGURAÇÃO PARA O RENDER!
 DATABASES = {
     "default": dj_database_url.config(
         default='postgres://folha_on_docker:vI5wJ7i89VEqujmIRfBKSrf1Xk4yltly@dpg-cpmrqq6ehbks73fu0lh0-a.ohio-postgres.render.com/folha_on_docker_dev',
         conn_max_age=600
     ),
 }
+
+# FIX ME: ESSA É A CONFIGURAÇÃO PARA O LOCALHOST!
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 PASSWORD_HASHERS = [
     # Use the default password hasher
