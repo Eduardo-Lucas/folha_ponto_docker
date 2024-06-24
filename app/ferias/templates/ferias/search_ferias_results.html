@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container border border-dark">
+    <div class="row border-bottom border-dark align-middle">
+        {% if user.is_superuser %}
+        <div class="col-md-5 align-middle">
+            <h3 class="text-info">Lista de Férias Cadastradas</h3>
+        </div>
+        {% else %}
+        <div class="col-md-3 align-middle">
+            <h3 class="text-info">Lista de Férias de {{request.user|capfirst}}</h3>
+        </div>
+        {% endif %}
+        <div class="col-md-3 mt-1 mb-1">
+            <a href="{% url 'ferias:ferias_create' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i>
+                Adicionar Férias
+            </a>
+        </div>
+        <div class="col-md-4 mt-1 ui-widget">
+            <form action="{% url 'ferias:search_ferias_results' %}" method="get">
+                <input type="text" id="usuario" name="q" class="form-control" placeholder="Pesquisa...">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table-responsive">
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+
+                            {% if user.is_superuser %}
+                            <th class="align-middle">Usuário</th>
+                            {% endif %}
+                            <th class="align-middle">Data Inicial</th>
+                            <th class="align-middle">Data Final</th>
+                            <th class="text-center">Dias<br>Úteis</th>
+                            <th class="text-center">Saldo<br>em Dias</th>
+                            {% if user.is_superuser %}
+                            <th class="align-middle text-center">Opções</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody id="table">
+                        {% for feria in search_ferias %}
+                        <tr>
+
+                            {% if user.is_superuser %}
+                            <th class="align-middle">{{feria.user.username|capfirst}}</th>
+                            {% endif %}
+                            <td class="align-middle">{{ feria.data_inicial|date:"d/m/Y"}}</td>
+                            <td class="align-middle">{{ feria.data_final|date:"d/m/Y" }}</td>
+                            <td class="align-middle text-center">{{ feria.dias_uteis }}</td>
+                            <td class="align-middle text-center">{{ feria.saldo_dias }}</td>
+                            {% if user.is_superuser %}
+                            <td class="text-center">
+                                <a href="{% url 'ferias:ferias_update' feria.id %}" class="btn btn-warning btn-sm"
+                                    id="edit-button">
+                                    <i class="fas fa-edit"></i>
+                                    Editar</a>
+                                <a href="{% url 'ferias:ferias_delete' feria.id %}" class="btn btn-danger btn-sm"
+                                    id="delete-button">
+                                    <i class="fas fa-trash"></i>
+                                    Excluir</a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-danger">
+                                <strong>Nenhum registro encontrado.</strong>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </table>
+        </div>
+    </div>
+    <div class="pagination mb-2">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; primeira</a>
+            <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#usuario").autocomplete({
+                source: "{% url 'user:usuario_autocomplete' %}",
+                minLength: 2,
+            });
+        });
+    </script>
+
+</div>
+{% endblock %}

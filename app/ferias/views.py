@@ -251,16 +251,16 @@ class FeriasDeleteView(LoginRequiredMixin, DeleteView):
 class SearchFeriasResultsView(ListView):
     """View para listar as férias filtradas."""
 
-    paginate_by = 10
+    paginate_by = 11
     model = Ferias
-    template_name = "ferias/ferias_list.html"
-    context_object_name = "ferias"
+    template_name = "ferias/search_ferias_results.html"
+    context_object_name = "search_ferias"
 
     def get_queryset(self):  # new
         if self.request.GET.get("q") is not None:
             query = self.request.GET.get("q")
-            ferias = Ferias.objects.filter(Q(user__username__icontains=query))
+            search_ferias = Ferias.objects.filter(Q(user__username__icontains=query))
         else:  # pragma: no cover
-            ferias = Ferias.objects.all()
+            search_ferias = Ferias.objects.all()
 
-        return ferias
+        return search_ferias
