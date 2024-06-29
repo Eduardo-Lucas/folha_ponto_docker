@@ -20,7 +20,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
+    path('accounts/', include('django.contrib.auth.urls')),
     path("admin/", admin.site.urls),
     path("", include("core.urls")),
     path("apontamento/", include("apontamento.urls")),
@@ -28,6 +31,45 @@ urlpatterns = [
     path("ferias/", include("ferias.urls")),
     path("refeicao/", include("refeicao.urls")),
     path("user/", include("user.urls")),
+
+    # Password reset
+         # 1) Submit our email form
+    path(
+        "password_reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset.html"
+        ),
+        name="password_reset",
+    ),
+
+    # 2) Email sent success message
+    path(
+        "password_reset_done/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name="registration/password_reset_done.html"
+        ),
+        name="password_reset_done",
+    ),
+
+    # 3) Link to password Reset form in email
+    path(
+        "password_reset_confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="registration/password_reset_confirm.html"
+        ),
+        name="password_reset_confirm",
+    ),
+
+    # 4) Password successfully changed message
+    path(
+        "password_reset_complete/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="registration/password_reset_complete.html"
+        ),
+        name="password_reset_complete",
+    ),
+
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

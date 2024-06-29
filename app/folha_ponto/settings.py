@@ -204,14 +204,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "user:login"
 
 
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_PORT = 25
-EMAIL_USE_TLS = True
-# FIXME: Change this to client email
-EMAIL_HOST_USER = "eduardolucas40@gmail.com"
-EMAIL_HOST_PASSWORD = "Bizagi2019#"
-
-
 # Increase maximum request size
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 20  # Example: 20MB
 
@@ -287,23 +279,6 @@ JAZZMIN_SETTINGS = {
     },
 }
 
-REDIS_URL = "redis://" + os.getenv("REDIS_HOST", "localhost") + ":6379/0"
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_SERIALIZER = "json"
-CELERY_TIMEZONE = "America/Sao_Paulo"
-
-CELERY_BEAT_SCHEDULE = {}
-
-CELERY_BEAT_SCHEDULE = {
-    "check_active_sessions": {
-        "task": "user.tasks.check_active_sessions",
-        "schedule": 60.0,  # every 1 minute
-        "args": [],
-    }
-}
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
