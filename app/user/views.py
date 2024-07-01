@@ -41,6 +41,9 @@ def sign_in(request):
                     user_profile.tipo_receita = TipoReceita.objects.get(id=1)
                     user_profile.save()
 
+                if user.email is None or user.email == "":
+                    messages.warning(request, "Por favor, atualize seu E-mail. Acesse 'Meu Perfil' no menu superior.")
+
                 if user_profile.nome is None or user_profile.nome == "":
                     messages.warning(request, "Por favor, atualize seu perfil.")
                 else:
