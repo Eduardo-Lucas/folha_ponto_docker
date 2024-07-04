@@ -1,0 +1,111 @@
+"""Views do app banco_de_horas."""
+
+from datetime import datetime, timedelta
+
+from apontamento.models import Ponto
+from banco_de_horas.forms import BancoDeHorasForm
+from banco_de_horas.models import BancoDeHoras
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, ListView, UpdateView
+
+from .forms import BancoDeHorasForm
+
+
+def calcula_banco_de_horas(request):
+    """Calcula o saldo de horas do usuário."""
+
+    # pega todos usuarios ativos
+    users = User.objects.filter(
+        is_active=True,
+        userprofile__isnull=False,
+    )
+
+    # pega o periodo de apuração
+    data_inicial = "2024-06-01"
+    data_final = "2024-06-30"
+
+    # cast data_final into datetime
+    data_final_object = datetime.strptime(data_final, "%Y-%m-%d")
+
+    # periodo anterios é o ultimo dia do mês anterior
+    data_anterior = "2024-05-31"
+
+    # remover todas horas
+    BancoDeHoras.objects.remover_todas_horas(periodo=data_final)
+
+    # para cada usuario, calcula o saldo de horas
+    for user in users:
+
+        saldo_anterior = BancoDeHoras.objects.consultar_saldo(
+            user_id=user.id, periodo=data_anterior
+        )
+
+        dict_total_credor_devedor = Ponto.objects.get_credor_devedor(
+            start=data_inicial, end=data_final, user=user
+        )
+        total_credor = dict_total_credor_devedor["total_credor"]
+        total_devedor = dict_total_credor_devedor["total_devedor"]
+
+        # salva o saldo de horas no banco de horas
+        BancoDeHoras.objects.create(
+            user=user,
+            periodo_apurado=data_final,
+            saldo_anterior=saldo_anterior,
+            total_credor=total_credor,
+            compensacao=timedelta(hours=0, minutes=0, seconds=0),
+            total_devedor=total_devedor,
+        )
+
+        # lista o banco de horas do periodo
+        banco_de_horas = BancoDeHoras.objects.filter(
+            periodo_apurado=data_final
+        ).order_by(
+            "user",
+        )
+
+    return render(
+        request,
+        "banco_de_horas/calcula_banco_de_horas.html",
+        {
+            "banco_de_horas": banco_de_horas,
+            "periodo_efetuado": data_final_object,
+        },
+    )
+
+
+class BancoDeHorasListView(ListView):
+    """View para listar o banco de horas."""
+
+    def get_queryset(self) -> QuerySet[BancoDeHoras]:
+        return super().get_queryset().all().order_by("user__username")
+
+    model = BancoDeHoras
+    template_name = "banco_de_horas/lista_banco_de_horas.html"
+    context_object_name = "banco_de_horas"
+    paginate_by = 10
+
+
+class BancoDeHorasUpdateView(LoginRequiredMixin, UpdateView):
+    """View para atualizar o banco de horas."""
+
+    model = BancoDeHoras
+    form_class = BancoDeHorasForm
+    context_object_name = "banco_de_horas"
+    template_name = "banco_de_horas/atualizar_banco_de_horas.html"
+    success_url = reverse_lazy("banco_de_horas:lista_banco_de_horas")
+
+
+class BancoDeHorasDeleteView(LoginRequiredMixin, DeleteView):
+    """View para deletar o banco de horas."""
+
+    model = BancoDeHoras
+    context_object_name = "banco_de_horas"
+    template_name = "banco_de_horas/deletar_banco_de_horas.html"
+
+    def get_success_url(self):
+        """Retorna a URL de sucesso."""
+        return reverse_lazy("banco_de_horas:lista_banco_de_horas")

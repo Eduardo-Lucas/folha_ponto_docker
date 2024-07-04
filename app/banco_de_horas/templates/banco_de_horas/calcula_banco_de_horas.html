@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Banco de Horas{% endblock %}
+
+{% block content %}
+<h3 class="text-success">Cálculo do Banco de Horas referente ao período {{periodo_efetuado|date:'d/m/Y'}} efetuado com
+    sucesso!</h3>
+<a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary btn-sm">Voltar para a lista</a>
+{% endblock %}

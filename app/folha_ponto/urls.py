@@ -31,6 +31,7 @@ urlpatterns = [
     path("ferias/", include("ferias.urls")),
     path("refeicao/", include("refeicao.urls")),
     path("user/", include("user.urls")),
+    path("banco_de_horas/", include("banco_de_horas.urls")),
 
     # Password reset
          # 1) Submit our email form
