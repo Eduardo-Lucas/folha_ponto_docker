@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Banco de Horas{% endblock %}
+
+{% block content %}
+<div class="container border border-dark">
+    <h2 class="text-info">Atualizar Banco de Horas</h2>
+    <div class="row">
+            <div class="col-md-4 mt-3 mb-3" disabled>
+                {{form.user|as_crispy_field}}
+            </div>
+            <div class="col-md-4 mt-3 mb-3">
+                {{form.periodo_apurado|as_crispy_field}}
+            </div>
+            <div class="col-md-4 mt-3 mb-3">
+                {{form.saldo_anterior|as_crispy_field}}
+            </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+
+            <div class="col-md-3 mt-3 mb-3">
+                {{form.total_credor|as_crispy_field}}
+            </div>
+            <div class="col-md-3 mt-3 mb-3">
+                {{form.total_devedor|as_crispy_field}}
+            </div>
+            <div class="col-md-3 mt-3 mb-3">
+                {{form.compensacao|as_crispy_field}}
+            </div>
+            <div class="col-md-3 mt-3 mb-3">
+                {{form.pagamento|as_crispy_field}}
+            </div>
+        </div>
+
+        <div class="row border-dark border-top">
+            <div class="col-md-6 mt-3 mb-3 text-center">
+                <button type="submit" class="btn btn-success btn-block btn-lg" {% if fechar_tarefa %}disabled{% endif%}>
+                    <i class="fas fa-database"></i>
+                    Gravar
+                </button>
+            </div>
+            <div class="col-md-6 mt-3 mb-3">
+                <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary  btn-block btn-lg">
+                    <i class="fas fa-undo"></i>
+                    Voltar
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

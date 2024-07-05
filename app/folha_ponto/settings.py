@@ -15,7 +15,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
-from celery.schedules import crontab
+
 from dotenv import load_dotenv  # render config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "feriado",
     "refeicao",
     "user",
+    "banco_de_horas",
     # third party libraries
     "crispy_forms",
     "crispy_bootstrap5",

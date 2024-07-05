@@ -2,11 +2,12 @@ crispy-bootstrap5==0.7
 debugpy==1.8.0
 celery==5.3.6
 Django==4.2.7
-django-cors-headers==4.3.1
+dj-database-url==2.2.0
+django-cors-headers==4.4.0
 django-import-export==3.3.1
 django-jazzmin==2.6.0
 django-bootstrap5==23.1
-django-crispy-forms==2.0
+django-crispy-forms==2.2
 django-smart-selects==1.6.0
 fontawesomefree==6.0
 flower==2.0.1

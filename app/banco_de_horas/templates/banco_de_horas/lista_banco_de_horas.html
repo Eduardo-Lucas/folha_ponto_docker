@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load timedelta_filters %}
+{% block title %}Banco de Horas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h2 class="text-info">Banco de Horas</h2>
+        </div>
+        {% if request.user.is_superuser%}
+            <div class="col-2">
+                <a href="{% url 'banco_de_horas:calcula_banco_de_horas' %}">
+                    <i class="fas fa-database btn btn-success btn-block btn-lg" disabled data-toggle="tooltip"
+                        title="Calcular o Banco de Horas"> Calcular</i>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+    <table class="responsive">
+        <table class="table table-striped table-bordered table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th class="text-center">Período</th>
+                    <th class="text-center">Saldo<br> Anterior</th>
+                    <th class="text-center">Positivo</th>
+                    <th class="text-center">Negativo</th>
+                    <th class="text-center">Compensação</th>
+                    <th class="text-center">Saldo</th>
+                    <th class="text-center"><strong>PGTO</strong></th>
+                    <th class="text-center">Saldo</th>
+                    {% if request.user.is_superuser %}
+                        <th class="text-center" colspan="2">Ações</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for banco in banco_de_horas %}
+                    {% if not banco.user.is_staff %}
+                        <tr>
+                            {% if banco.user.username.nome is None %}
+                                <td>{{ banco.user.userprofile }}</td>
+                            {% else %}
+                                <td>{{ banco.user.userprofile.nome }}</td>
+                            {% endif %}
+                            <td class="text-center">{{ banco.periodo_apurado|date:"d/m/Y" }}</td>
+                            <td class="text-center">{{ banco.saldo_anterior|format_timedelta }}</td>
+                            <td class="text-center">{{ banco.total_credor|format_timedelta }}</td>
+                            <td class="text-center">{{ banco.total_devedor|format_timedelta }} </td>
+                            <td class="text-center">{{ banco.compensacao|format_timedelta }}</td>
+                            <td class="text-center">{{ banco.saldo_final_sem_pagamento|format_timedelta }}</td>
+
+                            {% if banco.pagamento != '00:00:00' %}
+                            <td class="text-center bg-success">
+                                <strong>{{ banco.pagamento|format_timedelta }}</strong>
+                            </td>
+                            {% else %}
+                            <td class="text-center">
+                                <strong>{{ banco.pagamento|format_timedelta }}</strong>
+                            </td>
+                            {% endif %}
+                            </td>
+                            <td class="text-center">{{ banco.saldo_final_com_pagamento|format_timedelta }}</td>
+                            {% if request.user.is_superuser %}
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:atualiza_banco_de_horas' banco.id %}">
+                                        <i class="fas fa-edit" style="color:blue" data-toggle="tooltip"
+                                            title="Atualizar o Banco de Horas"></i>
+                                    </a>
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:deleta_banco_de_horas' banco.id %}">
+                                        <i class="fas fa-trash" style="color:red" data-toggle="tooltip"
+                                            title="Apagar a linha do Banco de Horas"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo; última</a>
+                {% endif %}
+            </span>
+        </div>
+    </table>
+</div>
+{% endblock %}
