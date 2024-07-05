@@ -129,7 +129,7 @@ WSGI_APPLICATION = "folha_ponto.wsgi.application"
 # }
 # else:
 
-# TO DO: ESSA É A CONFIGURAÇÃO PARA O RENDER!
+# # TO DO: ESSA É A CONFIGURAÇÃO PARA O RENDER!
 DATABASES = {
     "default": dj_database_url.config(
         default='postgres://folha_on_docker:vI5wJ7i89VEqujmIRfBKSrf1Xk4yltly@dpg-cpmrqq6ehbks73fu0lh0-a.ohio-postgres.render.com/folha_on_docker_dev',
@@ -137,7 +137,7 @@ DATABASES = {
     ),
 }
 
-# FIX ME: ESSA É A CONFIGURAÇÃO PARA O LOCALHOST!
+# # FIX ME: ESSA É A CONFIGURAÇÃO PARA O LOCALHOST!
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
