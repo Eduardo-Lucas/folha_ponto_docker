@@ -33,3 +33,18 @@ class BancoDeHorasForm(forms.ModelForm):
 
         self.fields["user"].disabled = True
         self.fields["periodo_apurado"].disabled = True
+
+
+class UserFilterForm(forms.Form):
+        """Campo para filtrar a lista do banco de horas por nome"""
+        user_name = forms.CharField(
+             label="Filtrar por nome de usuário",
+             max_length=100,
+             required=False,
+             widget=forms.TextInput(
+                  attrs={
+                       'class':'form-control',
+                       'placeholder':'Digite o nome do usuário'
+                  }
+             )
+        )

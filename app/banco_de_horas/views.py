@@ -12,8 +12,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, UpdateView
 
-from .forms import BancoDeHorasForm
-
+from .forms import BancoDeHorasForm, UserFilterForm
 
 def calcula_banco_de_horas(request):
     """Calcula o saldo de horas do usuário."""
@@ -81,7 +80,19 @@ class BancoDeHorasListView(ListView):
     """View para listar o banco de horas."""
 
     def get_queryset(self) -> QuerySet[BancoDeHoras]:
-        return super().get_queryset().all().order_by("user__username")
+        queryset = super().get_queryset().all().filter(user__userprofile__bateponto='Sim').order_by("user__username")
+        user_name = self.request.GET.get('user_name')
+        if user_name:
+            queryset = queryset.filter(user__username__icontains=user_name)
+        return queryset
+
+    def context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.filter(userprofile__bateponto='Sim')
+        context['user_name'] = self.request.GET.get('user_name', '')
+        context['form'] = UserFilterForm(self.request.GET or None)
+        return context
+
 
     model = BancoDeHoras
     template_name = "banco_de_horas/lista_banco_de_horas.html"
