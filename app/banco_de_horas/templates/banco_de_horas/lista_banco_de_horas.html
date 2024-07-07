@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load timedelta_filters %}
+{% load crispy_forms_tags %}
 {% block title %}Banco de Horas{% endblock %}
 
 {% block content %}
@@ -16,17 +17,27 @@
                 </a>
             </div>
         {% endif %}
+        <form method="get" class="row gx-3 gy-2 align-items-center">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-2">{{ form.user_name|as_crispy_field }}</div>
+                <div class="col-md-2">{{ form.month_choice|as_crispy_field }}</div>
+                    <div class="col-md-3 d-flex flex-column justify-content-center">
+                        <button type=" submit" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-search"></i> Consulta
+                        </button>
 
-        <div class="col-md-3">
-            <form method="get" action="">
-                <div class="form-group">
+                        <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary btn-sm"
+                            style="border: 1px solid white;">
+                            <i class="fa-solid fa-arrows-rotate"></i> Limpar
+                        </a>
+                    </div>
+            </div>
+        </form>
 
-                    <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Digite o nome de usuário">
-                </div>
 
-            </form>
-        </div>
-    </div>
+
+
     <table class="responsive">
         <table class="table table-striped table-bordered table-hover table-sm">
             <thead>
@@ -94,8 +105,8 @@
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; primeira</a>
-                <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&laquo; primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">anterior</a>
                 {% endif %}
 
                 <span class="current">
@@ -103,8 +114,8 @@
                 </span>
 
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">próxima</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">&raquo; última</a>
+                <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&raquo; última</a>
                 {% endif %}
             </span>
         </div>

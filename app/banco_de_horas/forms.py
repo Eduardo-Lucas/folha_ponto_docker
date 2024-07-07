@@ -1,7 +1,11 @@
 """ Formulário para o modelo BancoDeHoras """
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+import calendar
 from django import forms
+from django.contrib.auth.models import User
+from .utils import get_previous_month_choices
+
 
 from apontamento.templatetags.timedelta_filters import format_timedelta
 
@@ -34,17 +38,29 @@ class BancoDeHorasForm(forms.ModelForm):
         self.fields["user"].disabled = True
         self.fields["periodo_apurado"].disabled = True
 
-
-class UserFilterForm(forms.Form):
+class SearchFilterForm(forms.Form):
         """Campo para filtrar a lista do banco de horas por nome"""
-        user_name = forms.CharField(
-             label="Filtrar por nome de usuário",
-             max_length=100,
+        user_name = forms.ModelChoiceField(
+             queryset=User.objects.filter(
+                  is_active=True,
+                  userprofile__bateponto="Sim"
+             ).order_by("username"),
+             label="Usuário",
              required=False,
-             widget=forms.TextInput(
-                  attrs={
-                       'class':'form-control',
-                       'placeholder':'Digite o nome do usuário'
-                  }
-             )
         )
+        month_choice = forms.ChoiceField(
+             choices=get_previous_month_choices(),
+             label='Selecione o mês',
+             required=False,
+             widget=forms.Select(attrs={
+                  'class':'form-control',
+             }),
+             initial='',
+        )
+
+
+        def __init__(self, *args, **kwargs):
+            self.user = kwargs.pop("user_name", None)
+            super(SearchFilterForm, self).__init__(*args, **kwargs)
+            if self.user is not None:
+                self.fields["user_name"].initial = self.user

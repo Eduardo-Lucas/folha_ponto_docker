@@ -12,7 +12,9 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, UpdateView
 
-from .forms import BancoDeHorasForm, UserFilterForm
+from .forms import BancoDeHorasForm, SearchFilterForm
+
+import calendar
 
 def calcula_banco_de_horas(request):
     """Calcula o saldo de horas do usuário."""
@@ -82,15 +84,26 @@ class BancoDeHorasListView(ListView):
     def get_queryset(self) -> QuerySet[BancoDeHoras]:
         queryset = super().get_queryset().all().filter(user__userprofile__bateponto='Sim').order_by("user__username")
         user_name = self.request.GET.get('user_name')
+        month_choice = self.request.GET.get('month_choice')
+
         if user_name:
             queryset = queryset.filter(user__username__icontains=user_name)
+
+        if month_choice:
+            selected_date = datetime.strptime(month_choice, '%d/%m/%Y')
+            first_day = selected_date.replace(day=1).strftime('%Y-%m-%d')
+            last_day = selected_date.replace(day=calendar.monthrange(selected_date.year, selected_date.month)[1]).strftime('%Y-%m-%d')
+
+            queryset = queryset.filter(periodo_apurado__range=[first_day, last_day])
+
         return queryset
 
-    def context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users'] = User.objects.filter(userprofile__bateponto='Sim')
+        context['form'] = SearchFilterForm(self.request.GET or None)
         context['user_name'] = self.request.GET.get('user_name', '')
-        context['form'] = UserFilterForm(self.request.GET or None)
+        context['month_choice'] = self.request.GET.get('month_choice', '')
         return context
 
 
