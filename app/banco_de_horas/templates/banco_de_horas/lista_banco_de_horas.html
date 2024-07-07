@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-md-3">
             <h2 class="text-info">Banco de Horas</h2>
         </div>
@@ -16,16 +16,16 @@
                 </a>
             </div>
         {% endif %}
-    </div>
-    <div class="row col-md-3">
-        <form method="get" action="">
-            <div class="form-group">
-                <label for="user_name">Filtrar por nome de usuário:</label>
-                <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Digite o nome de usuário">
-            </div>
-            <button type="submit" class="btn btn-primary m-2">Filtrar</button>
-        </form>
 
+        <div class="col-md-3">
+            <form method="get" action="">
+                <div class="form-group">
+
+                    <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Digite o nome de usuário">
+                </div>
+
+            </form>
+        </div>
     </div>
     <table class="responsive">
         <table class="table table-striped table-bordered table-hover table-sm">
