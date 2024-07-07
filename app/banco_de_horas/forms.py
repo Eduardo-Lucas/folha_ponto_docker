@@ -62,5 +62,6 @@ class SearchFilterForm(forms.Form):
         def __init__(self, *args, **kwargs):
             self.user = kwargs.pop("user_name", None)
             super(SearchFilterForm, self).__init__(*args, **kwargs)
+            self.fields["month_choice"].initial = kwargs.get("initial", {}).get("month_choice", None)
             if self.user is not None:
                 self.fields["user_name"].initial = self.user

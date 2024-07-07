@@ -11,6 +11,7 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, UpdateView
+from django.contrib import messages
 
 from .forms import BancoDeHorasForm, SearchFilterForm
 
@@ -87,7 +88,7 @@ class BancoDeHorasListView(ListView):
         month_choice = self.request.GET.get('month_choice')
 
         if user_name:
-            queryset = queryset.filter(user__username__icontains=user_name)
+            queryset = queryset.filter(user_id=user_name)
 
         if month_choice:
             selected_date = datetime.strptime(month_choice, '%d/%m/%Y')
@@ -104,6 +105,10 @@ class BancoDeHorasListView(ListView):
         context['form'] = SearchFilterForm(self.request.GET or None)
         context['user_name'] = self.request.GET.get('user_name', '')
         context['month_choice'] = self.request.GET.get('month_choice', '')
+
+        if not context['banco_de_horas']:
+            messages.error(self.request, 'Nenhum resultado encontrado para o filtro aplicado.')
+
         return context
 
 
