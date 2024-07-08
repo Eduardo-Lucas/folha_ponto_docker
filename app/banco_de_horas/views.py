@@ -115,7 +115,10 @@ class BancoDeHorasListView(ListView):
     model = BancoDeHoras
     template_name = "banco_de_horas/lista_banco_de_horas.html"
     context_object_name = "banco_de_horas"
-    paginate_by = 10
+
+    # FIXME: Paginação não está desligada, a pedido de Bruno
+    # em 2024-07-08
+    # paginate_by = 10
 
 
 class BancoDeHorasUpdateView(LoginRequiredMixin, UpdateView):
