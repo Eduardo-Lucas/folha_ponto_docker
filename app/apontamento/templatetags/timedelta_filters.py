@@ -16,3 +16,9 @@ def format_timedelta(value):
     seconds = total_seconds % 60
 
     return "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds)
+
+@register.filter(name='is_greater_than_zero')
+def is_greater_than_zero(value):
+    if isinstance(value, timedelta):
+        return value >= timedelta(hours=0)
+    return False

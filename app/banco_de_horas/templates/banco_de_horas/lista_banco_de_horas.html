@@ -67,22 +67,48 @@
                             {% endif %}
                             <td class="text-center">{{ banco.periodo_apurado|date:"d/m/Y" }}</td>
                             <td class="text-center">{{ banco.saldo_anterior|format_timedelta }}</td>
-                            <td class="text-center">{{ banco.total_credor|format_timedelta }}</td>
-                            <td class="text-center">{{ banco.total_devedor|format_timedelta }} </td>
-                            <td class="text-center">{{ banco.compensacao|format_timedelta }}</td>
-                            <td class="text-center">{{ banco.saldo_final_sem_pagamento|format_timedelta }}</td>
+                            <td class="text-center text-success">{{ banco.total_credor|format_timedelta }}</td>
+                            <td class="text-center text-danger">{{ banco.total_devedor|format_timedelta }} </td>
 
-                            {% if banco.pagamento != '00:00:00' %}
-                            <td class="text-center bg-success">
-                                <strong>{{ banco.pagamento|format_timedelta }}</strong>
-                            </td>
+                            {% if banco.compensacao|is_greater_than_zero %}
+                                <td class="text-center text-success">{{ banco.compensacao|format_timedelta }}</td>
                             {% else %}
-                            <td class="text-center">
-                                <strong>{{ banco.pagamento|format_timedelta }}</strong>
-                            </td>
+                                <td class="text-center text-danger">{{ banco.compensacao|format_timedelta }}</td>
                             {% endif %}
+
+                            {% if banco.saldo_final_sem_pagamento|is_greater_than_zero %}
+                                <td class="text-center text-success">
+                                    {{ banco.saldo_final_sem_pagamento|format_timedelta }}
+                                </td>
+                            {% else %}
+                                <td class="text-center text-danger">
+                                    {{ banco.saldo_final_sem_pagamento|format_timedelta }}
+                                </td>
+                            {% endif %}
+
+                            {% if banco.pagamento|is_greater_than_zero %}
+                                <td class="text-center text-success">
+                                    {{ banco.pagamento|format_timedelta }}
+                                </td>
+                            {% else %}
+                                <td class="text-center">
+                                    {{ banco.pagamento|format_timedelta }}
+                                </td>
+                            {% endif %}
+
                             </td>
-                            <td class="text-center">{{ banco.saldo_final_com_pagamento|format_timedelta }}</td>
+
+                            {% if banco.saldo_final_com_pagamento|is_greater_than_zero %}
+                                <td class="text-center text-success">
+                                    {{ banco.saldo_final_com_pagamento|format_timedelta }}
+                                </td>
+                            {% else %}
+                                <td class="text-center text-danger">
+                                    {{ banco.saldo_final_com_pagamento|format_timedelta }}
+                                </td>
+                            {% endif %}
+
+
                             {% if request.user.is_superuser %}
                                 <td class="text-center">
                                     <a href="{% url 'banco_de_horas:atualiza_banco_de_horas' banco.id %}">
