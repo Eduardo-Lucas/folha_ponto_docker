@@ -3,7 +3,7 @@ import calendar
 
 def get_previous_month_choices():
     today = datetime.today()
-    choices = []
+    choices = [{'', 'Competência'}]
 
     for i in range(4):
         # Calculate the target month and year

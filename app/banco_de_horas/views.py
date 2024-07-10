@@ -26,15 +26,15 @@ def calcula_banco_de_horas(request):
         userprofile__isnull=False,
     )
 
-    # pega o periodo de apuração
-    data_inicial = "2024-06-01"
-    data_final = "2024-06-30"
+    # pega a data da competência selecionada no filtro
+    data_final = request.session.get('selected_data')
 
     # cast data_final into datetime
     data_final_object = datetime.strptime(data_final, "%Y-%m-%d")
 
     # periodo anterios é o ultimo dia do mês anterior
-    data_anterior = "2024-05-31"
+    data_anterior = (data_final_object.replace(day=1) - timedelta(days=1)).strftime('%Y-%m-%d')
+    data_inicial = data_final_object.replace(day=1).strftime('%Y-%m-%d')
 
     # remover todas horas
     BancoDeHoras.objects.remover_todas_horas(periodo=data_final)
@@ -95,7 +95,12 @@ class BancoDeHorasListView(ListView):
             first_day = selected_date.replace(day=1).strftime('%Y-%m-%d')
             last_day = selected_date.replace(day=calendar.monthrange(selected_date.year, selected_date.month)[1]).strftime('%Y-%m-%d')
 
+            """Armazena selected_data na session do Django p/ ser usado em calcular_banco_de_horas"""
+            self.request.session['selected_data'] = last_day
+
             queryset = queryset.filter(periodo_apurado__range=[first_day, last_day])
+        else:
+            return queryset.all()
 
         return queryset
 
@@ -118,7 +123,7 @@ class BancoDeHorasListView(ListView):
 
     # FIXME: Paginação não está desligada, a pedido de Bruno
     # em 2024-07-08
-    # paginate_by = 10
+    paginate_by = 30
 
 
 class BancoDeHorasUpdateView(LoginRequiredMixin, UpdateView):
