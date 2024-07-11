@@ -111,6 +111,13 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         if carga_horaria < 1 or carga_horaria > 8:
             messages.error(self.request, "Carga horária deve ser entre 1 e 8 horas.")
             return self.form_invalid(form)
+
+        email = form.cleaned_data["email"]
+        if email is not None or email != "":
+            self.request.user.email = email
+            self.request.user.save()
+
+
         messages.success(self.request, "Seu perfil foi atualizado com sucesso.")
         form.instance.user = self.request.user
         return super().form_valid(form)
