@@ -36,7 +36,11 @@
         </form>
 
 
-
+        <div id="spinner-container" class="d-none text-center mt-3">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Aguarde...</span>
+            </div>
+        </div>
 
     <table class="responsive">
         <table class="table table-striped table-bordered table-hover table-sm">
@@ -146,5 +150,33 @@
             </span>
         </div>
     </table>
+
+    <script>
+        const form = document.getElementById('form');
+        const spinnerContainer = document.getElementById('spinner-container');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            spinnerContainer.classList.remove('d-none');
+
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                },
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    spinnerContainer.classList.add('d-none');
+                    alert(data.message);
+                })
+                .catch(error => {
+                    spinnerContainer.classList.add('d-none');
+                    alert('Um erro ocorreu. Tente novamente!');
+                });
+
+        });
+    </script>
 </div>
 {% endblock %}
