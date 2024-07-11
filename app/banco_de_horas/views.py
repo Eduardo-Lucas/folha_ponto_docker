@@ -17,6 +17,7 @@ from .forms import BancoDeHorasForm, SearchFilterForm
 
 import calendar
 
+
 def calcula_banco_de_horas(request):
     """Calcula o saldo de horas do usuário."""
 
@@ -35,6 +36,15 @@ def calcula_banco_de_horas(request):
     # periodo anterios é o ultimo dia do mês anterior
     data_anterior = (data_final_object.replace(day=1) - timedelta(days=1)).strftime('%Y-%m-%d')
     data_inicial = data_final_object.replace(day=1).strftime('%Y-%m-%d')
+
+    # TODO: check if there is banco de horas for the period. If so, ask the user if they want to recalculate the banco de horas
+    # TODO: IF HE SAYS YES, THEN DELETE ALL BANCO DE HORAS FOR THE PERIOD AND RECALCULATE
+    # TODO: ELSE, RETURN A MESSAGE SAYING THAT THE BANCO DE HORAS FOR THE PERIOD HAS ALREADY BEEN CALCULATED
+
+    if BancoDeHoras.objects.check_banco_de_horas_existente(periodo=data_final_object):
+
+        # confirm if the user wants to recalculate the banco de horas
+        return render(request, "banco_de_horas/confirm_recalculate.html", {"periodo_efetuado": data_final_object})
 
     # remover todas horas
     BancoDeHoras.objects.remover_todas_horas(periodo=data_final)
@@ -98,9 +108,9 @@ class BancoDeHorasListView(ListView):
             """Armazena selected_data na session do Django p/ ser usado em calcular_banco_de_horas"""
             self.request.session['selected_data'] = last_day
 
-            queryset = queryset.filter(periodo_apurado__range=[first_day, last_day])
+            queryset = queryset.filter(periodo_apurado__range=[first_day, last_day]).order_by("-periodo_apurado", "user__username")
         else:
-            return queryset.all()
+            return queryset.all().order_by("-periodo_apurado", "user__username")
 
         return queryset
 
@@ -111,8 +121,8 @@ class BancoDeHorasListView(ListView):
         context['user_name'] = self.request.GET.get('user_name', '')
         context['month_choice'] = self.request.GET.get('month_choice', '')
 
-        if not context['banco_de_horas']:
-            messages.error(self.request, 'Nenhum resultado encontrado para o filtro aplicado.')
+        # if not context['banco_de_horas']:
+        #     messages.error(self.request, 'Nenhum resultado encontrado para o filtro aplicado.')
 
         return context
 
@@ -121,8 +131,6 @@ class BancoDeHorasListView(ListView):
     template_name = "banco_de_horas/lista_banco_de_horas.html"
     context_object_name = "banco_de_horas"
 
-    # FIXME: Paginação não está desligada, a pedido de Bruno
-    # em 2024-07-08
     paginate_by = 30
 
 
