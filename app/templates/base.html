@@ -45,29 +45,53 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+
+          {% if request.user.is_authenticated %}
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'core:home' %}">Home</a>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'apontamento:folha_ponto' %}" class="btn btn-outline">Resumo</a>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Operação
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
+              </li>
+              <li>
+                <a href="{% url 'apontamento:folha_ponto' %}" class="btn btn-outline">Resumo</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'ferias:ferias_list' %}">Férias</a>
+              </li>
+              <li>
+                <a href="{% url 'apontamento:ajuste_ponto' %}" class="btn btn-outline">Ajuste</a>
+              </li>
+
+            </ul>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'apontamento:appointment_create' %}" class="btn btn-outline">Marcação</a>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Rotinas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>
+                <a href="{% url 'refeicao:refeicao_list' %}" class="btn btn-outline">Refeição</a>
+              </li>
+              <li>
+                <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-outline">Banco de Horas</a>
+              </li>
+
+            </ul>
           </li>
-          <li class="nav-item">
-            <a href="{% url 'apontamento:ajuste_ponto' %}" class="btn btn-outline">Ajuste</a>
-          </li>
-          <!-- {% if request.user.is_authenticated %}
-          <li class="nav-item">
-            <a href="{% url 'apontamento:historico_sem_form' request.user.id %}" class="btn btn-outline">Histórico</a>
-          </li>
-          {% endif %} -->
-          <li class="nav-item">
-            <a href="{% url 'refeicao:refeicao_list' %}" class="btn btn-outline">Refeição</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-outline">Banco de Horas</a>
-          </li>
+
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -87,6 +111,9 @@
 
             </ul>
           </li>
+
+          {% endif %}
+
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -95,10 +122,9 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{% url 'user:profile' %}">Meu Perfil</a></li>
-              <li><a class="dropdown-item" href="{% url 'ferias:ferias_list' %}">Férias</a></li>
               <li><a class="dropdown-item" href="{% url 'user:password' %}">Troca Senha</a></li>
               {% if request.user.is_staff %}
-              <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
               {% endif %}
               <li><a class="dropdown-item" href="{% url 'user:logout' %}">Logout</a></li>
             </ul>
