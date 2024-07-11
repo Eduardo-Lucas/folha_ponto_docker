@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Confirmação</h1>
+<div class="container">
+    <div class="row">
+        <p>O banco de horas para esse período {{ periodo_efetuado }} já foi calculado. Quer CALCULAR DE NOVO?</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, apaga</button>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary">Não,
+                volta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

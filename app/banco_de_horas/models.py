@@ -9,6 +9,11 @@ from django.db import models
 class BancoDeHorasManager(models.Manager):
     """ " Manager customizado para o model BancoDeHoras."""
 
+    # check if there is banco de horas for the user in the period
+    def check_banco_de_horas_existente(self, periodo):
+        """Verifica se existe banco de horas para um determinado período."""
+        return self.filter(periodo_apurado=periodo).exists()
+
     def remover_todas_horas(self, periodo):
         """Remove todas as horas do banco de horas de todos os usuários
         em um determinado período."""
@@ -19,7 +24,7 @@ class BancoDeHorasManager(models.Manager):
         banco_de_horas = self.filter(user_id=user_id, periodo_apurado=periodo).first()
 
         if banco_de_horas:
-            return banco_de_horas.saldo_final
+            return banco_de_horas.saldo_final_com_pagamento
         return timedelta(hours=0, minutes=0, seconds=0)
 
 
@@ -47,8 +52,9 @@ class BancoDeHoras(models.Model):
         """Meta class para o model BancoDeHoras."""
 
         ordering = (
-            "user",
             "-periodo_apurado",
+            "user",
+
         )
         db_table = "banco_de_horas"
         unique_together = ("user", "periodo_apurado")
