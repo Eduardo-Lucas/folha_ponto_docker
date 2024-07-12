@@ -629,7 +629,7 @@ def fechar_todas_tarefas(request):
 @login_required
 def get_automatically_closed_tasks(request):
     """Get all tasks that were automatically closed"""
-    pontos_list = Ponto.objects.get_automatically_closed_tasks()
+    pontos_list = Ponto.objects.get_automatically_closed_tasks().order_by("-id")
     paginator = Paginator(pontos_list, 10)
 
     page_number = request.GET.get("page")
