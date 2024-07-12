@@ -8,6 +8,8 @@ from django.urls import reverse
 from feriado.models import Feriado
 from ferias.models import Ferias
 
+from django.db.models import Q
+
 
 class TipoReceitaManager(models.Manager):
     """Manager for the TipoReceita model."""
@@ -394,18 +396,20 @@ class PontoManager(models.Manager):
                 start = datetime.combine(day, time(11, 0))
                 end = datetime.combine(day, time(14, 0))
                 ponto = self.filter(
-                    entrada__range=(start, end), usuario=user, fechado=True
+                    Q(entrada__range=(start, end)),
+                    Q(saida__range=(start, end)),
+                    usuario=user, fechado=True
                 ).first()
                 if ponto:
-                    if ponto.difference > timedelta(hours=8):
-                        break_list.append(
-                            {
-                                "user_id": user.id,
-                                "username": user.username,
-                                "day": day,
-                                "total_hours": ponto.difference,
-                            }
-                        )
+                    # if ponto.difference > timedelta(hours=8):
+                    break_list.append(
+                        {
+                            "user_id": user.id,
+                            "username": user.username,
+                            "day": day,
+                            "total_hours": ponto.difference,
+                        }
+                    )
         return break_list
 
     def get_carga_horaria(self, user=None):
