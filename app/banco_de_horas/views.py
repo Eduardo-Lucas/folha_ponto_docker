@@ -17,6 +17,16 @@ from .forms import BancoDeHorasForm, SearchFilterForm
 
 import calendar
 
+def verica_banco_de_horas_existente(request, periodo_apurado):
+    """Verifica se o banco de horas já foi calculado para o período selecionado."""
+
+    if BancoDeHoras.objects.check_banco_de_horas_existente(periodo=periodo_apurado):
+        return True
+
+    return False
+
+
+
 
 def calcula_banco_de_horas(request):
     """Calcula o saldo de horas do usuário."""

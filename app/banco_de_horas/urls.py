@@ -4,11 +4,16 @@ from .views import (
     BancoDeHorasUpdateView,
     calcula_banco_de_horas,
     BancoDeHorasDeleteView,
+    verica_banco_de_horas_existente,
 )
 
 app_name = "banco_de_horas"
 
 urlpatterns = [
+    path('verica_banco_de_horas_existente/<date:periodo_apurado>',
+         verica_banco_de_horas_existente,
+         name='verica_banco_de_horas_existente'
+    ),
     path(
         "lista_banco_de_horas/",
         BancoDeHorasListView.as_view(),
@@ -20,7 +25,9 @@ urlpatterns = [
         name="atualiza_banco_de_horas",
     ),
     path(
-        "calcula_banco_de_horas/", calcula_banco_de_horas, name="calcula_banco_de_horas"
+        "calcula_banco_de_horas/",
+        calcula_banco_de_horas,
+        name="calcula_banco_de_horas"
     ),
     path(
         "deleta_banco_de_horas/<int:pk>/",
