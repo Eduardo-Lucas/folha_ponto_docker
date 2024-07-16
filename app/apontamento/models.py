@@ -509,9 +509,9 @@ class Ponto(models.Model):
 
     @property
     def get_intervalo(self):
-        """check if saida betweem 11 and 13"""
+        """check if saida betweem 11 and 14"""
         if self.saida:
-            if self.saida.time() > time(11, 0) and self.saida.time() < time(13, 0):
+            if self.saida.time() > time(11, 0) and self.saida.time() < time(13, minute=59):
                 return True
             return False
         return False
