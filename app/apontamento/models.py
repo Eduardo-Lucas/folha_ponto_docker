@@ -147,7 +147,7 @@ class PontoManager(models.Manager):
         open_task_list = []
         users = User.objects.all()
         for user in users:
-            ponto = self.get_open_pontos(user).last()
+            ponto = self.get_open_pontos_day_before(user).last()
             if ponto:
                 open_task_list.append(
                     {
@@ -158,6 +158,21 @@ class PontoManager(models.Manager):
                     }
                 )
         return open_task_list
+
+
+    def get_open_pontos_day_before(self, user=None):
+        """
+        Returns all open Ponto objects for the day before.
+        """
+        day = datetime.now().date() - timedelta(days=1)
+        start = datetime.combine(day, time.min)
+        end = datetime.combine(day, time.max)
+        return self.filter(
+            entrada__range=(start, end),
+            usuario=user,
+            entrada__year__gte=2024,
+            saida=None,
+        )
 
     def get_open_pontos(self, user=None):
         """
