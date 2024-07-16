@@ -163,6 +163,7 @@ class PontoManager(models.Manager):
     def get_open_pontos_day_before(self, user=None):
         """
         Returns all open Ponto objects for the day before.
+        Template: apontamento/open_task_list.html
         """
         day = datetime.now().date() - timedelta(days=1)
         start = datetime.combine(day, time.min)
@@ -177,6 +178,7 @@ class PontoManager(models.Manager):
     def get_open_pontos(self, user=None):
         """
         Returns all open Ponto objects for a given user.
+        Template: core/home.html
         """
         return self.filter(
             usuario=user,
