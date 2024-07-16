@@ -51,10 +51,6 @@ def calcula_banco_de_horas(request):
     # TODO: IF HE SAYS YES, THEN DELETE ALL BANCO DE HORAS FOR THE PERIOD AND RECALCULATE
     # TODO: ELSE, RETURN A MESSAGE SAYING THAT THE BANCO DE HORAS FOR THE PERIOD HAS ALREADY BEEN CALCULATED
 
-    if BancoDeHoras.objects.check_banco_de_horas_existente(periodo=data_final_object):
-
-        # confirm if the user wants to recalculate the banco de horas
-        return render(request, "banco_de_horas/confirm_recalculate.html", {"periodo_efetuado": data_final_object})
 
     # remover todas horas
     BancoDeHoras.objects.remover_todas_horas(periodo=data_final)
