@@ -10,12 +10,12 @@
             <h2 class="text-info">Banco de Horas</h2>
         </div>
         {% if request.user.is_superuser%}
-            <div class="col-2">
-                <a href="{% url 'banco_de_horas:calcula_banco_de_horas' %}">
-                    <i class="fas fa-database btn btn-success btn-block btn-lg" disabled data-toggle="tooltip"
-                        title="Calcular o Banco de Horas"> Calcular</i>
-                </a>
-            </div>
+            <form id="calcular_banco_de_horas_form"method="POST" class="col-md-2">
+                {% csrf_token %}
+                <button id="calcular_banco_de_horas_btn" class="btn btn-success btn-block btn-lg">
+                    <i class="fas fa-database" disabled data-toggle="tooltip" title="Calcular o Banco de Horas"> Calcular</i>
+                </button>
+            </form>
         {% endif %}
         <form method="get" class="row gx-3 gy-2 align-items-center">
             {% csrf_token %}
@@ -151,32 +151,71 @@
         </div>
     </table>
 
+    <div id="confirmacao_modal"class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Banco de Horas</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Banco de Horas já calculado. Gostaria de recalculá-lo?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+              <button id="confirmar_recalculo" type="button" class="btn btn-primary">Sim</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <script>
-        const form = document.getElementById('form');
-        const spinnerContainer = document.getElementById('spinner-container');
+        $(document).ready(function() {
+            $('#calcular_banco_de_horas_btn').click(function(e) {
+                e.preventDefault();
 
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            spinnerContainer.classList.remove('d-none');
-
-            const formData = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                },
-                body: formData
-            }).then(response => response.json())
-                .then(data => {
-                    spinnerContainer.classList.add('d-none');
-                    alert(data.message);
-                })
-                .catch(error => {
-                    spinnerContainer.classList.add('d-none');
-                    alert('Um erro ocorreu. Tente novamente!');
+                $.ajax({
+                    url: "{% url 'banco_de_horas:lista_banco_de_horas' %}",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    success: function(response) {
+                        if (response.status === 'warning') {
+                            $('#confirmacao_modal').modal('show');
+                        }
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.log(xhr.status + ": " + xhr.responseText);
+                        alert("Ocorreu um erro ao processar a solicitação.");
+                    }
                 });
+            });
+            $('#confirmar_recalculo').click(function() {
+                $('#confirmacao_modal').hide();
+                $.ajax({
+                    url: "{% url 'banco_de_horas:lista_banco_de_horas' %}",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'recalcular': 'true',
+                    },
+                    success: function(response) {
+                        if(response.status === 'success'){
+                            alert("Banco de Dados Calculado com Sucesso!")
+                            location.reload();
+                        } else{
+                            alert("Erro ao calcular Banco de Horas.");
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Erro na requisição:', error)
+                    }
 
-        });
+                })
+            })
+    });
     </script>
 </div>
 {% endblock %}
