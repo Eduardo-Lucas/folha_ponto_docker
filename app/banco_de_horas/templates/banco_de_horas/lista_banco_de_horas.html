@@ -36,11 +36,12 @@
         </form>
 
 
-        <div id="spinner-container" class="d-none text-center mt-3">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Aguarde...</span>
-            </div>
+    <!-- Spinner -->
+    <div id="loading-spinner" class="d-none justify-content-center align-items-center position-fixed w-100 h-100" style="display:none; top: 0; left: 0; background: rgba(255, 255, 255, 0.8); z-index: 1000;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
+    </div>
 
     <table class="responsive">
         <table class="table table-striped table-bordered table-hover table-sm">
@@ -132,6 +133,7 @@
             </tbody>
 
         </table>
+        <!-- #TODO Adaptar paginação -->
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
@@ -150,7 +152,7 @@
             </span>
         </div>
     </table>
-
+    <!-- Modal -->
     <div id="confirmacao_modal"class="modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -159,7 +161,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <p>Banco de Horas já calculado. Gostaria de recalculá-lo?</p>
+              <p id="modal-message">Banco de Horas já calculado. Gostaria de recalculá-lo?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
@@ -168,7 +170,8 @@
           </div>
         </div>
       </div>
-
+    </div>
+    <!-- Script jQuery -->
     <script>
         $(document).ready(function() {
             $('#calcular_banco_de_horas_btn').click(function(e) {
@@ -182,6 +185,7 @@
                     },
                     success: function(response) {
                         if (response.status === 'warning') {
+                            $('#modal-message').text(response.message);
                             $('#confirmacao_modal').modal('show');
                         }
                     },
@@ -193,6 +197,7 @@
             });
             $('#confirmar_recalculo').click(function() {
                 $('#confirmacao_modal').hide();
+                $('#loading-spinner').removeClass('d-none').addClass('d-flex');
                 $.ajax({
                     url: "{% url 'banco_de_horas:lista_banco_de_horas' %}",
                     type: 'POST',
@@ -202,6 +207,7 @@
                     },
                     success: function(response) {
                         if(response.status === 'success'){
+                            $('#loading-spinner').removeClass('d-flex').addClass('d-none');
                             alert("Banco de Dados Calculado com Sucesso!")
                             location.reload();
                         } else{

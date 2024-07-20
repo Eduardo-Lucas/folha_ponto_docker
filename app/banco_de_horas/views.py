@@ -14,6 +14,7 @@ from django.views.generic import DeleteView, UpdateView
 from django.views import View
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 from .forms import BancoDeHorasForm, SearchFilterForm
 
@@ -26,12 +27,16 @@ class BancoDeHorasListView(View):
     template_name = "banco_de_horas/lista_banco_de_horas.html"
     context_object_name = "banco_de_horas"
 
-    paginate_by = 30
 
     def get(self,request, *args, **kwargs):
         queryset = BancoDeHoras.objects.all().filter(user__userprofile__bateponto='Sim').order_by("user__username")
         user_name = request.GET.get('user_name')
         month_choice = request.GET.get('month_choice')
+        page_number = request.GET.get('page', 1)
+
+        #TODO Paginação deve ser adaptada.
+        paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
+        page_obj = paginator.get_page(page_number)
 
         if user_name:
             queryset = queryset.filter(user_id=user_name)
