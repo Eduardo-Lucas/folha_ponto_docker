@@ -36,10 +36,10 @@
         </form>
 
 
-    <!-- Spinner -->
+    <!-- Loading Spinner -->
     <div id="loading-spinner" class="d-none justify-content-center align-items-center position-fixed w-100 h-100" style="display:none; top: 0; left: 0; background: rgba(255, 255, 255, 0.8); z-index: 1000;">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Calculando...</span>
         </div>
     </div>
 
@@ -133,12 +133,12 @@
             </tbody>
 
         </table>
-        <!-- #TODO Adaptar paginação -->
+        <!-- Paginação -->
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&laquo; primeira</a>
-                <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">anterior</a>
+                    <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&laquo; primeira</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">anterior</a>
                 {% endif %}
 
                 <span class="current">
@@ -146,8 +146,8 @@
                 </span>
 
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">próxima</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&raquo; última</a>
+                    <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">próxima</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&raquo; última</a>
                 {% endif %}
             </span>
         </div>
@@ -189,9 +189,9 @@
                             $('#confirmacao_modal').modal('show');
                         }
                     },
-                    error: function(xhr, errmsg, err) {
+                    error: function(xhr, status, errorThrown) {
                         console.log(xhr.status + ": " + xhr.responseText);
-                        alert("Ocorreu um erro ao processar a solicitação.");
+                        alert("Ocorreu um erro ao processar a solicitação." + errorThrown);
                     }
                 });
             });

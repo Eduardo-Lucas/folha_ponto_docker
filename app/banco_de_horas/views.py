@@ -34,10 +34,6 @@ class BancoDeHorasListView(View):
         month_choice = request.GET.get('month_choice')
         page_number = request.GET.get('page', 1)
 
-        #TODO Paginação deve ser adaptada.
-        paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
-        page_obj = paginator.get_page(page_number)
-
         if user_name:
             queryset = queryset.filter(user_id=user_name)
 
@@ -52,12 +48,16 @@ class BancoDeHorasListView(View):
         else:
             queryset = queryset.all().order_by("-periodo_apurado", "user__username")
 
+        paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'banco_de_horas': queryset,
+            'banco_de_horas': page_obj.object_list,
             'users': User.objects.filter(userprofile__bateponto='Sim'),
             'form': SearchFilterForm(request.GET or None),
             'user_name': user_name,
             'month_choice': month_choice,
+            'page_obj': page_obj,
         }
 
         return render(request, 'banco_de_horas/lista_banco_de_horas.html', context)
