@@ -152,25 +152,43 @@
             </span>
         </div>
     </table>
-    <!-- Modal -->
-    <div id="confirmacao_modal"class="modal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Banco de Horas</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal de Confirmação-->
+        <div id="confirmacao_modal"class="modal" tabindex="-1">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Banco de Horas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p id="modal-message"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                <button id="confirmar_recalculo" type="button" class="btn btn-primary">Sim</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <p id="modal-message">Banco de Horas já calculado. Gostaria de recalculá-lo?</p>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-              <button id="confirmar_recalculo" type="button" class="btn btn-primary">Sim</button>
-            </div>
-          </div>
         </div>
-      </div>
+        <!-- Modal de Sucesso -->
+        <div id="sucesso_modal"class="modal" tabindex="-1">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Banco de Horas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p id="modal-text"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
+
     <!-- Script jQuery -->
     <script>
         $(document).ready(function() {
@@ -208,18 +226,19 @@
                     success: function(response) {
                         if(response.status === 'success'){
                             $('#loading-spinner').removeClass('d-flex').addClass('d-none');
-                            alert("Banco de Dados Calculado com Sucesso!")
-                            location.reload();
-                        } else{
-                            alert("Erro ao calcular Banco de Horas.");
-                            location.reload();
+                            $('#modal-text').text(response.message);
+                            $('#sucesso_modal').modal('show');
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Erro na requisição:', error)
+                    error: function(xhr, status, errorThrown) {
+                        console.error('Erro na requisição:', error);
+                        alert("Ocorreu um erro no cálculo." + errorThrown);
                     }
 
                 })
+            })
+            $("#sucesso_modal").on("hidden.bs.modal", function() {
+                location.reload();
             })
     });
     </script>
