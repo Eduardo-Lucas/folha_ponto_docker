@@ -9,13 +9,13 @@
         <div class="col-md-3">
             <h2 class="text-info">Banco de Horas</h2>
         </div>
-        {% if request.user.is_superuser%}
-            <div class="col-2">
-                <a href="{% url 'banco_de_horas:calcula_banco_de_horas' %}">
-                    <i class="fas fa-database btn btn-success btn-block btn-lg" disabled data-toggle="tooltip"
-                        title="Calcular o Banco de Horas"> Calcular</i>
-                </a>
-            </div>
+        {% if request.user.is_superuser and user_name or month_choice %}
+            <form id="calcular_banco_de_horas_form"method="POST" class="col-md-2">
+                {% csrf_token %}
+                <button id="calcular_banco_de_horas_btn" class="btn btn-success btn-block btn-lg">
+                    <i class="fas fa-database" disabled data-toggle="tooltip" title="Calcular o Banco de Horas"> Calcular</i>
+                </button>
+            </form>
         {% endif %}
         <form method="get" class="row gx-3 gy-2 align-items-center">
             {% csrf_token %}
@@ -36,11 +36,12 @@
         </form>
 
 
-        <div id="spinner-container" class="d-none text-center mt-3">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Aguarde...</span>
-            </div>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="d-none justify-content-center align-items-center position-fixed w-100 h-100" style="display:none; top: 0; left: 0; background: rgba(255, 255, 255, 0.8); z-index: 1000;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Calculando...</span>
         </div>
+    </div>
 
     <table class="responsive">
         <table class="table table-striped table-bordered table-hover table-sm">
@@ -132,11 +133,12 @@
             </tbody>
 
         </table>
+        <!-- Paginação -->
         <div class="pagination">
             <span class="step-links">
                 {% if page_obj.has_previous %}
-                <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&laquo; primeira</a>
-                <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">anterior</a>
+                    <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&laquo; primeira</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">anterior</a>
                 {% endif %}
 
                 <span class="current">
@@ -144,39 +146,101 @@
                 </span>
 
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">próxima</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&raquo; última</a>
+                    <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">próxima</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if month_choice %}&month_choice={{ month_choice }}{% endif %}">&raquo; última</a>
                 {% endif %}
             </span>
         </div>
     </table>
+    <!-- Modal de Confirmação-->
+        <div id="confirmacao_modal"class="modal" tabindex="-1">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Banco de Horas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p id="modal-message"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                <button id="confirmar_recalculo" type="button" class="btn btn-primary">Sim</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- Modal de Sucesso -->
+        <div id="sucesso_modal"class="modal" tabindex="-1">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title">Banco de Horas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p id="modal-text"></p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Script jQuery -->
     <script>
-        const form = document.getElementById('form');
-        const spinnerContainer = document.getElementById('spinner-container');
+        $(document).ready(function() {
+            $('#calcular_banco_de_horas_btn').click(function(e) {
+                e.preventDefault();
 
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            spinnerContainer.classList.remove('d-none');
-
-            const formData = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                },
-                body: formData
-            }).then(response => response.json())
-                .then(data => {
-                    spinnerContainer.classList.add('d-none');
-                    alert(data.message);
-                })
-                .catch(error => {
-                    spinnerContainer.classList.add('d-none');
-                    alert('Um erro ocorreu. Tente novamente!');
+                $.ajax({
+                    url: "{% url 'banco_de_horas:lista_banco_de_horas' %}",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    success: function(response) {
+                        if (response.status === 'warning') {
+                            $('#modal-message').text(response.message);
+                            $('#confirmacao_modal').modal('show');
+                        }
+                    },
+                    error: function(xhr, status, errorThrown) {
+                        console.log(xhr.status + ": " + xhr.responseText);
+                        alert("Ocorreu um erro ao processar a solicitação." + errorThrown);
+                    }
                 });
+            });
+            $('#confirmar_recalculo').click(function() {
+                $('#confirmacao_modal').hide();
+                $('#loading-spinner').removeClass('d-none').addClass('d-flex');
+                $.ajax({
+                    url: "{% url 'banco_de_horas:lista_banco_de_horas' %}",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'recalcular': 'true',
+                    },
+                    success: function(response) {
+                        if(response.status === 'success'){
+                            $('#loading-spinner').removeClass('d-flex').addClass('d-none');
+                            $('#modal-text').text(response.message);
+                            $('#sucesso_modal').modal('show');
+                        }
+                    },
+                    error: function(xhr, status, errorThrown) {
+                        console.error('Erro na requisição:', error);
+                        alert("Ocorreu um erro no cálculo." + errorThrown);
+                    }
 
-        });
+                })
+            })
+            $("#sucesso_modal").on("hidden.bs.modal", function() {
+                location.reload();
+            })
+    });
     </script>
 </div>
 {% endblock %}
