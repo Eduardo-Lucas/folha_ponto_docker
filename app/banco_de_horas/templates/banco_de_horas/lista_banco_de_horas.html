@@ -9,7 +9,7 @@
         <div class="col-md-3">
             <h2 class="text-info">Banco de Horas</h2>
         </div>
-        {% if request.user.is_superuser%}
+        {% if request.user.is_superuser and user_name or month_choice %}
             <form id="calcular_banco_de_horas_form"method="POST" class="col-md-2">
                 {% csrf_token %}
                 <button id="calcular_banco_de_horas_btn" class="btn btn-success btn-block btn-lg">

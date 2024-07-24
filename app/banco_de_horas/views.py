@@ -29,13 +29,13 @@ class BancoDeHorasListView(View):
 
 
     def get(self,request, *args, **kwargs):
-        queryset = BancoDeHoras.objects.all().filter(user__userprofile__bateponto='Sim').order_by("user__username")
+        queryset = BancoDeHoras.objects.none()
         user_name = request.GET.get('user_name')
         month_choice = request.GET.get('month_choice')
         page_number = request.GET.get('page', 1)
 
         if user_name:
-            queryset = queryset.filter(user_id=user_name)
+            queryset = BancoDeHoras.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name)
 
         if month_choice:
             selected_date = datetime.strptime(month_choice, '%d/%m/%Y')
@@ -44,9 +44,11 @@ class BancoDeHorasListView(View):
 
             request.session['selected_data'] = last_day
 
-            queryset = queryset.filter(periodo_apurado__range=[first_day, last_day]).order_by("-periodo_apurado", "user__username")
-        else:
-            queryset = queryset.all().order_by("-periodo_apurado", "user__username")
+            queryset = BancoDeHoras.objects.all().filter(periodo_apurado__range=[first_day, last_day], user__userprofile__bateponto='Sim').order_by("-periodo_apurado", "user__username")
+
+        if user_name and month_choice:
+            queryset = BancoDeHoras.objects.all().filter(periodo_apurado__range=[first_day, last_day], user__userprofile__bateponto='Sim', user_id=user_name).order_by("-periodo_apurado")
+
 
         paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
         page_obj = paginator.get_page(page_number)
