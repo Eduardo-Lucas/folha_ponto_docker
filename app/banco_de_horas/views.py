@@ -119,12 +119,18 @@ class BancoDeHorasListView(View):
                 total_devedor=total_devedor,
             )
 
-            # lista o banco de horas do periodo
-            banco_de_horas = BancoDeHoras.objects.filter(
-                periodo_apurado=data_final
-            ).order_by(
-                "user",
-            )
+            # atualiza o saldo das competências subsequentes caso elas existam.
+            saldo_final = saldo_anterior + total_credor - total_devedor
+
+            comp_subsequentes = BancoDeHoras.objects.filter(
+                user=user,
+                periodo_apurado__gt=data_final_object
+            ).order_by('periodo_apurado')
+
+            for comp in comp_subsequentes:
+                comp.saldo_anterior = saldo_final
+                comp.save()
+                saldo_final += comp.total_credor - comp.total_devedor
 
         return JsonResponse({
             'status': 'success',
