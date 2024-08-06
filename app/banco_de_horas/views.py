@@ -3,8 +3,8 @@
 from datetime import datetime, timedelta
 
 from apontamento.models import Ponto
-from banco_de_horas.forms import BancoDeHorasForm
-from banco_de_horas.models import BancoDeHoras
+from banco_de_horas.forms import BancoDeHorasForm, ConsultaValorInseridoForm
+from banco_de_horas.models import BancoDeHoras, ValorInserido
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
@@ -138,6 +138,38 @@ class BancoDeHorasListView(View):
         })
 
 
+class ValorInseridoView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = ConsultaValorInseridoForm(request.GET or None)
+        queryset = ValorInserido.objects.none()
+        page_number = request.GET.get('page', 1)
+
+        if form.is_valid():
+            user_name = form.cleaned_data.get('user_name')
+            competencia = form.cleaned_data.get('competencia')
+
+            if user_name:
+                queryset = ValorInserido.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name)
+
+            if competencia:
+                competencia_query = datetime.strptime(competencia, '%d/%m/%Y').strftime('%Y-%m-%d')
+                queryset = ValorInserido.objects.all().filter(competencia=competencia_query)
+
+            if user_name and competencia:
+                queryset = ValorInserido.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name, competencia=competencia_query).order_by('-competencia')
+
+        paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'queryset': queryset,
+            'form': form,
+            'page_obj': page_obj,
+        }
+
+        return render(request, 'banco_de_horas/valor_inserido.html', context)
+
 
 
 
@@ -150,6 +182,25 @@ class BancoDeHorasUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "banco_de_horas/atualizar_banco_de_horas.html"
     success_url = reverse_lazy("banco_de_horas:lista_banco_de_horas")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        print(response)
+
+        compensacao = form.cleaned_data.get('compensacao')
+        pagamento = form.cleaned_data.get('pagamento')
+
+        banco_de_horas = self.object
+
+        ValorInserido.objects.update_or_create(
+            user=banco_de_horas.user,
+            competencia=banco_de_horas.periodo_apurado,
+            defaults={
+                'compensacao': compensacao,
+                'pagamento': pagamento
+            }
+        )
+
+        return response
 
 class BancoDeHorasDeleteView(LoginRequiredMixin, DeleteView):
     """View para deletar o banco de horas."""

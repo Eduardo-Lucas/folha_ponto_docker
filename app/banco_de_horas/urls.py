@@ -3,6 +3,7 @@ from .views import (
     BancoDeHorasListView,
     BancoDeHorasUpdateView,
     BancoDeHorasDeleteView,
+    ValorInseridoView,
 )
 
 app_name = "banco_de_horas"
@@ -22,5 +23,9 @@ urlpatterns = [
         "deleta_banco_de_horas/<int:pk>/",
         BancoDeHorasDeleteView.as_view(),
         name="deleta_banco_de_horas",
+    ),
+    path("valor_inserido/",
+        ValorInseridoView.as_view(),
+        name="valor_inserido",
     ),
 ]
