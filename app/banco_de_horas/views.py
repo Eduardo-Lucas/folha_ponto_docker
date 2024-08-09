@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView, UpdateView, CreateView
+from django.views.generic import DeleteView, UpdateView, CreateView, ListView
 from django.views import View
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse, JsonResponse
@@ -137,15 +137,16 @@ class BancoDeHorasListView(View):
             'message': 'Banco de Horas calculado com sucesso!',
         })
 
+class ValorInseridoListView(LoginRequiredMixin, ListView):
 
-class ValorInseridoView(LoginRequiredMixin, View):
+    model = ValorInserido
+    template_name = 'banco_de_horas/valor_inserido.html'
+    context_object_name = 'queryset'
+    paginate_by = 30
 
-    def get(self, request, *args, **kwargs):
-        form = ConsultaValorInseridoForm(request.GET or None)
+    def get_queryset(self):
         queryset = ValorInserido.objects.all()
-        page_number = request.GET.get('page', 1)
-        user_name = None
-        competencia = None
+        form = self.get_form()
 
         if form.is_valid():
             user_name = form.cleaned_data.get('user_name')
@@ -161,18 +162,18 @@ class ValorInseridoView(LoginRequiredMixin, View):
             if user_name and competencia:
                 queryset = ValorInserido.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name, competencia=competencia_query).order_by('-competencia')
 
-        paginator = Paginator(queryset, 30) # Paginação com 30 objetos por página
-        page_obj = paginator.get_page(page_number)
+        return queryset
 
-        context = {
-            'queryset': queryset,
-            'form': form,
-            'user_name': user_name,
-            'competencia': competencia,
-            'page_obj': page_obj,
-        }
+    def get_form(self):
+        return ConsultaValorInseridoForm(self.request.GET or None)
 
-        return render(request, 'banco_de_horas/valor_inserido.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        context['user_name'] = self.request.GET.get('user_name')
+        context['competencia'] = self.request.GET.get('competencia')
+        return context
+
 
 class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
 

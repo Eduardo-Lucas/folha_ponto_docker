@@ -4,8 +4,11 @@
 {% block title %}Banco de Horas{% endblock %}
 
 {% block content %}
-<div class="container border border-dark">
-    <h2 class="text-info">Atualizar Valor Inserido</h2>
+<div class="container mt-3 border border-dark">
+    <div class="row border-dark border-bottom">
+      <h2 class="text-info mt-3">Atualizar Valor Inserido</h2>
+    </div>
+
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
 

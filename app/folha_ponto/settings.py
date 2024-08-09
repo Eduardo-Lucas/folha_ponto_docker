@@ -145,8 +145,6 @@ DATABASES = {
 #     }
 # }
 
-
-
 PASSWORD_HASHERS = [
     # Use the default password hasher
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
