@@ -87,6 +87,9 @@
               <li>
                 <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-outline">Banco de Horas</a>
               </li>
+              <li>
+                <a class="btn btn-outline" href="{% url 'banco_de_horas:valor_inserido' %}">Valores Inseridos</a>
+              </li>
 
             </ul>
           </li>
@@ -105,7 +108,6 @@
               </li>
               <li><a class="dropdown-item" href="{% url 'apontamento:open_task_list' %}">Lista de Tarefas Abertas</a>
               </li>
-              <li><a class="dropdown-item" href="{% url 'banco_de_horas:valor_inserido' %}">Lista de Valores Inseridos</a></li>
               <li><a class="dropdown-item" href="{% url 'apontamento:tarefas_fechadas_automaticamente' %}">Tarefas
                   Fechadas
                   Automaticamente</a></li>

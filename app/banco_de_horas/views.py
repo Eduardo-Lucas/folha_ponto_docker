@@ -3,17 +3,17 @@
 from datetime import datetime, timedelta
 
 from apontamento.models import Ponto
-from banco_de_horas.forms import BancoDeHorasForm, ConsultaValorInseridoForm
+from banco_de_horas.forms import BancoDeHorasForm, ConsultaValorInseridoForm, InserirValorForm
 from banco_de_horas.models import BancoDeHoras, ValorInserido
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView, UpdateView
+from django.views.generic import DeleteView, UpdateView, CreateView
 from django.views import View
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 from .forms import BancoDeHorasForm, SearchFilterForm
@@ -138,12 +138,14 @@ class BancoDeHorasListView(View):
         })
 
 
-class ValorInseridoView(View):
+class ValorInseridoView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         form = ConsultaValorInseridoForm(request.GET or None)
-        queryset = ValorInserido.objects.none()
+        queryset = ValorInserido.objects.all()
         page_number = request.GET.get('page', 1)
+        user_name = None
+        competencia = None
 
         if form.is_valid():
             user_name = form.cleaned_data.get('user_name')
@@ -165,10 +167,92 @@ class ValorInseridoView(View):
         context = {
             'queryset': queryset,
             'form': form,
+            'user_name': user_name,
+            'competencia': competencia,
             'page_obj': page_obj,
         }
 
         return render(request, 'banco_de_horas/valor_inserido.html', context)
+
+class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
+
+    model = ValorInserido
+    form_class = InserirValorForm
+    template_name = 'banco_de_horas/adicionar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user_name = self.request.GET.get('user')
+        competencia = self.request.GET.get('competencia')
+
+        if user_name:
+            initial['user'] = User.objects.get(username=user_name)
+        if competencia:
+            initial['competencia'] = competencia
+
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        compensacao = form.cleaned_data.get('compensacao')
+        pagamento = form.cleaned_data.get('pagamento')
+
+        valor_inserido = self.object
+
+        BancoDeHoras.objects.update_or_create(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia,
+            defaults={
+                'compensacao': compensacao,
+                'pagamento': pagamento
+            }
+        )
+
+        messages.success(self.request, 'Valores Inseridos com Sucesso!')
+
+        return response
+
+class ValorInseridoUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = ValorInserido
+    form_class = InserirValorForm
+    template_name = 'banco_de_horas/atualizar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        compensacao = form.cleaned_data.get('compensacao')
+        pagamento = form.cleaned_data.get('pagamento')
+
+        valor_inserido = self.object
+
+        BancoDeHoras.objects.filter(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia,
+        ).update(
+            compensacao=compensacao,
+            pagamento=pagamento
+        )
+
+        messages.success(self.request, 'Valores Atualizados com Sucesso!')
+
+
+        return response
+
+
+class ValorInseridoDeleteView(LoginRequiredMixin, DeleteView):
+
+    model = ValorInserido
+    template_name = 'banco_de_horas/deletar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        messages.success(request, 'Valores Excluídos com Sucesso!')
+
+        return response
 
 
 
@@ -182,25 +266,6 @@ class BancoDeHorasUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "banco_de_horas/atualizar_banco_de_horas.html"
     success_url = reverse_lazy("banco_de_horas:lista_banco_de_horas")
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        print(response)
-
-        compensacao = form.cleaned_data.get('compensacao')
-        pagamento = form.cleaned_data.get('pagamento')
-
-        banco_de_horas = self.object
-
-        ValorInserido.objects.update_or_create(
-            user=banco_de_horas.user,
-            competencia=banco_de_horas.periodo_apurado,
-            defaults={
-                'compensacao': compensacao,
-                'pagamento': pagamento
-            }
-        )
-
-        return response
 
 class BancoDeHorasDeleteView(LoginRequiredMixin, DeleteView):
     """View para deletar o banco de horas."""

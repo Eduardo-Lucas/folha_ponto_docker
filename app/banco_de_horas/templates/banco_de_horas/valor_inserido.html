@@ -6,6 +6,11 @@
 {% block content %}
     <div class="container mt-3">
         <h2 class="text-info">Valor Inserido</h2>
+        {% if request.user.is_superuser and competencia and user_name and not queryset %}
+            <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}?user={{ user_name }}&competencia={{ competencia }}" class="btn btn-success btn-block btn-lg">
+                <i class="fas fa-database" disabled data-toggle="tooltip" title="Adicionar Valores"> Adicionar Valores</i>
+            </a>
+        {% endif %}
         <form method="GET" class="row">
             {% csrf_token %}
             {% for field in form %}
@@ -31,6 +36,9 @@
                     <th class="text-center">Competência</th>
                     <th class="text-center">Compensação</th>
                     <th class="text-center">Pagamento</th>
+                    {% if request.user.is_superuser %}
+                        <th class="text-center" colspan="2">Ações</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -52,6 +60,17 @@
                                 <td class="text-center text-success">{{ valor.pagamento|format_timedelta }}</td>
                             {% else %}
                                 <td class="text-center">{{ valor.pagamento|format_timedelta}}</td>
+                            {% endif %}
+                            {% if request.user.is_superuser %}
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:atualizar_valor_inserido' pk=valor.pk %}">
+                                        <i class="fas fa-edit" style="color:blue" data-toggle="tooltip" title="Editar Valores"></i>
+                                    </a>
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:deletar_valor_inserido' pk=valor.pk %}">
+                                        <i class="fas fa-trash" style="color:red" data-toggle="tooltip" title="Deletar Valores"></i>
+                                    </a>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endif %}
@@ -76,5 +95,4 @@
             </span>
         </div>
         </div>
-
-{% endblock content %}
+{% endblock %}
