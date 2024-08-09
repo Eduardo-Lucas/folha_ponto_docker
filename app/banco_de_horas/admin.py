@@ -2,7 +2,7 @@ from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
-from .models import BancoDeHoras
+from .models import BancoDeHoras, ValorInserido
 
 
 class BancoDeHorasResource(resources.ModelResource):
@@ -36,5 +36,17 @@ class BancoDeHorasAdmin(ImportExportModelAdmin):
     )
     search_fields = ["user__username"]
 
+class ValorInseridoAdmin(admin.ModelAdmin):
+    list_display = ('user', 'competencia', 'compensacao', 'pagamento')
+    search_fields = ['user__username']
+
+class ValorInseridoResource(resources.ModelResource):
+    """Resource class for ValorInserido."""
+
+    class Meta:
+        """Meta class for ValorInseridoResource."""
+
+        model = ValorInserido
 
 admin.site.register(BancoDeHoras, BancoDeHorasAdmin)
+admin.site.register(ValorInserido, ValorInseridoAdmin)
