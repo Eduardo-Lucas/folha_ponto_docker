@@ -3,7 +3,10 @@ from .views import (
     BancoDeHorasListView,
     BancoDeHorasUpdateView,
     BancoDeHorasDeleteView,
-    ValorInseridoView,
+    ValorInseridoListView,
+    ValorInseridoUpdateView,
+    ValorInseridoDeleteView,
+    ValorInseridoCreateView,
 )
 
 app_name = "banco_de_horas"
@@ -25,7 +28,19 @@ urlpatterns = [
         name="deleta_banco_de_horas",
     ),
     path("valor_inserido/",
-        ValorInseridoView.as_view(),
+        ValorInseridoListView.as_view(),
         name="valor_inserido",
     ),
+    path("atualizar_valor_inserido/<int:pk>/",
+         ValorInseridoUpdateView.as_view(),
+         name="atualizar_valor_inserido",
+    ),
+    path("deletar_valor_inserido/<int:pk>/",
+         ValorInseridoDeleteView.as_view(),
+         name="deletar_valor_inserido",
+    ),
+    path("adicionar_valor_inserido/",
+         ValorInseridoCreateView.as_view(),
+         name="adicionar_valor_inserido",)
+
 ]

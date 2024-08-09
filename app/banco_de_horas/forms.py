@@ -37,6 +37,8 @@ class BancoDeHorasForm(forms.ModelForm):
 
         self.fields["user"].disabled = True
         self.fields["periodo_apurado"].disabled = True
+        self.fields["compensacao"].disabled = True
+        self.fields["pagamento"].disabled = True
 
 class SearchFilterForm(forms.Form):
         """Campo para filtrar a lista do banco de horas por nome"""
@@ -96,3 +98,20 @@ class ConsultaValorInseridoForm(forms.Form):
           self.fields["competencia"].initial = kwargs.get("initial", {}).get("competencia", None)
           if self.user is not None:
                self.fields["user_name"].initial = self.user
+
+class InserirValorForm(forms.ModelForm):
+
+     class Meta:
+          model = ValorInserido
+          fields = (
+               'user',
+               'competencia',
+               'pagamento',
+               'compensacao',
+          )
+
+     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["user"].disabled = True
+        self.fields["competencia"].disabled = True

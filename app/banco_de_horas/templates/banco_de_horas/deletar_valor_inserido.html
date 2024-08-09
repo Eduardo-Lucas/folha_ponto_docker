@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Confirmação</h1>
+<div class="container">
+    <div class="row">
+        <p>Tem certeza que deseja apagar os registros de "{{ object.user }}" -
+            "{{ object.competencia|date:'d/m/Y' }}?</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, apaga</button>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'banco_de_horas:valor_inserido' %}" class="btn btn-primary">Não,
+                volta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
