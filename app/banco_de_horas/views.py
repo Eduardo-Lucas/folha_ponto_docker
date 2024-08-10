@@ -109,13 +109,23 @@ class BancoDeHorasListView(View):
             total_credor = dict_total_credor_devedor["total_credor"]
             total_devedor = dict_total_credor_devedor["total_devedor"]
 
+            # check if there are ValorInserido objects for the user in the selected period
+            valor_inserido = ValorInserido.objects.filter(user=user, competencia=data_final).first()
+            if valor_inserido:
+                compensacao = valor_inserido.compensacao
+                pagamento = valor_inserido.pagamento
+            else:
+                compensacao = timedelta(hours=0, minutes=0, seconds=0)
+                pagamento = timedelta(hours=0, minutes=0, seconds=0)
+
             # salva o saldo de horas no banco de horas
             BancoDeHoras.objects.create(
                 user=user,
                 periodo_apurado=data_final,
                 saldo_anterior=saldo_anterior,
                 total_credor=total_credor,
-                compensacao=timedelta(hours=0, minutes=0, seconds=0),
+                compensacao=compensacao,
+                pagamento=pagamento,
                 total_devedor=total_devedor,
             )
 
@@ -255,6 +265,19 @@ class ValorInseridoDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('banco_de_horas:valor_inserido')
 
     def post(self, request, *args, **kwargs):
+
+        # Before deleting, check if the BancoDeHoras object exists
+        valor_inserido = self.get_object()
+        banco_de_horas = BancoDeHoras.objects.filter(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, turn the values to zero
+        if banco_de_horas:
+            banco_de_horas.compensacao = timedelta(hours=0, minutes=0, seconds=0)
+            banco_de_horas.pagamento = timedelta(hours=0, minutes=0, seconds=0)
+            banco_de_horas.save()
+
         response = super().post(request, *args, **kwargs)
         messages.success(request, 'Valores Excluídos com Sucesso!')
 
