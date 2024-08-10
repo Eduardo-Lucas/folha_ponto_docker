@@ -113,5 +113,5 @@ class InserirValorForm(forms.ModelForm):
      def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["user"].disabled = True
-        self.fields["competencia"].disabled = True
+     #    self.fields["user"].disabled = True
+     #    self.fields["competencia"].disabled = True

@@ -6,11 +6,9 @@
 {% block content %}
     <div class="container mt-3">
         <h2 class="text-info">Valor Inserido</h2>
-        {% if request.user.is_superuser and competencia and user_name and not queryset %}
-            <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}?user={{ user_name }}&competencia={{ competencia }}" class="mt-3 mb-3 btn btn-success btn-block btn-lg">
-                <i class="fas fa-plus" disabled data-toggle="tooltip" title="Adicionar Valores"> Adicionar Valores</i>
-            </a>
-        {% endif %}
+
+
+
         <form method="GET" class="row">
             {% csrf_token %}
             {% for field in form %}
@@ -26,6 +24,12 @@
                 <a href="{% url 'banco_de_horas:valor_inserido' %}" class="btn btn-primary btn-sm"
                 style="border: 1px solid white;">
                     <i class="fa-solid fa-arrows-rotate"></i> Limpar
+                </a>
+            </div>
+            <div class="col-md-3 d-flex flex-column justify-content-center">
+                <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}" class="btn btn-success btn-lg"
+                style="border: 1px solid white;">
+                    <i class="fa-solid fa-plus"></i> Adicionar Valores
                 </a>
             </div>
         </form>

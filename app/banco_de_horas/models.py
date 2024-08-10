@@ -33,7 +33,7 @@ class ValorInserido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competencia = models.DateField()
     compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
-    pagamento = models.DurationField(null=True, blank=True)
+    pagamento = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
 
     class Meta:
 

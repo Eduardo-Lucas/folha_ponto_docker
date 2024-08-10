@@ -201,14 +201,16 @@ class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
 
         valor_inserido = self.object
 
-        BancoDeHoras.objects.update_or_create(
+        # Before creating, check if the BancoDeHoras object exists
+        banco_de_horas = BancoDeHoras.objects.filter(
             user=valor_inserido.user,
-            periodo_apurado=valor_inserido.competencia,
-            defaults={
-                'compensacao': compensacao,
-                'pagamento': pagamento
-            }
-        )
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, update the values
+        if banco_de_horas:
+            banco_de_horas.compensacao = compensacao
+            banco_de_horas.pagamento = pagamento
+            banco_de_horas.save()
 
         messages.success(self.request, 'Valores Inseridos com Sucesso!')
 
@@ -229,13 +231,16 @@ class ValorInseridoUpdateView(LoginRequiredMixin, UpdateView):
 
         valor_inserido = self.object
 
-        BancoDeHoras.objects.filter(
+        # Before updating, check if the BancoDeHoras object exists
+        banco_de_horas = BancoDeHoras.objects.filter(
             user=valor_inserido.user,
-            periodo_apurado=valor_inserido.competencia,
-        ).update(
-            compensacao=compensacao,
-            pagamento=pagamento
-        )
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, update the values
+        if banco_de_horas:
+            banco_de_horas.compensacao = compensacao
+            banco_de_horas.pagamento = pagamento
+            banco_de_horas.save()
 
         messages.success(self.request, 'Valores Atualizados com Sucesso!')
 
