@@ -63,7 +63,7 @@
             </thead>
             <tbody>
                 {% for banco in banco_de_horas %}
-                    {% if not banco.user.is_staff %}
+                    {% if not banco.user.is_superuser %}
                         <tr>
                             {% if banco.user.username.nome is None %}
                                 <td>{{ banco.user.userprofile }}</td>

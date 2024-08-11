@@ -22,3 +22,9 @@ def is_greater_than_zero(value):
     if isinstance(value, timedelta):
         return value >= timedelta(hours=0)
     return False
+
+@register.filter(name='is_greater_than_timedelta_zero')
+def is_greater_than_timedelta_zero(value):
+    if isinstance(value, timedelta):
+        return value > timedelta(hours=0, minutes=0, seconds=0)
+    return False

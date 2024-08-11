@@ -28,6 +28,29 @@ class BancoDeHorasManager(models.Manager):
         return timedelta(hours=0, minutes=0, seconds=0)
 
 
+class ValorInserido(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    competencia = models.DateField()
+    compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
+    pagamento = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
+
+    class Meta:
+
+        ordering = (
+            '-competencia',
+            'user',
+        )
+        db_table = 'valor_inserido'
+        unique_together = ("user", "competencia")
+        verbose_name = 'Valor Inserido'
+        verbose_name_plural = 'Valores Inseridos'
+
+
+    def __str__(self):
+        return f"Valor Inserido - Usuário: {self.user.username} - Competência: {self.competencia} - Pagamento: {self.pagamento} - Compensacao: {self.compensacao}"
+
+
 class BancoDeHoras(models.Model):
     """Model para o banco de horas dos usuários."""
 
@@ -45,6 +68,7 @@ class BancoDeHoras(models.Model):
     )
     compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
     pagamento = models.DurationField(null=True, blank=True)
+
 
     objects = BancoDeHorasManager()
 

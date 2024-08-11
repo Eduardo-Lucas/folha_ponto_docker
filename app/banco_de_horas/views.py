@@ -3,17 +3,17 @@
 from datetime import datetime, timedelta
 
 from apontamento.models import Ponto
-from banco_de_horas.forms import BancoDeHorasForm
-from banco_de_horas.models import BancoDeHoras
+from banco_de_horas.forms import BancoDeHorasForm, ConsultaValorInseridoForm, InserirValorForm
+from banco_de_horas.models import BancoDeHoras, ValorInserido
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import DeleteView, UpdateView
+from django.views.generic import DeleteView, UpdateView, CreateView, ListView
 from django.views import View
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 from .forms import BancoDeHorasForm, SearchFilterForm
@@ -109,28 +109,179 @@ class BancoDeHorasListView(View):
             total_credor = dict_total_credor_devedor["total_credor"]
             total_devedor = dict_total_credor_devedor["total_devedor"]
 
+            # check if there are ValorInserido objects for the user in the selected period
+            valor_inserido = ValorInserido.objects.filter(user=user, competencia=data_final).first()
+            if valor_inserido:
+                compensacao = valor_inserido.compensacao
+                pagamento = valor_inserido.pagamento
+            else:
+                compensacao = timedelta(hours=0, minutes=0, seconds=0)
+                pagamento = timedelta(hours=0, minutes=0, seconds=0)
+
             # salva o saldo de horas no banco de horas
             BancoDeHoras.objects.create(
                 user=user,
                 periodo_apurado=data_final,
                 saldo_anterior=saldo_anterior,
                 total_credor=total_credor,
-                compensacao=timedelta(hours=0, minutes=0, seconds=0),
+                compensacao=compensacao,
+                pagamento=pagamento,
                 total_devedor=total_devedor,
             )
 
-            # lista o banco de horas do periodo
-            banco_de_horas = BancoDeHoras.objects.filter(
-                periodo_apurado=data_final
-            ).order_by(
-                "user",
-            )
+            # atualiza o saldo das competências subsequentes caso elas existam.
+            saldo_final = saldo_anterior + total_credor - total_devedor
+
+            comp_subsequentes = BancoDeHoras.objects.filter(
+                user=user,
+                periodo_apurado__gt=data_final_object
+            ).order_by('periodo_apurado')
+
+            for comp in comp_subsequentes:
+                comp.saldo_anterior = saldo_final
+                comp.save()
+                saldo_final += comp.total_credor - comp.total_devedor
 
         return JsonResponse({
             'status': 'success',
             'message': 'Banco de Horas calculado com sucesso!',
         })
 
+class ValorInseridoListView(LoginRequiredMixin, ListView):
+
+    model = ValorInserido
+    template_name = 'banco_de_horas/valor_inserido.html'
+    context_object_name = 'queryset'
+    paginate_by = 30
+
+    def get_queryset(self):
+        queryset = ValorInserido.objects.all()
+        form = self.get_form()
+
+        if form.is_valid():
+            user_name = form.cleaned_data.get('user_name')
+            competencia = form.cleaned_data.get('competencia')
+
+            if user_name:
+                queryset = ValorInserido.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name)
+
+            if competencia:
+                competencia_query = datetime.strptime(competencia, '%d/%m/%Y').strftime('%Y-%m-%d')
+                queryset = ValorInserido.objects.all().filter(competencia=competencia_query)
+
+            if user_name and competencia:
+                queryset = ValorInserido.objects.all().filter(user__userprofile__bateponto='Sim', user_id=user_name, competencia=competencia_query).order_by('-competencia')
+
+        return queryset
+
+    def get_form(self):
+        return ConsultaValorInseridoForm(self.request.GET or None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        context['user_name'] = self.request.GET.get('user_name')
+        context['competencia'] = self.request.GET.get('competencia')
+        return context
+
+
+class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
+
+    model = ValorInserido
+    form_class = InserirValorForm
+    template_name = 'banco_de_horas/adicionar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user_name = self.request.GET.get('user')
+        competencia = self.request.GET.get('competencia')
+
+        if user_name:
+            initial['user'] = User.objects.get(username=user_name)
+        if competencia:
+            initial['competencia'] = competencia
+
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        compensacao = form.cleaned_data.get('compensacao')
+        pagamento = form.cleaned_data.get('pagamento')
+
+        valor_inserido = self.object
+
+        # Before creating, check if the BancoDeHoras object exists
+        banco_de_horas = BancoDeHoras.objects.filter(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, update the values
+        if banco_de_horas:
+            banco_de_horas.compensacao = compensacao
+            banco_de_horas.pagamento = pagamento
+            banco_de_horas.save()
+
+        messages.success(self.request, 'Valores Inseridos com Sucesso!')
+
+        return response
+
+class ValorInseridoUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = ValorInserido
+    form_class = InserirValorForm
+    template_name = 'banco_de_horas/atualizar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        compensacao = form.cleaned_data.get('compensacao')
+        pagamento = form.cleaned_data.get('pagamento')
+
+        valor_inserido = self.object
+
+        # Before updating, check if the BancoDeHoras object exists
+        banco_de_horas = BancoDeHoras.objects.filter(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, update the values
+        if banco_de_horas:
+            banco_de_horas.compensacao = compensacao
+            banco_de_horas.pagamento = pagamento
+            banco_de_horas.save()
+
+        messages.success(self.request, 'Valores Atualizados com Sucesso!')
+
+
+        return response
+
+
+class ValorInseridoDeleteView(LoginRequiredMixin, DeleteView):
+
+    model = ValorInserido
+    template_name = 'banco_de_horas/deletar_valor_inserido.html'
+    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+
+    def post(self, request, *args, **kwargs):
+
+        # Before deleting, check if the BancoDeHoras object exists
+        valor_inserido = self.get_object()
+        banco_de_horas = BancoDeHoras.objects.filter(
+            user=valor_inserido.user,
+            periodo_apurado=valor_inserido.competencia
+        ).first()
+        # if exists, turn the values to zero
+        if banco_de_horas:
+            banco_de_horas.compensacao = timedelta(hours=0, minutes=0, seconds=0)
+            banco_de_horas.pagamento = timedelta(hours=0, minutes=0, seconds=0)
+            banco_de_horas.save()
+
+        response = super().post(request, *args, **kwargs)
+        messages.success(request, 'Valores Excluídos com Sucesso!')
+
+        return response
 
 
 

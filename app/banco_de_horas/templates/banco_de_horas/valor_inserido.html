@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load timedelta_filters %}
+{% load crispy_forms_tags %}
+{% block title %}Banco de Horas{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <h2 class="text-info">Valor Inserido</h2>
+
+
+
+        <form method="GET" class="row">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="col-md-2">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <div class="col-md-3 d-flex flex-column justify-content-center">
+                <button type=" submit" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-search"></i> Consultar
+                </button>
+                <a href="{% url 'banco_de_horas:valor_inserido' %}" class="btn btn-primary btn-sm"
+                style="border: 1px solid white;">
+                    <i class="fa-solid fa-arrows-rotate"></i> Limpar
+                </a>
+            </div>
+            <div class="col-md-3 d-flex flex-column justify-content-center">
+                <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}" class="btn btn-success btn-lg"
+                style="border: 1px solid white;">
+                    <i class="fa-solid fa-plus"></i> Adicionar Valores
+                </a>
+            </div>
+        </form>
+        <table class="mt-3 table table-striped table-bordered table-hover table-sm">
+            <thead>
+                <tr>
+                    <th class="text-center">Nome</th>
+                    <th class="text-center">Competência</th>
+                    <th class="text-center">Compensação</th>
+                    <th class="text-center">Pagamento</th>
+                    {% if request.user.is_superuser %}
+                        <th class="text-center" colspan="2">Ações</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for valor in queryset %}
+                    {% if not valor.user.is_staff and not valor.user.is_superuser %}
+                        <tr>
+                            {% if valor.user.username.nome is None %}
+                                <td class="text-center">{{ valor.user.userprofile }}</td>
+                            {% else %}
+                                <td class="text-center">{{ valor.user.userprofile.nome }}</td>
+                            {% endif %}
+                            <td class="text-center">{{ valor.competencia|date:"d/m/Y" }}</td>
+                            {% if valor.compensacao|is_greater_than_timedelta_zero %}
+                                <td class="text-center text-success">{{ valor.compensacao|format_timedelta }}</td>
+                            {% else %}
+                                <td class="text-center">{{ valor.compensacao|format_timedelta }}</td>
+                            {% endif %}
+                            {% if valor.pagamento is not None %}
+                                <td class="text-center text-success">{{ valor.pagamento|format_timedelta }}</td>
+                            {% else %}
+                                <td class="text-center">{{ valor.pagamento|format_timedelta}}</td>
+                            {% endif %}
+                            {% if request.user.is_superuser %}
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:atualizar_valor_inserido' pk=valor.pk %}">
+                                        <i class="fas fa-edit" style="color:blue" data-toggle="tooltip" title="Editar Valores"></i>
+                                    </a>
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:deletar_valor_inserido' pk=valor.pk %}">
+                                        <i class="fas fa-trash" style="color:red" data-toggle="tooltip" title="Deletar Valores"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+        </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if user_name %}&user_name={{ user_name }}{% endif %}{% if competencia %}&competencia={{ competencia }}{% endif %}">&laquo; primeira</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if competencia %}&competencia={{ competencia }}{% endif %}">anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if competencia %}&competencia={{ competencia }}{% endif %}">próxima</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if user_name %}&user_name={{ user_name }}{% endif %}{% if competencia %}&competencia={{ competencia }}{% endif %}">&raquo; última</a>
+                {% endif %}
+            </span>
+        </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load timedelta_filters %}
+{% load crispy_forms_tags %}
+{% block title %}Banco de Horas{% endblock %}
+
+{% block content %}
+<div class="container mt-3 border border-dark">
+    <div class="row border-dark border-bottom">
+      <h2 class="text-info mt-3">Atualizar Valor Inserido</h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="row">
+        <div class="col-md-4 mt-3 mb-3" disabled>
+          {{form.user|as_crispy_field}}
+        </div>
+        <div class="col-md-4 mt-3 mb-3" disabled>
+          {{form.competencia|as_crispy_field}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 mt-3 mb-3">{{form.compensacao|as_crispy_field}}</div>
+        <div class="col-md-3 mt-3 mb-3">{{form.pagamento|as_crispy_field}}</div>
+      </div>
+
+      <div class="row border-dark border-top">
+        <div class="col-md-6 mt-3 mb-3 text-center">
+          <button
+            type="submit"
+            class="btn btn-success btn-block btn-lg">
+            <i class="fas fa-database"></i>
+            Gravar
+          </button>
+        </div>
+        <div class="col-md-6 mt-3 mb-3">
+          <a
+            href="{% url 'banco_de_horas:valor_inserido' %}"
+            class="btn btn-primary btn-block btn-lg"
+          >
+            <i class="fas fa-undo"></i>
+            Voltar
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}
