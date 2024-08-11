@@ -67,7 +67,7 @@ class BancoDeHoras(models.Model):
         default=timedelta(hours=0, minutes=0, seconds=0)
     )
     compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
-    pagamento = models.DurationField(null=True, blank=True)
+    pagamento = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
 
 
     objects = BancoDeHorasManager()
