@@ -57,7 +57,7 @@
                     <th class="text-center"><strong>PGTO</strong></th>
                     <th class="text-center">Saldo</th>
                     {% if request.user.is_superuser %}
-                        <th class="text-center" colspan="2">Ações</th>
+                        <th class="text-center" colspan="3">Ações</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -120,6 +120,15 @@
                                         <i class="fas fa-edit" style="color:blue" data-toggle="tooltip"
                                             title="Atualizar o Banco de Horas"></i>
                                     </a>
+
+                                </td>
+                                <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}">
+                                        <i class="fas fa-pencil" style="color:green" data-toggle="tooltip"
+                                            title="Atualizar Pagamento ou Compensação"></i>
+                                    </a>
+
+                                </td>
                                 <td class="text-center">
                                     <a href="{% url 'banco_de_horas:deleta_banco_de_horas' banco.id %}">
                                         <i class="fas fa-trash" style="color:red" data-toggle="tooltip"
