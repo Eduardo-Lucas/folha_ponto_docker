@@ -443,7 +443,7 @@ class Ponto(models.Model):
     Model to represent a point in time for a user.
     """
 
-    id = models.IntegerField(primary_key=True)
+    id = models.IntegerField(primary_key=True, auto_created=True)
     entrada = models.DateTimeField()
     primeiro = models.BooleanField(default=False)
     segundo = models.BooleanField(default=False)
