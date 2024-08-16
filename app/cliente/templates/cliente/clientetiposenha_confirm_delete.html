@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Confirmação</h1>
+<div class="container">
+    <div class="row">
+        <p>Tem certeza que quer apagar o registro : "{{ object }}"?</p>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sim, apaga</button>
+            </form>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'cliente:cliente_tipo_senha_list' %}" class="btn btn-primary">Não,
+                volta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
