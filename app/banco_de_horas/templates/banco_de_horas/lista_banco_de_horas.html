@@ -22,16 +22,22 @@
             <div class="row">
                 <div class="col-md-2">{{ form.user_name|as_crispy_field }}</div>
                 <div class="col-md-2">{{ form.month_choice|as_crispy_field }}</div>
-                    <div class="col-md-3 d-flex flex-column justify-content-center">
-                        <button type=" submit" class="btn btn-primary btn-sm">
-                        <i class="fa-solid fa-search"></i> Consulta
-                        </button>
+                <div class="col-md-3 d-flex flex-column justify-content-center">
+                    <button type=" submit" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-search"></i> Consulta
+                    </button>
 
-                        <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary btn-sm"
-                            style="border: 1px solid white;">
-                            <i class="fa-solid fa-arrows-rotate"></i> Limpar
-                        </a>
-                    </div>
+                    <a href="{% url 'banco_de_horas:lista_banco_de_horas' %}" class="btn btn-primary btn-sm"
+                        style="border: 1px solid white;">
+                        <i class="fa-solid fa-arrows-rotate"></i> Limpar
+                    </a>
+                </div>
+                <div class="col-md-5 align-middle">
+                    <a href="{% url 'banco_de_horas:valor_inserido' %}" class="btn btn-success btn-lg"
+                        style="border: 1px solid white;">
+                        <i class="fa-solid fa-plus"></i> Valores Inseridos
+                    </a>
+                </div>
             </div>
         </form>
 
@@ -57,7 +63,7 @@
                     <th class="text-center"><strong>PGTO</strong></th>
                     <th class="text-center">Saldo</th>
                     {% if request.user.is_superuser %}
-                        <th class="text-center" colspan="3">Ações</th>
+                        <th class="text-center" colspan="2">Ações</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -71,7 +77,13 @@
                                 <td>{{ banco.user.userprofile.nome }}</td>
                             {% endif %}
                             <td class="text-center">{{ banco.periodo_apurado|date:"d/m/Y" }}</td>
-                            <td class="text-center">{{ banco.saldo_anterior|format_timedelta }}</td>
+
+                            {% if banco.saldo_anterior|is_greater_than_zero %}
+                                <td class="text-center text-success">{{ banco.saldo_anterior|format_timedelta }}</td>
+                            {% else %}
+                                <td class="text-center text-danger">{{ banco.saldo_anterior|format_timedelta }}</td>
+                            {% endif %}
+
                             <td class="text-center text-success">{{ banco.total_credor|format_timedelta }}</td>
                             <td class="text-center text-danger">{{ banco.total_devedor|format_timedelta }} </td>
 
@@ -122,13 +134,7 @@
                                     </a>
 
                                 </td>
-                                <td class="text-center">
-                                    <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}">
-                                        <i class="fas fa-pencil" style="color:green" data-toggle="tooltip"
-                                            title="Atualizar Pagamento ou Compensação"></i>
-                                    </a>
 
-                                </td>
                                 <td class="text-center">
                                     <a href="{% url 'banco_de_horas:deleta_banco_de_horas' banco.id %}">
                                         <i class="fas fa-trash" style="color:red" data-toggle="tooltip"

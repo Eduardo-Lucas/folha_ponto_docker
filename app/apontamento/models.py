@@ -437,6 +437,9 @@ class PontoManager(models.Manager):
         """Automatically close tasks are those with saida = 23:59:59"""
         return self.filter(entrada__year__gte=2024, saida__time=time(23, 59, 59))
 
+    def get_ajustes_nao_autorizados(self):
+        """return all ajustes not authorized"""
+        return self.filter(ajuste=True, ajuste_autorizado=False)
 
 class Ponto(models.Model):
     """
@@ -462,6 +465,10 @@ class Ponto(models.Model):
     )
     over_10_hours_authorization = models.BooleanField(
         default=False, verbose_name="Autorização de +10 horas de jornada", db_index=True
+    )
+    ajuste = models.BooleanField(default=False, db_index=True, verbose_name="Ajuste")
+    ajuste_autorizado = models.BooleanField(
+        default=False, db_index=True, verbose_name="Ajuste Autorizado"
     )
 
     objects = PontoManager()

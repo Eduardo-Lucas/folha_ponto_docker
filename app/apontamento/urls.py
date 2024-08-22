@@ -23,6 +23,7 @@ from .views import (
     open_task_list,
     over_10_hour_validation,
     over_10_hours_list,
+    get_ajustes_nao_autorizados,
 )
 
 app_name = "apontamento"
@@ -91,5 +92,10 @@ urlpatterns = [
         "tarefas_fechadas_automaticamente",
         get_automatically_closed_tasks,
         name="tarefas_fechadas_automaticamente",
+    ),
+    path(
+        "ajustes-nao-autorizados",
+        get_ajustes_nao_autorizados,
+        name="ajustes_nao_autorizados",
     ),
 ]

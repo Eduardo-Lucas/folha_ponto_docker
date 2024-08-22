@@ -594,6 +594,8 @@ def ajuste_ponto(request):
                 tipo_receita=tipo_receita,
                 cliente_id=cliente_id,
                 usuario=usuario,
+                ajuste=True,
+                ajuste_autorizado=False,
             )
             messages.success(request, "Appointment created successfully")
         else:
@@ -637,4 +639,17 @@ def get_automatically_closed_tasks(request):
 
     return render(
         request, "apontamento/tarefas_fechadas_automaticamente.html", {"pontos": pontos}
+    )
+
+@login_required
+def get_ajustes_nao_autorizados(request):
+    """Get all tasks that were not authorized"""
+    pontos_list = Ponto.objects.get_ajustes_nao_autorizados().order_by("-id")
+    paginator = Paginator(pontos_list, 10)
+
+    page_number = request.GET.get("page")
+    pontos = paginator.get_page(page_number)
+
+    return render(
+        request, "apontamento/ajustes_nao_autorizados.html", {"pontos": pontos}
     )
