@@ -63,7 +63,7 @@
                     <th class="text-center"><strong>PGTO</strong></th>
                     <th class="text-center">Saldo</th>
                     {% if request.user.is_superuser %}
-                        <th class="text-center" colspan="2">Ações</th>
+                        <th class="text-center" colspan="1">Ações</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -127,13 +127,7 @@
 
 
                             {% if request.user.is_superuser %}
-                                <td class="text-center">
-                                    <a href="{% url 'banco_de_horas:atualiza_banco_de_horas' banco.id %}">
-                                        <i class="fas fa-edit" style="color:blue" data-toggle="tooltip"
-                                            title="Atualizar o Banco de Horas"></i>
-                                    </a>
 
-                                </td>
 
                                 <td class="text-center">
                                     <a href="{% url 'banco_de_horas:deleta_banco_de_horas' banco.id %}">
