@@ -100,6 +100,15 @@ class ConsultaValorInseridoForm(forms.Form):
                self.fields["user_name"].initial = self.user
 
 class InserirValorForm(forms.ModelForm):
+     competencia = forms.ChoiceField(
+          choices=get_previous_month_choices(),
+          label='Selecione o mês',
+          required=False,
+          widget=forms.Select(attrs={
+               'class':'form-control',
+          }),
+          initial='',
+     )
 
      class Meta:
           model = ValorInserido
@@ -111,7 +120,13 @@ class InserirValorForm(forms.ModelForm):
           )
 
      def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+          # user has to be active and have bateponto set to 'Sim'
+          super().__init__(*args, **kwargs)
+          self.fields["user"].queryset = User.objects.filter(
+               is_active=True,
+               userprofile__bateponto="Sim"
+          ).order_by("username")
 
-     #    self.fields["user"].disabled = True
-     #    self.fields["competencia"].disabled = True
+          # competencia has to 3 months before the current month
+          # and 3 months after the current month
+          self.fields["competencia"].initial = kwargs.get("initial", {}).get("competencia", None)
