@@ -107,3 +107,11 @@ class BancoDeHoras(models.Model):
             self.pagamento = self.pagamento
 
         return self.saldo_final_sem_pagamento - self.pagamento
+
+    @property
+    def get_valor_inserido(self):
+        """Retorna o valor inserido de um determinado período."""
+        valor_inserido = ValorInserido.objects.filter(user=self.user, competencia=self.periodo_apurado).first()
+        if valor_inserido:
+            return valor_inserido.id
+        return None

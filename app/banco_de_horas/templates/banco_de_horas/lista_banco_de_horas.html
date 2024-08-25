@@ -32,12 +32,7 @@
                         <i class="fa-solid fa-arrows-rotate"></i> Limpar
                     </a>
                 </div>
-                <div class="col-md-5 align-middle">
-                    <a href="{% url 'banco_de_horas:valor_inserido' %}" class="btn btn-success btn-lg"
-                        style="border: 1px solid white;">
-                        <i class="fa-solid fa-plus"></i> Valores Inseridos
-                    </a>
-                </div>
+
             </div>
         </form>
 
@@ -128,13 +123,22 @@
 
                             {% if request.user.is_superuser %}
 
-
-                                <td class="text-center">
-                                    <a href="{% url 'banco_de_horas:deleta_banco_de_horas' banco.id %}">
-                                        <i class="fas fa-trash" style="color:red" data-toggle="tooltip"
-                                            title="Apagar a linha do Banco de Horas"></i>
+                                {% if banco.get_valor_inserido %}
+                                    <td class="text-center">
+                                        <a href="{% url 'banco_de_horas:atualizar_valor_inserido' banco.get_valor_inserido %}">
+                                            <i class="fas fa-pencil" style="color:blue" data-toggle="tooltip"
+                                                title="Atualiza a informação de Compensação e/ou Pagamento"></i>
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td class="text-center">
+                                    <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}">
+                                        <i class="fas fa-plus" style="color:green" data-toggle="tooltip"
+                                            title="Cria a informa de Compensação e/ou Pagamento"></i>
                                     </a>
-                                </td>
+                                    </td>
+                                {% endif %}
+
                             {% endif %}
                         </tr>
                     {% endif %}

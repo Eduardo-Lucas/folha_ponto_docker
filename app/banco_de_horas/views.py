@@ -190,7 +190,7 @@ class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
     model = ValorInserido
     form_class = InserirValorForm
     template_name = 'banco_de_horas/adicionar_valor_inserido.html'
-    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+    success_url = reverse_lazy('banco_de_horas:lista_banco_de_horas')
 
     def get_initial(self):
         initial = super().get_initial()

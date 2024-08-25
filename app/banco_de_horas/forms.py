@@ -100,15 +100,7 @@ class ConsultaValorInseridoForm(forms.Form):
                self.fields["user_name"].initial = self.user
 
 class InserirValorForm(forms.ModelForm):
-     competencia = forms.ChoiceField(
-          choices=get_previous_month_choices(),
-          label='Selecione o mês',
-          required=False,
-          widget=forms.Select(attrs={
-               'class':'form-control',
-          }),
-          initial='',
-     )
+
 
      class Meta:
           model = ValorInserido
@@ -127,6 +119,6 @@ class InserirValorForm(forms.ModelForm):
                userprofile__bateponto="Sim"
           ).order_by("username")
 
-          # competencia has to 3 months before the current month
-          # and 3 months after the current month
-          self.fields["competencia"].initial = kwargs.get("initial", {}).get("competencia", None)
+          # disable user and competencia fields
+          self.fields["user"].disabled = True
+          self.fields["competencia"].disabled = True

@@ -32,15 +32,19 @@
           </button>
         </div>
         <div class="col-md-6 mt-3 mb-3">
-          <a
-            href="{% url 'banco_de_horas:valor_inserido' %}"
-            class="btn btn-primary btn-block btn-lg"
-          >
+
+            <button type="button" class="btn btn-primary btn-lg" onclick="goBack()">
             <i class="fas fa-undo"></i>
-            Voltar
-          </a>
+               Voltar
+            </button>
+
         </div>
       </div>
     </form>
+    <script>
+      function goBack() {
+          window.history.back();
+      }
+    </script>
   </div>
 {% endblock %}
