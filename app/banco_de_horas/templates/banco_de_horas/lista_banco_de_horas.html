@@ -58,7 +58,7 @@
                     <th class="text-center"><strong>PGTO</strong></th>
                     <th class="text-center">Saldo</th>
                     {% if request.user.is_superuser %}
-                        <th class="text-center" colspan="1">Ações</th>
+                        <th class="text-center" colspan="1">Ação</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -132,9 +132,9 @@
                                     </td>
                                 {% else %}
                                     <td class="text-center">
-                                    <a href="{% url 'banco_de_horas:adicionar_valor_inserido' %}">
+                                    <a href="{% url 'banco_de_horas:adicionar_valor_inserido' banco.user banco.periodo_apurado %}">
                                         <i class="fas fa-plus" style="color:green" data-toggle="tooltip"
-                                            title="Cria a informa de Compensação e/ou Pagamento"></i>
+                                            title="Cria a informação de Compensação e/ou Pagamento"></i>
                                     </a>
                                     </td>
                                 {% endif %}

@@ -101,7 +101,6 @@ class ConsultaValorInseridoForm(forms.Form):
 
 class InserirValorForm(forms.ModelForm):
 
-
      class Meta:
           model = ValorInserido
           fields = (
@@ -112,12 +111,7 @@ class InserirValorForm(forms.ModelForm):
           )
 
      def __init__(self, *args, **kwargs):
-          # user has to be active and have bateponto set to 'Sim'
-          super().__init__(*args, **kwargs)
-          self.fields["user"].queryset = User.objects.filter(
-               is_active=True,
-               userprofile__bateponto="Sim"
-          ).order_by("username")
+          super(InserirValorForm, self).__init__(*args, **kwargs)
 
           # disable user and competencia fields
           self.fields["user"].disabled = True

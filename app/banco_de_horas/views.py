@@ -194,15 +194,10 @@ class ValorInseridoCreateView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        user_name = self.request.GET.get('user')
-        competencia = self.request.GET.get('competencia')
-
-        if user_name:
-            initial['user'] = User.objects.get(username=user_name)
-        if competencia:
-            initial['competencia'] = competencia
-
+        initial['user'] = User.objects.filter(username=self.kwargs.get('user')).first()
+        initial['competencia'] = self.kwargs.get('competencia')
         return initial
+
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -231,7 +226,7 @@ class ValorInseridoUpdateView(LoginRequiredMixin, UpdateView):
     model = ValorInserido
     form_class = InserirValorForm
     template_name = 'banco_de_horas/atualizar_valor_inserido.html'
-    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+    success_url = reverse_lazy('banco_de_horas:lista_banco_de_horas')
 
     def form_valid(self, form):
         response = super().form_valid(form)

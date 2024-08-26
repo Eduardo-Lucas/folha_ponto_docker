@@ -27,7 +27,7 @@ urlpatterns = [
          ValorInseridoDeleteView.as_view(),
          name="deletar_valor_inserido",
     ),
-    path("adicionar_valor_inserido/",
+    path("adicionar_valor_inserido/<str:user>/<date:competencia>/",
          ValorInseridoCreateView.as_view(),
          name="adicionar_valor_inserido",)
 
