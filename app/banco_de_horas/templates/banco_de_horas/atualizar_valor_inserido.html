@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load timedelta_filters %}
 {% load crispy_forms_tags %}
+{% load timedelta_filters %}
 {% block title %}Banco de Horas{% endblock %}
 
 {% block content %}
@@ -22,11 +22,15 @@
       </div>
       <div class="row">
         <div class="col-md-3 mt-3 mb-3">{{form.compensacao|as_crispy_field}}</div>
+        <div class="col-md-3 mt-3 mb-3">{{form.compensacao_str|as_crispy_field}}</div>
+      </div>
+      <div class="row">
         <div class="col-md-3 mt-3 mb-3">{{form.pagamento|as_crispy_field}}</div>
+        <div class="col-md-3 mt-3 mb-3">{{form.pagamento_str|as_crispy_field}}</div>
       </div>
 
       <div class="row border-dark border-top">
-        <div class="col-md-6 mt-3 mb-3 text-center">
+        <div class="col-md-4 mt-3 mb-3 text-center">
           <button
             type="submit"
             class="btn btn-success btn-block btn-lg">
@@ -34,7 +38,14 @@
             Gravar
           </button>
         </div>
-        <div class="col-md-6 mt-3 mb-3">
+        <div class="col-md-4 mt-3 mb-3 text-center">
+          <a href="{% url 'banco_de_horas:deletar_valor_inserido' object.pk %}"
+            class="btn btn-danger btn-block btn-lg">
+            <i class="fas fa-trash"></i>
+            Apagar
+          </a>
+        </div>
+        <div class="col-md-4 mt-3 mb-3">
             <button type="button" class="btn btn-primary btn-lg" onclick="goBack()">
             <i class="fas fa-undo"></i>
                Voltar

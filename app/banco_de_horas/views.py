@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 
 from apontamento.models import Ponto
+from apontamento.templatetags.timedelta_filters import format_timedelta
 from banco_de_horas.forms import BancoDeHorasForm, ConsultaValorInseridoForm, InserirValorForm
 from banco_de_horas.models import BancoDeHoras, ValorInserido
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -231,10 +232,12 @@ class ValorInseridoUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
-        compensacao = form.cleaned_data.get('compensacao')
-        pagamento = form.cleaned_data.get('pagamento')
+
+        compensacao = str(format_timedelta(form.cleaned_data.get('compensacao')))
+        pagamento = str(format_timedelta(form.cleaned_data.get('pagamento')))
 
         valor_inserido = self.object
+
 
         # Before updating, check if the BancoDeHoras object exists
         banco_de_horas = BancoDeHoras.objects.filter(
@@ -257,7 +260,7 @@ class ValorInseridoDeleteView(LoginRequiredMixin, DeleteView):
 
     model = ValorInserido
     template_name = 'banco_de_horas/deletar_valor_inserido.html'
-    success_url = reverse_lazy('banco_de_horas:valor_inserido')
+    success_url = reverse_lazy('banco_de_horas:lista_banco_de_horas')
 
     def post(self, request, *args, **kwargs):
 

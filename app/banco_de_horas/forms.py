@@ -4,10 +4,11 @@ from datetime import timedelta, datetime
 import calendar
 from django import forms
 from django.contrib.auth.models import User
-from .utils import get_previous_month_choices
-
 
 from apontamento.templatetags.timedelta_filters import format_timedelta
+from .utils import get_previous_month_choices
+import re
+
 
 from .models import BancoDeHoras, ValorInserido
 
@@ -92,6 +93,7 @@ class ConsultaValorInseridoForm(forms.Form):
              initial='',
         )
 
+
      def __init__(self, *args, **kwargs):
           self.user = kwargs.pop("user_name", None)
           super(ConsultaValorInseridoForm, self).__init__(*args, **kwargs)
@@ -101,6 +103,8 @@ class ConsultaValorInseridoForm(forms.Form):
 
 class InserirValorForm(forms.ModelForm):
 
+     pagamento_str = forms.DurationField(required=False, label="Pagamento em horas e minutos")
+     compensacao_str = forms.DurationField(required=False, label="Compensação em horas e minutos")
      class Meta:
           model = ValorInserido
           fields = (
@@ -108,6 +112,7 @@ class InserirValorForm(forms.ModelForm):
                'competencia',
                'pagamento',
                'compensacao',
+
           )
 
      def __init__(self, *args, **kwargs):
@@ -116,3 +121,23 @@ class InserirValorForm(forms.ModelForm):
           # disable user and competencia fields
           self.fields["user"].disabled = True
           self.fields["competencia"].disabled = True
+          self.fields["pagamento_str"].disabled = True
+          self.fields["compensacao_str"].disabled = True
+
+          # set initial value for pagamento
+          if self.instance.pk:
+               if self.instance.pagamento:
+                    self.fields['pagamento_str'].initial = format_timedelta(self.instance.pagamento)
+               else:
+                    self.fields['pagamento_str'].initial = "00:00:00"
+          else:
+               self.fields['pagamento_str'].initial = "00:00:00"
+
+          # set initial value for compensacao
+          if self.instance.pk:
+               if self.instance.compensacao:
+                    self.fields['compensacao_str'].initial = format_timedelta(self.instance.compensacao)
+               else:
+                    self.fields['compensacao_str'].initial = "00:00:00"
+          else:
+               self.fields['compensacao_str'].initial = "00:00:00"

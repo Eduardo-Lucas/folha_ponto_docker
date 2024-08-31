@@ -32,7 +32,7 @@ class ValorInserido(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     competencia = models.DateField()
-    compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
+    compensacao = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0), )
     pagamento = models.DurationField(default=timedelta(hours=0, minutes=0, seconds=0))
 
     class Meta:
@@ -48,8 +48,21 @@ class ValorInserido(models.Model):
 
 
     def __str__(self):
-        return f"Valor Inserido - Usuário: {self.user.username} - Competência: {self.competencia} - Pagamento: {self.pagamento} - Compensacao: {self.compensacao}"
+        return f"Valor Inserido - Usuário: {self.user.username} - Competência: {self.competencia} - Pagamento: {self.formatted_pagamento} - Compensacao: {self.compensacao}"
 
+    @property
+    def formatted_pagamento(self):
+        total_seconds = int(self.pagamento.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f'{hours:02}:{minutes:02}:{seconds:02}'
+
+    @property
+    def formatted_compensacao(self):
+        total_seconds = int(self.compensacao.total_seconds())
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f'{hours:02}:{minutes:02}:{seconds:02}'
 
 class BancoDeHoras(models.Model):
     """Model para o banco de horas dos usuários."""
