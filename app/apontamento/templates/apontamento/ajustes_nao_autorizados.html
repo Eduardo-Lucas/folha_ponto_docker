@@ -13,19 +13,19 @@
                 </tr>
             </thead>
             <tbody>
-                {% for ponto in pontos %}
+                {% for ponto in pontos_list %}
                 <tr>
                     <td>{{ ponto.id }}</td>
                     <td>{{ ponto.entrada|date:"d/m/Y" }}</td>
-                    <td>{{ ponto.username|capfirst }}</td>
+                    <td>{{ ponto.usuario|capfirst }}</td>
                     <td scope="row" class="text-center">
                         <a
-                            href="#">
-                            <i class="fas fa-eye" data-toggle="tooltip" title="Histórico do dia" style="color:blue"></i>
+                            href="{% url 'apontamento:ajuste_ponto_detail' ponto.id %}">
+                            <i class="fas fa-eye" data-toggle="tooltip" title="Detalhes do ajuste" style="color:blue"></i>
                     </td>
                     <td class="text-center">
-                        <a href="#">
-                            <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar essa Tarefa"
+                        <a href="{% url 'apontamento:autoriza_ajuste' ponto.id %}">
+                            <i class="fas fa-door-closed" data-toggle="tooltip" title="Autorizar esse ajuste"
                                 style="color:orange"></i>
                         </a>
                     </td>
@@ -33,7 +33,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center text-danger">Nenhuma tarefa aberta!</td>
+                    <td colspan="5" class="text-center text-danger">Nenhum ajuste para autorizar!</td>
                 </tr>
                 {% endfor %}
             </tbody>

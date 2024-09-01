@@ -2,6 +2,7 @@ from django.urls import path, register_converter
 
 from .converters.custom_date_converter import DateConverter
 from .views import (
+    AjustePontoDetailView,
     AppointmentCreateView,
     AppointmentDeleteView,
     AppointmentDetailView,
@@ -11,6 +12,7 @@ from .views import (
     MudarTarefaUpdateView,
     ajuste_ponto,
     apontamento_list,
+    autoriza_ajuste,
     fecha_tarefa,
     fechar_todas_tarefas,
     folha_ponto,
@@ -98,4 +100,10 @@ urlpatterns = [
         get_ajustes_nao_autorizados,
         name="ajustes_nao_autorizados",
     ),
+    path(
+        "ajuste_ponto_detail/<int:pk>/",
+        AjustePontoDetailView.as_view(),
+        name="ajuste_ponto_detail",
+    ),
+    path("autoriza_ajuste/<int:pk>/", autoriza_ajuste, name="autoriza_ajuste"),
 ]

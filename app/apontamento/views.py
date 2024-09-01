@@ -651,5 +651,22 @@ def get_ajustes_nao_autorizados(request):
     pontos = paginator.get_page(page_number)
 
     return render(
-        request, "apontamento/ajustes_nao_autorizados.html", {"pontos": pontos}
+        request, "apontamento/ajustes_nao_autorizados.html", {"pontos_list": pontos_list}
     )
+
+
+class AjustePontoDetailView(LoginRequiredMixin, DetailView):
+    """Detalhe do ajuste de ponto"""
+
+    model = Ponto
+    template_name = "apontamento/ajuste_ponto_detail.html"
+    success_url = reverse_lazy("apontamento:ajustes_nao_autorizados")
+    context_object_name = "ponto"
+
+def autoriza_ajuste(request, pk):
+    """Autoriza ajuste de ponto"""
+    ponto = get_object_or_404(Ponto, pk=pk)
+    ponto.ajuste_autorizado = True
+    ponto.save()
+    messages.info(request, "Ajuste de ponto autorizado.")
+    return redirect("apontamento:ajustes_nao_autorizados")
