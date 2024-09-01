@@ -108,7 +108,7 @@ urlpatterns = [
     ),
     path("autoriza_ajuste/<int:pk>/", autoriza_ajuste, name="autoriza_ajuste"),
     path(
-        "autoriza_todos_ajustes/<int:pk>/",
+        "autoriza_todos_ajustes/",
         autoriza_todos_ajustes,
         name="autoriza_todos_ajustes",
     ),

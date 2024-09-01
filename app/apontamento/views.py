@@ -675,7 +675,7 @@ def autoriza_todos_ajustes(request):
     """Autoriza todos os ajustes de ponto"""
     pontos = Ponto.objects.get_ajustes_nao_autorizados()
     for ponto in pontos:
-        ponto_obj = Ponto.objects.get(id=ponto["ponto_id"])
+        ponto_obj = Ponto.objects.get(id=ponto.id)
         ponto_obj.ajuste_autorizado = True
         ponto_obj.save()
     messages.info(request, "Todos os ajustes de ponto foram autorizados.")
