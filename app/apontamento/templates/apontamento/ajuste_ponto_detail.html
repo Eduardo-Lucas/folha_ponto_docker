@@ -69,7 +69,7 @@
     </div>
 
     <div class="row text-center">
-        <div class="text-center col-md-12 border border-dark">
+        <div class="text-center col-md-6 border border-dark">
 
             <a href="{% url 'apontamento:autoriza_ajuste' ponto.id %}">
                 <button type="button" class="btn btn-warning btn-block">
@@ -79,11 +79,23 @@
             </a>
 
         </div>
+        <div class="col-md-6 border border-dark">
+            <button type="button" class="btn btn-warning" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </button>
+        </div>
 
 
     </div>
 
 </div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
 <script>
     $(document).ready(function () {
