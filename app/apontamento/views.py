@@ -670,3 +670,13 @@ def autoriza_ajuste(request, pk):
     ponto.save()
     messages.info(request, "Ajuste de ponto autorizado.")
     return redirect("apontamento:ajustes_nao_autorizados")
+
+def autoriza_todos_ajustes(request):
+    """Autoriza todos os ajustes de ponto"""
+    pontos = Ponto.objects.get_ajustes_nao_autorizados()
+    for ponto in pontos:
+        ponto_obj = Ponto.objects.get(id=ponto["ponto_id"])
+        ponto_obj.ajuste_autorizado = True
+        ponto_obj.save()
+    messages.info(request, "Todos os ajustes de ponto foram autorizados.")
+    return redirect("apontamento:ajustes_nao_autorizados")

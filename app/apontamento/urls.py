@@ -13,6 +13,7 @@ from .views import (
     ajuste_ponto,
     apontamento_list,
     autoriza_ajuste,
+    autoriza_todos_ajustes,
     fecha_tarefa,
     fechar_todas_tarefas,
     folha_ponto,
@@ -106,4 +107,9 @@ urlpatterns = [
         name="ajuste_ponto_detail",
     ),
     path("autoriza_ajuste/<int:pk>/", autoriza_ajuste, name="autoriza_ajuste"),
+    path(
+        "autoriza_todos_ajustes/<int:pk>/",
+        autoriza_todos_ajustes,
+        name="autoriza_todos_ajustes",
+    ),
 ]

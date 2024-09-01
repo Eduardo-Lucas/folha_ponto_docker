@@ -41,9 +41,9 @@
     </table>
     {% if pontos %}
     <div class="text-center">
-        Fechar todos os pontos do dia à meia-noite:
-        <a href="#" class="btn btn-danger">
-            <i class="fas fa-door-closed" data-toggle="tooltip" title="Fechar todas as Tarefas"></i>
+        Autorizar todos os ajustes
+        <a href="{% url 'apontamento:autoriza_todos_ajustes' %}" class="btn btn-danger">
+            <i class="fas fa-door-closed" data-toggle="tooltip" title="Autorizar todos os ajustes"></i>
         </a>
 
     </div>
