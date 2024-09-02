@@ -39,6 +39,25 @@
             </tbody>
         </table>
     </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if pontos.has_previous %}
+            <a href="?page=1">&laquo; primeira</a>
+            <a href="?page={{ pontos.previous_page_number }}">anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Página {{ pontos.number }} de {{ pontos.paginator.num_pages }}.
+            </span>
+
+            {% if pontos.has_next %}
+            <a href="?page={{ pontos.next_page_number }}">próxima</a>
+            <a href="?page={{ pontos.paginator.num_pages }}">&raquo; última</a>
+            {% endif %}
+        </span>
+    </div>
+
     {% if pontos_list %}
     <div class="text-center">
         Autorizar todos os ajustes

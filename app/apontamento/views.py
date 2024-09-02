@@ -651,7 +651,9 @@ def get_ajustes_nao_autorizados(request):
     pontos = paginator.get_page(page_number)
 
     return render(
-        request, "apontamento/ajustes_nao_autorizados.html", {"pontos_list": pontos_list}
+        request, "apontamento/ajustes_nao_autorizados.html",
+        {"pontos_list": pontos_list,
+         "pontos": pontos}
     )
 
 
