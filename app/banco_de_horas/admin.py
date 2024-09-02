@@ -36,10 +36,6 @@ class BancoDeHorasAdmin(ImportExportModelAdmin):
     )
     search_fields = ["user__username"]
 
-class ValorInseridoAdmin(admin.ModelAdmin):
-    list_display = ('user', 'competencia', 'compensacao', 'pagamento')
-    search_fields = ['user__username']
-
 class ValorInseridoResource(resources.ModelResource):
     """Resource class for ValorInserido."""
 
@@ -47,6 +43,15 @@ class ValorInseridoResource(resources.ModelResource):
         """Meta class for ValorInseridoResource."""
 
         model = ValorInserido
+class ValorInseridoAdmin(ImportExportModelAdmin):
+    """ Admin class for ValorInserido."""
+
+    resource_classes = [ValorInseridoResource]
+
+    list_display = ('user', 'competencia', 'compensacao', 'pagamento')
+    search_fields = ['user__username']
+
+
 
 admin.site.register(BancoDeHoras, BancoDeHorasAdmin)
 admin.site.register(ValorInserido, ValorInseridoAdmin)
