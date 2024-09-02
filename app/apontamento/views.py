@@ -544,9 +544,15 @@ def over_10_hour_validation(request, day, user_id):
 @login_required
 def get_30_min_break_list(request):
     """Listagem de pontos sem intervalo de 30 minutos"""
-    pontos = Ponto.objects.get_30_min_break_list()
+    pontos = Ponto.objects.get_intervalo_30_minutos()
+    paginator = Paginator(pontos, 10)
+
+    page_number = request.GET.get("page")
+    pontos = paginator.get_page(page_number)
+
     context = {
         "pontos": pontos,
+
     }
     return render(request, "apontamento/30_min_break_list.html", context)
 

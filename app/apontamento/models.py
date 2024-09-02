@@ -398,36 +398,32 @@ class PontoManager(models.Manager):
                     )
         return over_10_hours_list
 
-    def get_30_min_break_list(self, user=None):
-        """
-        return a list of dictionaries with the days that the user worked without a 30 min break,
-        between 11:00AM and 2:00PM using the following format:
-        {user: user, day: date, total_hours: total_hours}
-        """
-        break_list = []
-        users = User.objects.all()
-        for day in range(30):
-            day = datetime.now().date() - timedelta(days=day)
-            # loop through users
-            for user in users:
-                start = datetime.combine(day, time(11, 0))
-                end = datetime.combine(day, time(14, 0))
-                ponto = self.filter(
-                    Q(entrada__range=(start, end)),
-                    Q(saida__range=(start, end)),
-                    usuario=user, fechado=True
-                ).first()
-                if ponto:
-                    # if ponto.difference > timedelta(hours=8):
-                    break_list.append(
-                        {
-                            "user_id": user.id,
-                            "username": user.username,
-                            "day": day,
-                            "total_hours": ponto.difference,
-                        }
-                    )
-        return break_list
+
+
+    def get_intervalo_30_minutos(self, user=None):
+        # take all the points of those users who bateponto='Sim' and who have a point between 11 and 14
+        # check if there is an interval between saida of one and entrada of the other
+        # if there is an interval, check if it is greater than 30 minutes
+        # if so, return the list of users and the days they worked without a 30 minute break
+        intervalo_30_minutos = []
+        users = User.objects.filter(userprofile__bateponto="Sim")
+        for user in users:
+            pontos = self.filter(usuario=user).order_by("entrada")
+            for i in range(len(pontos) - 1):
+                if pontos[i].get_intervalo:
+                    intervalo = pontos[i + 1].entrada - pontos[i].saida
+                    if intervalo < timedelta(minutes=30):
+                        intervalo_30_minutos.append(
+                            {
+                                "user_id": user.id,
+                                "username": user.username,
+                                "day": pontos[i].entrada.date(),
+                                "total_hours": intervalo,
+                            }
+                        )
+        # sort intervalo_30_minutos by -id
+        intervalo_30_minutos = sorted(intervalo_30_minutos, key=lambda x: x["day"], reverse=True)
+        return intervalo_30_minutos
 
     def get_carga_horaria(self, user=None):
         """get UserProfile  carga horaria"""
