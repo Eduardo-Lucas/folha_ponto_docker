@@ -14,6 +14,8 @@ from .views import (
     apontamento_list,
     autoriza_ajuste,
     autoriza_todos_ajustes,
+    recusa_ajuste,
+    recusa_todos_ajustes,
     fecha_tarefa,
     fechar_todas_tarefas,
     folha_ponto,
@@ -26,7 +28,9 @@ from .views import (
     open_task_list,
     over_10_hour_validation,
     over_10_hours_list,
+    get_ajustes_pendentes,
     get_ajustes_nao_autorizados,
+    get_ajustes_autorizados,
 )
 
 app_name = "apontamento"
@@ -97,9 +101,19 @@ urlpatterns = [
         name="tarefas_fechadas_automaticamente",
     ),
     path(
+        "ajustes-pendentes",
+        get_ajustes_pendentes,
+        name="ajustes_pendentes",
+    ),
+    path(
         "ajustes-nao-autorizados",
         get_ajustes_nao_autorizados,
         name="ajustes_nao_autorizados",
+    ),
+    path(
+        "ajustes-autorizados",
+        get_ajustes_autorizados,
+        name="ajustes_autorizados",
     ),
     path(
         "ajuste_ponto_detail/<int:pk>/",
@@ -111,5 +125,11 @@ urlpatterns = [
         "autoriza_todos_ajustes/",
         autoriza_todos_ajustes,
         name="autoriza_todos_ajustes",
+    ),
+    path("recusa_ajuste/<int:pk>/", recusa_ajuste, name="recusa_ajuste"),
+    path(
+        "recusa_todos_ajustes/",
+        recusa_todos_ajustes,
+        name="recusa_todos_ajustes",
     ),
 ]

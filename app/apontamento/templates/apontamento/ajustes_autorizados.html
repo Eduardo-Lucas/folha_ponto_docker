@@ -4,17 +4,17 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <a href="{% url 'apontamento:ajustes_pendentes' %}" class="text-info"><h3>Lista de Ajustes Pendentes</h3>
-
+            <a href="{% url 'apontamento:ajustes_pendentes' %}" class="text-info">
+                <h3>Lista de Ajustes Pendentes</h3>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{% url 'apontamento:ajustes_autorizados' %}" class="text-success"><h3>Ajustes Autorizados</h3>
-
-            </a>
+            <h3 class="text-success">Ajustes Autorizados</h3>
         </div>
         <div class="col-md-4">
-            <h3 class="text-danger">Ajustes Não Autorizados</h3>
+            <a href="{% url 'apontamento:ajustes_nao_autorizados' %}" class="text-danger">
+                <h3>Ajustes Não Autorizados</h3>
+            </a>
         </div>
 
     </div>
@@ -54,7 +54,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center text-danger">Não existem ajustes Não Autorizados!</td>
+                    <td colspan="5" class="text-center text-danger">Ainda não existem ajustes autorizados!</td>
                 </tr>
                 {% endfor %}
             </tbody>

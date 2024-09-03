@@ -398,7 +398,17 @@ class PontoManager(models.Manager):
                     )
         return over_10_hours_list
 
+    def get_ajustes_autorizados(self):
+        """return all ajustes authorized"""
+        return self.filter(ajuste=True, status_ajuste=1)
 
+    def get_ajustes_nao_autorizados(self):
+        """return all ajustes denied"""
+        return self.filter(ajuste=True, status_ajuste=2)
+
+    def get_ajustes_pendentes(self):
+        """return all ajustes pending"""
+        return self.filter(ajuste=True, status_ajuste=0)
 
     def get_intervalo_30_minutos(self, user=None):
         # take all the points of those users who bateponto='Sim' and who have a point between 11 and 14
@@ -433,10 +443,6 @@ class PontoManager(models.Manager):
         """Automatically close tasks are those with saida = 23:59:59"""
         return self.filter(entrada__year__gte=2024, saida__time=time(23, 59, 59))
 
-    def get_ajustes_nao_autorizados(self):
-        """return all ajustes not authorized"""
-        return self.filter(ajuste=True, ajuste_autorizado=False)
-
 class Ponto(models.Model):
     """
     Model to represent a point in time for a user.
@@ -463,9 +469,29 @@ class Ponto(models.Model):
         default=False, verbose_name="Autorização de +10 horas de jornada", db_index=True
     )
     ajuste = models.BooleanField(default=False, db_index=True, verbose_name="Ajuste")
+
+    # Define choices for ajuste_autorizado
+    PENDENTE = 0
+    AUTORIZADO = 1
+    NEGADO = 2
+
+    AJUSTE_STATUS_CHOICES = [
+        (PENDENTE, 'Pendente'),
+        (AUTORIZADO, 'Autorizado'),
+        (NEGADO, 'Negado'),
+    ]
+
+    status_ajuste = models.PositiveSmallIntegerField(
+        choices=AJUSTE_STATUS_CHOICES,
+        default=PENDENTE,
+        db_index=True,
+        verbose_name="Status do Ajuste"
+    )
+
     ajuste_autorizado = models.BooleanField(
         default=False, db_index=True, verbose_name="Ajuste Autorizado"
     )
+
 
     objects = PontoManager()
 

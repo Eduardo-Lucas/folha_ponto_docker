@@ -648,6 +648,20 @@ def get_automatically_closed_tasks(request):
     )
 
 @login_required
+def get_ajustes_pendentes(request):
+    """Get all tasks that were not authorized"""
+    pontos_list = Ponto.objects.get_ajustes_pendentes().order_by("-id")
+    paginator = Paginator(pontos_list, 10)
+
+    page_number = request.GET.get("page")
+    pontos = paginator.get_page(page_number)
+
+    return render(
+        request, "apontamento/ajustes_pendentes.html",
+        {"pontos_list": pontos_list,
+         "pontos": pontos}
+    )
+
 def get_ajustes_nao_autorizados(request):
     """Get all tasks that were not authorized"""
     pontos_list = Ponto.objects.get_ajustes_nao_autorizados().order_by("-id")
@@ -662,6 +676,19 @@ def get_ajustes_nao_autorizados(request):
          "pontos": pontos}
     )
 
+def get_ajustes_autorizados(request):
+    """Get all tasks that were authorized"""
+    pontos_list = Ponto.objects.get_ajustes_autorizados().order_by("-id")
+    paginator = Paginator(pontos_list, 10)
+
+    page_number = request.GET.get("page")
+    pontos = paginator.get_page(page_number)
+
+    return render(
+        request, "apontamento/ajustes_autorizados.html",
+        {"pontos_list": pontos_list,
+         "pontos": pontos}
+    )
 
 class AjustePontoDetailView(LoginRequiredMixin, DetailView):
     """Detalhe do ajuste de ponto"""
@@ -674,9 +701,9 @@ class AjustePontoDetailView(LoginRequiredMixin, DetailView):
 def autoriza_ajuste(request, pk):
     """Autoriza ajuste de ponto"""
     ponto = get_object_or_404(Ponto, pk=pk)
-    ponto.ajuste_autorizado = True
+    ponto.status_ajuste = 1
     ponto.save()
-    messages.info(request, "Ajuste de ponto autorizado.")
+    messages.success(request, "Ajuste de ponto autorizado.")
     return redirect("apontamento:ajustes_nao_autorizados")
 
 def autoriza_todos_ajustes(request):
@@ -684,7 +711,25 @@ def autoriza_todos_ajustes(request):
     pontos = Ponto.objects.get_ajustes_nao_autorizados()
     for ponto in pontos:
         ponto_obj = Ponto.objects.get(id=ponto.id)
-        ponto_obj.ajuste_autorizado = True
+        ponto_obj.status_ajuste = 1
         ponto_obj.save()
-    messages.info(request, "Todos os ajustes de ponto foram autorizados.")
+    messages.success(request, "Todos os ajustes de ponto foram autorizados.")
+    return redirect("apontamento:ajustes_nao_autorizados")
+
+def recusa_ajuste(request, pk):
+    """Recusa ajuste de ponto"""
+    ponto = get_object_or_404(Ponto, pk=pk)
+    ponto.status_ajuste = 2
+    ponto.save()
+    messages.error(request, "Ajuste de ponto recusado.")
+    return redirect("apontamento:ajustes_nao_autorizados")
+
+def recusa_todos_ajustes(request):
+    """Recusa todos os ajustes de ponto"""
+    pontos = Ponto.objects.get_ajustes_nao_autorizados()
+    for ponto in pontos:
+        ponto_obj = Ponto.objects.get(id=ponto.id)
+        ponto_obj.status_ajuste = 2
+        ponto_obj.save()
+    messages.error(request, "Todos os ajustes de ponto foram recusados.")
     return redirect("apontamento:ajustes_nao_autorizados")
