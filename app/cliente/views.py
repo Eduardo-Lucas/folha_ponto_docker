@@ -65,9 +65,9 @@ class ClienteListView(LoginRequiredMixin, ListView):
         if query:
             object_list = Cliente.objects.filter(
                 Q(nomerazao__icontains=query) | Q(codigosistema__icontains=query)
-            ).order_by("codigosistema", "nomerazao", )
+            ).order_by("nomerazao", )
         else:
-            object_list = Cliente.objects.all().order_by("codigosistema", "nomerazao", )
+            object_list = Cliente.objects.all().order_by("nomerazao", )
         return object_list
 
     def get_context_data(self, **kwargs):

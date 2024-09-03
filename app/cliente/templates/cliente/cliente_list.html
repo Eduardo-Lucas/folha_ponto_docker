@@ -31,7 +31,7 @@
 
                             <th class="align-middle">Código</th>
                             <th class="align-middle">Razão Social</th>
-                            <th class="align-middle">Status</th>
+                            <th class="align-middle text-center">Status</th>
 
                             <th class="align-middle text-center">Opções</th>
 
@@ -45,9 +45,13 @@
                             <td class="align-middle">{{cliente.nomerazao}}</td>
 
                             {% if cliente.situacaoentidade == 1 %}
-                                <td class="align-middle">Ativo</td>
+                                <td class="align-middle text-center">
+                                    <strong>Ativo</strong>
+                                </td>
                             {% else %}
-                                <td class="align-middle">Inativo</td>
+                                <td class="align-middle text-center text-danger">
+                                    <strong>Inativo</strong>
+                                </td>
                             {% endif %}
 
                             <td class="text-center">
