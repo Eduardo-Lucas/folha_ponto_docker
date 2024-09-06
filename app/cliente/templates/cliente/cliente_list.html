@@ -5,18 +5,32 @@
 <div class="container border border-dark">
     <div class="row border-bottom border-dark align-middle">
 
-        <div class="col-md-4 align-middle">
+        <div class="col-md-3 align-middle">
             <h3 class="text-info">Lista de Clientes</h3>
         </div>
 
-        <div class="col-md-4 mt-1 mb-1 ui-widget">
+        <div class="col-md-2 mt-1 mb-1 ui-widget">
             <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Pesquisa Cliente" required>
         </div>
 
-        <div class="col-md-4 mt-1 mb-1">
+        <div class="col-md-3 mt-1 mb-1">
             <a href="{% url 'cliente:cliente_insert' %}" class="btn btn-success">
                 <i class="fas fa-plus"></i>
                 Adicionar Novo Cliente
+            </a>
+        </div>
+
+        <div class="col-md-2 mt-1 mb-1">
+            <a href="{% url 'cliente:cliente_list' %}" class="btn btn-outline-primary">
+                <i class="fas fa-square-check"></i>
+                Ativos
+            </a>
+        </div>
+
+        <div class="col-md-2 mt-1 mb-1">
+            <a href="{% url 'cliente:cliente_list_inativo' %}" class="btn btn-outline-danger">
+                <i class="fas fa-square"></i>
+                Inativos
             </a>
         </div>
 
@@ -29,7 +43,7 @@
                         <tr>
 
 
-                            <th class="align-middle">Código</th>
+                            <th class="align-middle text-center">Código</th>
                             <th class="align-middle">Razão Social</th>
                             <th class="align-middle text-center">Status</th>
 
@@ -41,7 +55,7 @@
                         {% for cliente in clientes %}
                         <tr>
 
-                            <td class="align-middle">{{cliente.codigosistema}}</td>
+                            <td class="align-middle text-center">{{cliente.get_codigosistema_formatado}}</td>
                             <td class="align-middle">{{cliente.nomerazao}}</td>
 
                             {% if cliente.situacaoentidade == 1 %}
@@ -59,6 +73,12 @@
                                     id="edit-button">
                                     <i class="fas fa-edit"></i>
                                     Editar</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-primary btn-sm"
+                                    id="edit-button">
+                                    <i class="fas fa-edit"></i>
+                                    </a>
                             </td>
 
                         </tr>

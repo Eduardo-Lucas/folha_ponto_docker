@@ -54,6 +54,7 @@ class ClienteCreateView(LoginRequiredMixin, CreateView):
         return context
 
 class ClienteListView(LoginRequiredMixin, ListView):
+    """ Lista de Cliente Ativo"""
 
     model = Cliente
     template_name = "cliente/cliente_list.html"
@@ -61,13 +62,7 @@ class ClienteListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        query = self.request.GET.get("q")
-        if query:
-            object_list = Cliente.objects.filter(
-                Q(nomerazao__icontains=query) | Q(codigosistema__icontains=query)
-            ).order_by("nomerazao", )
-        else:
-            object_list = Cliente.objects.all().order_by("nomerazao", )
+        object_list = Cliente.objects.cliente_ativo().order_by("nomerazao", )
         return object_list
 
     def get_context_data(self, **kwargs):
@@ -75,6 +70,24 @@ class ClienteListView(LoginRequiredMixin, ListView):
         context["title"] = "Clientes"
         return context
 
+
+
+class ClienteInativoListView(LoginRequiredMixin, ListView):
+    """ Lista de Cliente Inativo"""
+
+    model = Cliente
+    template_name = "cliente/cliente_list.html"
+    context_object_name = "clientes"
+    paginate_by = 10
+
+    def get_queryset(self):
+        object_list = Cliente.objects.cliente_inativo().order_by("nomerazao", )
+        return object_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Clientes"
+        return context
 
 class ClienteUpdateView(LoginRequiredMixin, UpdateView):
     model = Cliente

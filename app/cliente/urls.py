@@ -15,6 +15,9 @@ urlpatterns = [
         "cliente-list/", views.ClienteListView.as_view(), name="cliente_list",
     ),
     path(
+        "cliente-list-inativo/", views.ClienteInativoListView.as_view(), name="cliente_list_inativo",
+    ),
+    path(
         "cliente-update/<int:pk>/", views.ClienteUpdateView.as_view(), name="cliente_update",
     ),
     path(

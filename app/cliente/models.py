@@ -8,6 +8,11 @@ class ClienteManager(models.Manager):
         """Queryset definition for Cliente."""
         return super().get_queryset().filter(situacaoentidade=1)
 
+    def cliente_inativo(self):
+        """Queryset definition for Cliente."""
+        # situacaoentidade not in 1
+        return super().get_queryset().exclude(situacaoentidade=1)
+
     def get_queryset(self):
         """Queryset definition for Cliente."""
         return super().get_queryset().all()
@@ -90,6 +95,13 @@ class Cliente(models.Model):
         if self.codigosistema is not None:
             return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
         return self.nomerazao
+
+    def get_codigosistema_formatado(self):
+        if self.codigosistema:
+            return self.codigosistema.zfill(4)
+        else:
+            return "-"
+
 
     class Meta:
         """Meta definition for Cliente."""
