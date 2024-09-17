@@ -21,10 +21,10 @@ urlpatterns = [
         "cliente-update/<int:pk>/", views.ClienteUpdateView.as_view(), name="cliente_update",
     ),
     path(
-        "cliente-tipo-senha-insert/", views.ClienteTipoSenhaCreateView.as_view(), name="cliente_tipo_senha_insert",
+        "cliente-tipo-senha-insert/<int:cliente_id>/", views.ClienteTipoSenhaCreateView.as_view(), name="cliente_tipo_senha_insert",
     ),
     path(
-        "cliente-tipo-senha-list/", views.ClienteTipoSenhaListView.as_view(), name="cliente_tipo_senha_list",
+        "cliente-tipo-senha-list/<int:cliente_id>/", views.ClienteTipoSenhaListView.as_view(), name="cliente_tipo_senha_list",
     ),
     path(
         "cliente-tipo-senha-update/<int:pk>/", views.ClienteTipoSenhaUpdateView.as_view(), name="cliente_tipo_senha_update",

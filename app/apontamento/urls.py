@@ -14,6 +14,7 @@ from .views import (
     apontamento_list,
     autoriza_ajuste,
     autoriza_todos_ajustes,
+    consulta_por_user_cliente_tarefa,
     recusa_ajuste,
     recusa_todos_ajustes,
     fecha_tarefa,
@@ -131,5 +132,10 @@ urlpatterns = [
         "recusa_todos_ajustes/",
         recusa_todos_ajustes,
         name="recusa_todos_ajustes",
+    ),
+    path(
+        "consulta_por_user_cliente_tarefa/",
+        consulta_por_user_cliente_tarefa,
+        name="consulta_por_user_cliente_tarefa",
     ),
 ]

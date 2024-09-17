@@ -20,17 +20,15 @@
             </a>
         </div>
 
-        <div class="col-md-2 mt-1 mb-1">
+        <div class="col-md-4 mt-1 mb-1">
             <a href="{% url 'cliente:cliente_list' %}" class="btn btn-outline-primary">
                 <i class="fas fa-square-check"></i>
-                Ativos
+                Ativado
             </a>
-        </div>
 
-        <div class="col-md-2 mt-1 mb-1">
             <a href="{% url 'cliente:cliente_list_inativo' %}" class="btn btn-outline-danger">
                 <i class="fas fa-square"></i>
-                Inativos
+                Desativado
             </a>
         </div>
 
@@ -47,7 +45,7 @@
                             <th class="align-middle">Razão Social</th>
                             <th class="align-middle text-center">Status</th>
 
-                            <th class="align-middle text-center">Opções</th>
+                            <th class="align-middle text-center" colspan="2">Opções</th>
 
                         </tr>
                     </thead>
@@ -60,11 +58,11 @@
 
                             {% if cliente.situacaoentidade == 1 %}
                                 <td class="align-middle text-center">
-                                    <strong>Ativo</strong>
+                                    <strong>Ativado</strong>
                                 </td>
                             {% else %}
                                 <td class="align-middle text-center text-danger">
-                                    <strong>Inativo</strong>
+                                    <strong>Desativado</strong>
                                 </td>
                             {% endif %}
 
@@ -75,9 +73,9 @@
                                     Editar</a>
                             </td>
                             <td class="text-center">
-                                <a href="#" class="btn btn-primary btn-sm"
+                                <a href="{% url 'cliente:cliente_tipo_senha_list' cliente.id %}" class="btn btn-warning btn-sm"
                                     id="edit-button">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-lock"></i>
                                     </a>
                             </td>
 

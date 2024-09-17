@@ -1,7 +1,10 @@
 from datetime import datetime, time, timedelta
 
+from utils.last_day_of_month import get_last_day_of_month
 from cliente.models import Cliente
 from django.contrib.auth.models import User
+from django.db.models import Count, Sum, F
+from django.db.models.functions import TruncMonth
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.urls import reverse
@@ -93,6 +96,25 @@ class PontoManager(models.Manager):
         end = datetime.combine(day, time.max)
         return self.filter(entrada__range=(start, end),
                            usuario=user,
+        )
+
+    def for_month_resumo_cliente_tarefa(self, start_date=None, end_date=None, user=None, cliente=None, tarefa=None):
+        """
+        Returns all Ponto objects for a given day and user.
+        Esse método funciona para o resumo (folha-ponto)
+        """
+        if start_date is None or end_date is None:
+            # first day or the current date
+            start_date = datetime.now().date().replace(day=1)
+            # last day of the current month
+            end_date = get_last_day_of_month(datetime.now().date())
+
+        # start should the day itself and the day before
+        start_date = datetime.combine(start_date, time.min)  # - timedelta(days=1)
+        # start = datetime.combine(day, time.min)
+        end_date = datetime.combine(end_date, time.max)
+        return self.filter(entrada__range=(start_date, end_date),
+                           usuario=user, cliente_id=cliente, tipo_receita=tarefa,
         )
 
     def for_day_unauthorized(self, day=None, user=None):
@@ -305,6 +327,74 @@ class PontoManager(models.Manager):
 
         return total_hours
 
+
+
+    def get_total_hours_by_month_by_user_cliente_tarefa(self, start, end, user, cliente, tarefa):
+        """
+        Returns a list of dictionaries with day and the total hours, summarized by day worked for a given range of days and user.
+        Using the format {day: date, total_hours: total_hours}.
+        """
+        total_hours = []
+        credor = timedelta(hours=0)
+        devedor = timedelta(hours=0)
+
+        # turn start in datetime object
+        start = datetime.strptime(start, "%Y-%m-%d")
+        # turn end in datetime object
+        end = datetime.strptime(end, "%Y-%m-%d")
+
+        for month in range((end - start).days + 1):
+            day = start + timedelta(days=day)
+            horas_trabalhadas = self.for_month_resumo_cliente_tarefa(day, user, cliente, tarefa)
+
+            feriado = Feriado.objects.is_holiday(
+                year=day.year, month=day.month, day=day.day
+            )
+
+            try:
+                ferias = Ferias.objects.get_ferias(
+                    data_inicial=day.date(),
+                    data_final=day.date(),
+                    user=user,
+                )
+            except ObjectDoesNotExist:
+                ferias = "Não"
+
+            if day.weekday() >= 5:
+                carga_horaria = timedelta(hours=0)
+            elif feriado:
+                carga_horaria = timedelta(hours=0)
+            elif ferias == "Sim":
+                carga_horaria = timedelta(hours=0)
+            else:
+                user_carga_horaria = self.get_carga_horaria(user)
+                carga_horaria = timedelta(hours=user_carga_horaria)
+
+            if horas_trabalhadas > carga_horaria:
+                credor = horas_trabalhadas - carga_horaria
+                devedor = timedelta(hours=0)
+            elif horas_trabalhadas <= carga_horaria:
+                credor = timedelta(hours=0)
+                devedor = carga_horaria - horas_trabalhadas
+
+            total_hours.append(
+                {
+                    "month": month,
+                    "user": user,
+                    "username": User.objects.filter(username=user).first().username,
+                    "total_hours": horas_trabalhadas,
+                    "atrasado": self.get_status_atrasado(day, user),
+                    "feriado": feriado,
+                    "ferias": ferias,
+                    "credor": credor,
+                    "devedor": devedor,
+                }
+            )
+
+        return total_hours
+
+
+
     def get_status_atrasado(self, day=None, user=None):
         """get the first entrada of the day and if it is later than 9:15, it is considered late"""
         if day is None:
@@ -442,6 +532,9 @@ class PontoManager(models.Manager):
     def get_automatically_closed_tasks(self):
         """Automatically close tasks are those with saida = 23:59:59"""
         return self.filter(entrada__year__gte=2024, saida__time=time(23, 59, 59))
+
+
+
 
 class Ponto(models.Model):
     """

@@ -108,6 +108,12 @@ class ClienteTipoSenhaListView(LoginRequiredMixin, ListView):
     context_object_name = "clientetiposenhas"
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Itens de Segurança"
+        context["cliente_id"] = self.kwargs.get("cliente_id")
+        return context
+
     def get_queryset(self):
         query = self.request.GET.get("q")
         if query:
@@ -115,18 +121,22 @@ class ClienteTipoSenhaListView(LoginRequiredMixin, ListView):
                 Q(cliente__nomerazao__icontains=query)
             ).order_by("cliente__nomerazao")
         else:
-            object_list = ClienteTipoSenha.objects.all().order_by("cliente__nomerazao")
+            # filter by cliente_id
+            object_list = ClienteTipoSenha.objects.filter(id=self.kwargs.get("cliente_id")).order_by("cliente__nomerazao")
+
         return object_list
 
 class ClienteTipoSenhaCreateView(LoginRequiredMixin, CreateView):
     model = ClienteTipoSenha
     form_class = ClienteTipoSenhaForm
     template_name = "cliente/clientetiposenha_form.html"
+    context_object_name = "clientetiposenha"
     success_url = reverse_lazy("cliente:cliente_tipo_senha_list")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Novo Item de Segurança"
+        context["cliente_id"] = self.kwargs.get("cliente_id")
         return context
 
 class ClienteTipoSenhaUpdateView(LoginRequiredMixin, UpdateView):

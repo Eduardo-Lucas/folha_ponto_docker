@@ -7,7 +7,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from user.models import UserProfile
-
+from cliente.models import Cliente
 from .models import Ponto, TipoReceita
 
 
@@ -43,6 +43,54 @@ class FolhaPontoForm(forms.Form):
         queryset=User.objects.filter(
             is_active=True, userprofile__bateponto="Sim"
         ).order_by("username"),
+        required=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        # Get the user from the kwargs
+        self.user = kwargs.pop("user", None)
+        super(FolhaPontoForm, self).__init__(*args, **kwargs)
+        # Get the current date
+        now = datetime.now()
+        # Get the first day of the current month
+        first_day = now.replace(day=1).strftime("%Y-%m-%d")
+        # Set the initial value of the entrada field
+        self.fields["entrada"].initial = first_day
+
+        # Get the last day of the current month
+        # last_day = self.get_last_day_month(now.year, now.month)
+        # Set the initial value of the saida field
+        self.fields["saida"].initial = now.strftime("%Y-%m-%d")
+
+        # Set the initial value of the usuario field
+        if self.user is not None:
+            self.fields["usuario"].initial = self.user
+
+
+class ConsultaClienteTarefaForm(forms.Form):
+    """Consulta por usuário, cliente e tarefa."""
+
+    def get_last_day_month(self, year, month):
+        """Return the last day of a month."""
+        _, last_day = monthrange(year, month)
+        return last_day
+
+    entrada = forms.DateField(widget=DateInput, label="Início", required=True)
+    saida = forms.DateField(widget=DateInput, label="Fim", required=True)
+    usuario = forms.ModelChoiceField(
+        queryset=User.objects.filter(
+            is_active=True, userprofile__bateponto="Sim"
+        ).order_by("username"),
+        required=True,
+    )
+
+    cliente = forms.ModelChoiceField(
+        queryset=Cliente.objects.cliente_ativo().order_by("nomerazao"),
+        required=True,
+    )
+
+    tarefa = forms.ModelChoiceField(
+        queryset=TipoReceita.objects.filter(status="Ativo").order_by("descricao"),
         required=True,
     )
 
