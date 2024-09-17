@@ -45,6 +45,11 @@ class ClienteCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
+
+        # check if codigosistema has length 4 and the first character is a zero, cut it off
+        if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
+            form.instance.codigosistema = form.instance.codigosistema[1:]
+
         form.instance.id = Cliente.objects.last().id + 1
         return super().form_valid(form)
 
