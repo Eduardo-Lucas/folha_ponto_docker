@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm
+from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm, ConsultaClienteTarefaForm
 from apontamento.models import Ponto
 from cliente.models import Cliente
 from django.contrib import messages
@@ -394,52 +394,38 @@ def folha_ponto(request):
 @login_required
 def consulta_por_user_cliente_tarefa(request):
     """Retorna o total de horas trabalhadas em um intervalo de datas"""
-    form = FolhaPontoForm(user=request.user)
+    form = ConsultaClienteTarefaForm(request.GET or None)
+    query = None
+
+    if request.method == "GET" and form.is_valid():
+        data_inicial = form.cleaned_data["entrada"]
+        data_final = form.cleaned_data["saida"]
+        usuario = form.cleaned_data["usuario"]
+        cliente = form.cleaned_data["cliente"]
+        tarefa = form.cleaned_data["tarefa"]
+
+        if data_inicial > data_final:
+            messages.error(request, "Data inicial não pode ser maior que data final")
+
+        query = Ponto.objects.filter(
+            entrada__gte=data_inicial,
+            saida__lte=data_final,
+            usuario=usuario,
+            cliente_id=cliente,
+            tipo_receita_id=tarefa,
+        )
+
+
     context = {
         "form": form,
+        "query": query,
     }
-    if request.method == "POST":
-        form = FolhaPontoForm(request.POST)
-        if form.is_valid():
-            data_inicial = form.cleaned_data["entrada"]
-            data_final = form.cleaned_data["saida"]
-            usuario = form.cleaned_data["usuario"]
-            cliente = form.cleaned_data["cliente"]
-            tarefa = form.cleaned_data["tarefa"]
 
-            if data_inicial > data_final:
-                messages.error(
-                    request, "Data inicial não pode ser maior que data final"
-                )
+    return render(request, "apontamento/consulta_por_user_cliente_tarefa.html", context)
 
-        query = Ponto.objects.get_total_hours_by_month_by_user_cliente_tarefa(
-            start=data_inicial, end=data_final, user=usuario, cliente=cliente, tarefa=tarefa
-        )
 
-        dict_total_credor_devedor = Ponto.objects.get_credor_devedor(
-            start=data_inicial, end=data_final, user=usuario, cliente=cliente, tarefa=tarefa
-        )
 
-        total_credor = dict_total_credor_devedor["total_credor"]
-        total_devedor = dict_total_credor_devedor["total_devedor"]
-        saldo = (
-            total_credor - total_devedor
-            if total_credor > total_devedor
-            else total_devedor - total_credor
-        )
 
-        context = {
-            "form": form,
-            "query": query,
-            "total_trabalhado": Ponto.objects.total_range_days_time(
-                data_inicial, data_final, usuario, cliente, tarefa
-            ),
-            "total_credor": total_credor,
-            "total_devedor": total_devedor,
-            "saldo": saldo,
-            "usuario_id": usuario.id,
-        }
-    return render(request, "apontamento/folha-ponto.html", context)
 
 
 @login_required

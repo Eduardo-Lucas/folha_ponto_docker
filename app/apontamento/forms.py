@@ -97,7 +97,7 @@ class ConsultaClienteTarefaForm(forms.Form):
     def __init__(self, *args, **kwargs):
         # Get the user from the kwargs
         self.user = kwargs.pop("user", None)
-        super(FolhaPontoForm, self).__init__(*args, **kwargs)
+        super(ConsultaClienteTarefaForm, self).__init__(*args, **kwargs)
         # Get the current date
         now = datetime.now()
         # Get the first day of the current month
@@ -111,8 +111,9 @@ class ConsultaClienteTarefaForm(forms.Form):
         self.fields["saida"].initial = now.strftime("%Y-%m-%d")
 
         # Set the initial value of the usuario field
-        if self.user is not None:
+        if self.user:
             self.fields["usuario"].initial = self.user
+
 
 
 class AppointmentForm(forms.ModelForm):

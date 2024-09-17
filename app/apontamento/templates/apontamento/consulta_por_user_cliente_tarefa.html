@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load timedelta_filters %}
+
+{% block content %}
+<form method="GET" class="row gx-3 gy-2 align-items-center mt-5">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-2">{{ form.entrada|as_crispy_field }}</div>
+        <div class="col-md-2">{{ form.saida|as_crispy_field }}</div>
+        <div class="col-md-2">{{ form.usuario|as_crispy_field }}</div>
+        <div class="col-md-2">{{ form.cliente|as_crispy_field }}</div>
+        <div class="col-md-2">{{ form.tarefa|as_crispy_field }}</div>
+
+
+        <div class="col-md-3 d-flex flex-column justify-content-center">
+            <button type=" submit" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-search"></i> Consultar
+            </button>
+
+            <a href="{% url 'apontamento:consulta_por_user_cliente_tarefa' %}" class="btn btn-primary btn-sm"
+                style="border: 1px solid white;">
+                <i class="fa-solid fa-arrows-rotate"></i> Limpar
+            </a>
+        </div>
+
+    </div>
+</form>
+
+
+    <table class="table table-striped table-bordered table-hover table-sm mt-3">
+        <thead >
+            <tr>
+                <th class="text-center">Data Inicial</th>
+                <th class="text-center">Data Final</th>
+                <th class="text-center">Usuário</th>
+                <th class="text-center">Cliente</th>
+                <th class="text-center">Tipo Receita</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ponto in query %}
+            <tr>
+                <td class="text-center">{{ ponto.entrada }}</td>
+                <td class="text-center">{{ ponto.saida }}</td>
+                <td class="text-center">{{ ponto.usuario }}</td>
+                <td class="text-center">{{ ponto.cliente_id }}</td>
+                <td class="text-center">{{ ponto.tipo_receita }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
