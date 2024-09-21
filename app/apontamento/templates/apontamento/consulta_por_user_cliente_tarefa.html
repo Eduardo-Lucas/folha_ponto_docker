@@ -10,10 +10,11 @@
         <div class="col-md-2">{{ form.entrada|as_crispy_field }}</div>
         <div class="col-md-2">{{ form.saida|as_crispy_field }}</div>
         <div class="col-md-2">{{ form.usuario|as_crispy_field }}</div>
-        <div class="col-md-2">{{ form.cliente|as_crispy_field }}</div>
+        <div class="col-md-4">{{ form.cliente|as_crispy_field }}</div>
         <div class="col-md-2">{{ form.tarefa|as_crispy_field }}</div>
 
-
+    </div>
+    <div class="row">
         <div class="col-md-3 d-flex flex-column justify-content-center">
             <button type=" submit" class="btn btn-primary btn-sm">
             <i class="fa-solid fa-search"></i> Consultar
@@ -34,7 +35,7 @@
             <tr>
                 <th class="text-center">Data Inicial</th>
                 <th class="text-center">Data Final</th>
-                <th class="text-center">Usuário</th>
+                <th class="text-center">Diferença</th>
                 <th class="text-center">Cliente</th>
                 <th class="text-center">Tipo Receita</th>
             </tr>
@@ -42,13 +43,18 @@
         <tbody>
             {% for ponto in query %}
             <tr>
-                <td class="text-center">{{ ponto.entrada }}</td>
-                <td class="text-center">{{ ponto.saida }}</td>
-                <td class="text-center">{{ ponto.usuario }}</td>
+                <td class="text-center">{{ ponto.entrada|date:"d/m/Y h:i:s" }}</td>
+                <td class="text-center">{{ ponto.saida|date:"d/m/Y h:i:s" }}</td>
+                <td class="text-center">{{ ponto.difference }}</td>
                 <td class="text-center">{{ ponto.cliente_id }}</td>
                 <td class="text-center">{{ ponto.tipo_receita }}</td>
             </tr>
             {% endfor %}
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" class="fw-bolder text-end">Total ==> </td>
+                <td class="fw-bolder text-center">{{ total_trabalhado|format_timedelta }}</td>
+            </tr>
     </table>
 {% endblock %}

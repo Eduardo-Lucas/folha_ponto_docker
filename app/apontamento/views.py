@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Max
+
+from django.db.models import DurationField, F, Max, Sum
 from django.db.models.base import Model
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
@@ -415,10 +416,15 @@ def consulta_por_user_cliente_tarefa(request):
             tipo_receita_id=tarefa,
         )
 
+        # sum the total of hours worked inside query variable
+        hours_total = query.aggregate(
+            total=Sum(F("saida") - F("entrada"), output_field=DurationField())
+        )["total"]
 
     context = {
         "form": form,
         "query": query,
+        "total_trabalhado": hours_total if query else "00:00:00",
     }
 
     return render(request, "apontamento/consulta_por_user_cliente_tarefa.html", context)
