@@ -114,6 +114,12 @@ class ConsultaClienteTarefaForm(forms.Form):
         if self.user:
             self.fields["usuario"].initial = self.user
 
+        # cliente is not  required
+        self.fields["cliente"].required = False
+
+        # tarefa is not  required
+        self.fields["tarefa"].required = False
+
 
 
 class AppointmentForm(forms.ModelForm):

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any
 
 from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm, ConsultaClienteTarefaForm
-from apontamento.models import Ponto
+from apontamento.models import Ponto, TipoReceita
 from cliente.models import Cliente
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -408,12 +408,23 @@ def consulta_por_user_cliente_tarefa(request):
         if data_inicial > data_final:
             messages.error(request, "Data inicial não pode ser maior que data final")
 
-        query = Ponto.objects.filter(
-            entrada__gte=data_inicial,
-            saida__lte=data_final,
-            usuario=usuario,
-            cliente_id=cliente,
-            tipo_receita_id=tarefa,
+
+        # if cliente is not None, get the id from the text
+        if cliente:
+            if "|" in cliente:
+                cliente = Cliente.objects.filter(
+                    codigosistema=int(cliente.split("|")[0]),
+                    nomerazao=cliente.split("|")[1],).first()
+            else:
+                cliente = Cliente.objects.filter(nomerazao=cliente).first()
+
+
+        query = Ponto.objects.get_total_hours_by_month_by_user_cliente_tarefa(
+            user=usuario,
+            cliente=cliente,
+            tarefa=tarefa,
+            start=data_inicial,
+            end=data_final,
         )
 
         # sum the total of hours worked inside query variable

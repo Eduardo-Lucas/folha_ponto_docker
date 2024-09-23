@@ -329,69 +329,31 @@ class PontoManager(models.Manager):
 
 
 
-    def get_total_hours_by_month_by_user_cliente_tarefa(self, start, end, user, cliente, tarefa):
+    def get_total_hours_by_month_by_user_cliente_tarefa(self, start, end, user, cliente=None, tarefa=None):
         """
-        Returns a list of dictionaries with day and the total hours, summarized by day worked for a given range of days and user.
-        Using the format {day: date, total_hours: total_hours}.
+        Returns a query with the worked hours by the user, cliente and tarefa.
         """
-        total_hours = []
-        credor = timedelta(hours=0)
-        devedor = timedelta(hours=0)
+
 
         # turn start in datetime object
-        start = datetime.strptime(start, "%Y-%m-%d")
+        #start = datetime.strptime(start, "%Y-%m-%d")
         # turn end in datetime object
-        end = datetime.strptime(end, "%Y-%m-%d")
+        # end = datetime.strptime(end, "%Y-%m-%d")
 
-        for month in range((end - start).days + 1):
-            day = start + timedelta(days=day)
-            horas_trabalhadas = self.for_month_resumo_cliente_tarefa(day, user, cliente, tarefa)
+        query = Ponto.objects.filter(
+            entrada__gte=start,
+            saida__lte=end,
+            usuario=user,
+        )
 
-            feriado = Feriado.objects.is_holiday(
-                year=day.year, month=day.month, day=day.day
-            )
+        if cliente:
+            query = query.filter(cliente_id=cliente)
 
-            try:
-                ferias = Ferias.objects.get_ferias(
-                    data_inicial=day.date(),
-                    data_final=day.date(),
-                    user=user,
-                )
-            except ObjectDoesNotExist:
-                ferias = "Não"
+        if tarefa:
+            query = query.filter(tipo_receita=tarefa)
 
-            if day.weekday() >= 5:
-                carga_horaria = timedelta(hours=0)
-            elif feriado:
-                carga_horaria = timedelta(hours=0)
-            elif ferias == "Sim":
-                carga_horaria = timedelta(hours=0)
-            else:
-                user_carga_horaria = self.get_carga_horaria(user)
-                carga_horaria = timedelta(hours=user_carga_horaria)
 
-            if horas_trabalhadas > carga_horaria:
-                credor = horas_trabalhadas - carga_horaria
-                devedor = timedelta(hours=0)
-            elif horas_trabalhadas <= carga_horaria:
-                credor = timedelta(hours=0)
-                devedor = carga_horaria - horas_trabalhadas
-
-            total_hours.append(
-                {
-                    "month": month,
-                    "user": user,
-                    "username": User.objects.filter(username=user).first().username,
-                    "total_hours": horas_trabalhadas,
-                    "atrasado": self.get_status_atrasado(day, user),
-                    "feriado": feriado,
-                    "ferias": ferias,
-                    "credor": credor,
-                    "devedor": devedor,
-                }
-            )
-
-        return total_hours
+        return query
 
 
 

@@ -10,7 +10,12 @@
         <div class="col-md-2">{{ form.entrada|as_crispy_field }}</div>
         <div class="col-md-2">{{ form.saida|as_crispy_field }}</div>
         <div class="col-md-2">{{ form.usuario|as_crispy_field }}</div>
-        <div class="col-md-4">{{ form.cliente|as_crispy_field }}</div>
+
+        <div class="col-md-4 mt-1 mb-1 ui-widget">
+            <label for="cliente">Cliente</label><br>
+            <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Cliente">
+        </div>
+
         <div class="col-md-2">{{ form.tarefa|as_crispy_field }}</div>
 
     </div>
@@ -28,6 +33,8 @@
 
     </div>
 </form>
+
+
 
 
     <table class="table table-striped table-bordered table-hover table-sm mt-3">
@@ -57,4 +64,13 @@
                 <td class="fw-bolder text-center">{{ total_trabalhado|format_timedelta }}</td>
             </tr>
     </table>
+
+    <script>
+        $(function () {
+            $("#cliente").autocomplete({
+                source: "{% url 'cliente:cliente_autocomplete' %}",
+                minLength: 2,
+            });
+        });
+    </script>
 {% endblock %}
