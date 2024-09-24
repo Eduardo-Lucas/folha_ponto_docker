@@ -410,18 +410,16 @@ def consulta_por_user_cliente_tarefa(request):
 
 
         # if cliente is not None, get the id from the text
-        if cliente:
-            if "|" in cliente:
-                cliente = Cliente.objects.filter(
-                    codigosistema=int(cliente.split("|")[0]),
-                    nomerazao=cliente.split("|")[1],).first()
-            else:
-                cliente = Cliente.objects.filter(nomerazao=cliente).first()
-
+        if cliente != "":
+            cliente = Cliente.objects.filter(
+                codigosistema=int(cliente.split("|")[0]),
+                nomerazao=cliente.split("|")[1]).first()
+        else:
+            cliente = Cliente.objects.filter(nomerazao=cliente).first()
 
         query = Ponto.objects.get_total_hours_by_month_by_user_cliente_tarefa(
             user=usuario,
-            cliente=cliente,
+            cliente=cliente if cliente else None,
             tarefa=tarefa,
             start=data_inicial,
             end=data_final,
@@ -431,6 +429,10 @@ def consulta_por_user_cliente_tarefa(request):
         hours_total = query.aggregate(
             total=Sum(F("saida") - F("entrada"), output_field=DurationField())
         )["total"]
+
+        paginator = Paginator(query, 10)
+        page_number = request.GET.get("page")
+        query = paginator.get_page(page_number)
 
     context = {
         "form": form,

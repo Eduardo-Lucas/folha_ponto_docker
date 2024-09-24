@@ -84,10 +84,7 @@ class ConsultaClienteTarefaForm(forms.Form):
         required=True,
     )
 
-    cliente = forms.ModelChoiceField(
-        queryset=Cliente.objects.cliente_ativo().order_by("nomerazao"),
-        required=True,
-    )
+    cliente = forms.CharField(max_length=200, required=False)
 
     tarefa = forms.ModelChoiceField(
         queryset=TipoReceita.objects.filter(status="Ativo").order_by("descricao"),
