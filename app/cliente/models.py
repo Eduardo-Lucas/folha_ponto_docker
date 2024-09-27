@@ -91,6 +91,12 @@ class Cliente(models.Model):
 
     objects = ClienteManager()
 
+
+    def save(self, *args, **kwargs):
+        # take the max id and add 1
+        self.id = Cliente.objects.all().aggregate(models.Max("id"))["id__max"] + 1
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         if self.codigosistema is not None:
             return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)

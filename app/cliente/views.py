@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 from .models import Cliente, ClienteTipoSenha
 from .forms import ClienteForm, ClienteTipoSenhaForm
 
+from django.db.models import Max
+
 
 def cliente_autocomplete(request):
     """Autocomplete for cliente"""
@@ -46,11 +48,16 @@ class ClienteCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.usuario = self.request.user
 
+        # check if codigosistema already exists
+        if form.instance.codigosistema:
+            if Cliente.objects.filter(codigosistema=form.instance.codigosistema).exists():
+                form.add_error("codigosistema", "Código já existe.")
+                return self.form_invalid(form)
+
         # check if codigosistema has length 4 and the first character is a zero, cut it off
         if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
             form.instance.codigosistema = form.instance.codigosistema[1:]
 
-        form.instance.id = Cliente.objects.last().id + 1
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
