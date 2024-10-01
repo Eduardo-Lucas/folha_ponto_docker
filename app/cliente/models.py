@@ -93,8 +93,9 @@ class Cliente(models.Model):
 
 
     def save(self, *args, **kwargs):
-        # take the max id and add 1
-        self.id = Cliente.objects.all().aggregate(models.Max("id"))["id__max"] + 1
+        # take the max id and add 1 only if it is a new record
+        if self.id is None:
+            self.id = Cliente.objects.all().aggregate(models.Max("id"))["id__max"] + 1
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
