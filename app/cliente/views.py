@@ -1,10 +1,11 @@
 import json
 
 from django.db.models import Q
+from django.forms import BaseModelForm
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from .models import Cliente, ClienteTipoSenha
 from .forms import ClienteForm, ClienteTipoSenhaForm
@@ -131,6 +132,10 @@ class ClienteTipoSenhaListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Itens de Segurança"
         context["cliente_id"] = self.kwargs.get("cliente_id")
+        try:
+            context["nomerazao"] = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
+        except Cliente.DoesNotExist:
+            context["nomerazao"] = None
         return context
 
     def get_queryset(self):
@@ -141,7 +146,7 @@ class ClienteTipoSenhaListView(LoginRequiredMixin, ListView):
             ).order_by("cliente__nomerazao")
         else:
             # filter by cliente_id
-            object_list = ClienteTipoSenha.objects.filter(id=self.kwargs.get("cliente_id")).order_by("cliente__nomerazao")
+            object_list = ClienteTipoSenha.objects.filter(cliente=self.kwargs.get("cliente_id")).order_by("cliente__nomerazao")
 
         return object_list
 
@@ -150,31 +155,54 @@ class ClienteTipoSenhaCreateView(LoginRequiredMixin, CreateView):
     form_class = ClienteTipoSenhaForm
     template_name = "cliente/clientetiposenha_form.html"
     context_object_name = "clientetiposenha"
-    success_url = reverse_lazy("cliente:cliente_tipo_senha_list")
+
+    def get_success_url(self):
+        return reverse_lazy("cliente:cliente_tipo_senha_list", kwargs={"cliente_id": self.kwargs.get("cliente_id")})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Novo Item de Segurança"
+        context["title"] = "Cadastrar Senha"
         context["cliente_id"] = self.kwargs.get("cliente_id")
+        context["nomerazao"] = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
         return context
+
+    def form_valid(self, form):
+        try:
+            form.instance.cliente = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
+            return super().form_valid(form)
+        except Cliente.DoesNotExist:
+            form.add_error(None, "Cliente não encontrado.")
+            return self.form_invalid(form)
+
+
 
 class ClienteTipoSenhaUpdateView(LoginRequiredMixin, UpdateView):
     model = ClienteTipoSenha
     form_class = ClienteTipoSenhaForm
     template_name = "cliente/clientetiposenha_form.html"
-    success_url = reverse_lazy("cliente:cliente_tipo_senha_list")
+
+    def get_success_url(self):
+        return reverse_lazy("cliente:cliente_tipo_senha_list", kwargs={"cliente_id": self.kwargs.get("cliente_id")})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Editar Item de Segurança"
+        context["title"] = "Editar Senha"
+        context["cliente_id"] = self.kwargs.get("cliente_id")
+        context["nomerazao"] = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
         return context
+
+
 
 class ClienteTipoSenhaDeleteView(LoginRequiredMixin, DeleteView):
     model = ClienteTipoSenha
     template_name = "cliente/clientetiposenha_confirm_delete.html"
-    success_url = reverse_lazy("cliente:cliente_tipo_senha_list")
+
+    def get_success_url(self):
+        return reverse_lazy("cliente:cliente_tipo_senha_list", kwargs={"cliente_id": self.kwargs.get("cliente_id")})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Excluir Item de Segurança"
+        context["cliente_id"] = self.kwargs.get("cliente_id")
+        context["nomerazao"] = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
         return context

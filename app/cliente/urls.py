@@ -27,9 +27,9 @@ urlpatterns = [
         "cliente-tipo-senha-list/<int:cliente_id>/", views.ClienteTipoSenhaListView.as_view(), name="cliente_tipo_senha_list",
     ),
     path(
-        "cliente-tipo-senha-update/<int:pk>/", views.ClienteTipoSenhaUpdateView.as_view(), name="cliente_tipo_senha_update",
+        "cliente-tipo-senha-update/<int:pk>/<int:cliente_id>", views.ClienteTipoSenhaUpdateView.as_view(), name="cliente_tipo_senha_update",
     ),
     path(
-        "cliente-tipo-senha-delete/<int:pk>/", views.ClienteTipoSenhaDeleteView.as_view(), name="cliente_tipo_senha_delete",
+        "cliente-tipo-senha-delete/<int:pk>/<int:cliente_id>", views.ClienteTipoSenhaDeleteView.as_view(), name="cliente_tipo_senha_delete",
     ),
 ]

@@ -5,22 +5,21 @@
 <div class="container border border-dark">
     <div class="row border-bottom border-dark align-middle">
 
-        <div class="col-md-4 align-middle">
-            <h3 class="text-info">Itens de Segurança</h3>
-        </div>
-
-        <div class="col-md-4 mt-1 mb-1 ui-widget">
-            <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Pesquisa Cliente" required>
-        </div>
-
-        <div class="col-md-4 mt-1 mb-1">
-            <a href="{% url 'cliente:cliente_tipo_senha_insert' clientetiposenha. %}" class="btn btn-success">
-                <i class="fas fa-plus"></i>
-                Adicionar Novo Item de Segurança
-            </a>
+        <div class="col-md-12 align-middle text-center">
+            <h4 class="text-info">Senhas do Cliente: {{nomerazao}}</h4>
         </div>
 
     </div>
+
+    <div class="row border-bottom border-dark align-middle text-center">
+        <div class="col-md-12 mt-1 mb-1">
+            <a href="{% url 'cliente:cliente_tipo_senha_insert' cliente_id %}" class="btn btn-success">
+                <i class="fas fa-plus"></i>
+                Novo Item de Segurança
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <table class="table-responsive">
@@ -28,7 +27,7 @@
                     <thead>
                         <tr>
 
-
+                            <th class="align-middle">id</th>
                             <th class="align-middle">Tipo de senha</th>
                             <th class="align-middle">Cliente</th>
                             <th class="align-middle">Login</th>
@@ -39,24 +38,24 @@
                         </tr>
                     </thead>
                     <tbody id="table">
-                        {% for cliente in clientetiposenhas %}
+                        {% for obj in object_list %}
                         <tr>
+                            <td class="align-middle">{{obj.id}}</td>
+                            <td class="align-middle">{{obj.tipo_senha}}</td>
+                            <td class="align-middle">{{obj.cliente}}</td>
 
-                            <td class="align-middle">{{cliente.tipo_senha}}</td>
-                            <td class="align-middle">{{cliente.cliente}}</td>
-
-                            <td class="align-middle">{{cliente.login}}</td>
-                            <td class="align-middle">{{cliente.senha}}</td>
-                            <td class="align-middle">{{cliente.informacao_adicional}}</td>
+                            <td class="align-middle">{{obj.login}}</td>
+                            <td class="align-middle">{{obj.senha}}</td>
+                            <td class="align-middle">{{obj.informacao_adicional}}</td>
 
 
                             <td class="text-center">
-                                <a href="{% url 'cliente:cliente_tipo_senha_update' cliente.id %}" class="btn btn-primary btn-sm"
+                                <a href="{% url 'cliente:cliente_tipo_senha_update' obj.id obj.cliente.id %}" class="btn btn-primary btn-sm"
                                     id="edit-button">
                                     <i class="fas fa-edit"></i>
                                     Editar
                                 </a>
-                                <a href="{% url 'cliente:cliente_tipo_senha_delete' cliente.id %}" class="btn btn-danger btn-sm"
+                                <a href="{% url 'cliente:cliente_tipo_senha_delete' obj.id obj.cliente.id %}" class="btn btn-danger btn-sm"
                                 id="delete-button">
                                 <i class="fas fa-trash"></i>
                                 Excluir</a>

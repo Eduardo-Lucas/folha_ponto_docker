@@ -41,7 +41,6 @@ class ClienteTipoSenhaForm(forms.ModelForm):
 
         labels = {
             'tipo_senha': 'Tipo de Senha',
-            'cliente': 'Cliente',
             'login': 'Login',
             'senha': 'Senha',
             'informacao_adicional': 'Informação Adicional',
@@ -49,7 +48,6 @@ class ClienteTipoSenhaForm(forms.ModelForm):
 
         help_texts = {
             'tipo_senha': 'Informe o tipo de senha associado ao cliente.',
-            'cliente': 'Informe o cliente associado a senha.',
             'login': 'Informe o login associado a senha.',
             'senha': 'Informe a senha associada ao cliente.',
             'informacao_adicional': 'Informe informações adicionais sobre a senha (Opcional).',

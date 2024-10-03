@@ -52,7 +52,6 @@
                     <tbody id="table">
                         {% for cliente in clientes %}
                         <tr>
-
                             <td class="align-middle text-center">{{cliente.get_codigosistema_formatado}}</td>
                             <td class="align-middle">{{cliente.nomerazao}}</td>
 
@@ -75,7 +74,7 @@
                             <td class="text-center">
                                 <a href="{% url 'cliente:cliente_tipo_senha_list' cliente.id %}" class="btn btn-warning btn-sm"
                                     id="edit-button">
-                                    <i class="fas fa-lock"></i>
+                                    <i class="fas fa-lock" data-toggle="tooltip" title="Senhas"></i>
                                     </a>
                             </td>
 
