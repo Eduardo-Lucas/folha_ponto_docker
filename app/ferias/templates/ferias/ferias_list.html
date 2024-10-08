@@ -52,7 +52,7 @@
                             {% endif %}
                             <td class="align-middle">{{ feria.data_inicial|date:"d/m/Y"}}</td>
                             <td class="align-middle">{{ feria.data_final|date:"d/m/Y" }}</td>
-                            <td class="align-middle text-center">{{ feria.dias_uteis }}</td>
+                            <td class="align-middle text-center">{{ feria.get_dias_uteis }}</td>
                             <td class="align-middle text-center">{{ feria.saldo_dias }}</td>
                             {% if user.is_superuser %}
                             <td class="text-center">

@@ -41,7 +41,7 @@ class FeriasManager(models.Manager):
             periodo=data_inicial.year, user=user, data_inicial__lt=data_inicial
         )
         # sum dias_uteis from query
-        dias_uteis = sum(ferias.dias_uteis for ferias in query)
+        dias_uteis = sum(ferias.get_dias_uteis for ferias in query)
         return dias_uteis
 
 
@@ -89,9 +89,18 @@ class Ferias(models.Model):
         return "Não"
 
     @property
+    def get_dias_uteis(self):
+        """Retorna os dias úteis de férias."""
+        dias = self.data_final - self.data_inicial
+        dias_uteis = np.busday_count(
+            self.data_inicial, self.data_final
+        )
+        return dias_uteis +1
+
+    @property
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
             self.data_inicial, self.user
         )
-        return FERIAS_BUSINESS_DAYS - saldo_anterior - self.dias_uteis
+        return FERIAS_BUSINESS_DAYS - saldo_anterior - self.get_dias_uteis
