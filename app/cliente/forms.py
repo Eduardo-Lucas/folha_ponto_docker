@@ -1,18 +1,20 @@
 
 from django import forms
+import django_filters
 from cliente.models import Cliente, ClienteTipoSenha
 
 
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nomerazao', 'codigosistema', 'situacaoentidade',
+        fields = ['nomerazao', 'codigosistema', 'documento', 'situacaoentidade',
                   'tipocertificado', 'senhacertificado', 'vencimentocertificado',
                   ]
 
         labels = {
             'nomerazao': 'Nome Completo ou Razão Social',
             'codigosistema': 'Código no Sistema',
+            'documento': 'Documento',
             'situacaoentidade': 'Situação do Cliente',
             'tipocertificado': 'Tipo de Certificado',
             'senhacertificado': 'Senha do Certificado',
@@ -22,7 +24,8 @@ class ClienteForm(forms.ModelForm):
 
         help_texts = {
             'nomerazao': 'Entre com o nome completo ou a Razão Social.',
-            'codigosistema': 'Entre com o código do sistema associado ao cliente (Opcional).',
+            'documento': 'Entre com o CNPJ ou CPF do cliente.',
+            'codigosistema': 'Código do sistema associado ao cliente.',
             'situacaoentidade': 'Informe a situação do Cliente: 1 = Ativo.',
             'tipocertificado': 'Informe o tipo de certificado.',
             'senhacertificado': 'Informe a senha do certificado.',
@@ -33,6 +36,23 @@ class ClienteForm(forms.ModelForm):
         super(ClienteForm, self).__init__(*args, **kwargs)
         self.fields['situacaoentidade'].initial = 1
 
+class ClienteFilterForm(django_filters.FilterSet):
+    class Meta:
+        model = Cliente
+        fields = {
+            'nomerazao': ['icontains'],
+            'codigosistema': ['icontains'],
+        }
+
+        labels = {
+            'nomerazao': 'Razão Social',
+            'codigosistema': 'Código',
+        }
+
+        help_texts = {
+            'nomerazao': 'Entre com o nome completo ou a Razão Social.',
+            'codigosistema': 'Código do sistema associado ao cliente.',
+        }
 
 class ClienteTipoSenhaForm(forms.ModelForm):
     class Meta:

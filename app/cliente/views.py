@@ -8,7 +8,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
 from .models import Cliente, ClienteTipoSenha
-from .forms import ClienteForm, ClienteTipoSenhaForm
+from .forms import ClienteFilterForm, ClienteForm, ClienteTipoSenhaForm
 from .filters import ClienteFilter
 from django.db.models import Max
 
@@ -72,7 +72,7 @@ class ClienteListView(LoginRequiredMixin, ListView):
     model = Cliente
     template_name = "cliente/cliente_list.html"
     context_object_name = "clientes"
-    paginate_by = 7
+    paginate_by = 10
 
     def get_queryset(self):
         object_list = Cliente.objects.cliente_ativo().order_by("nomerazao", )
@@ -93,12 +93,12 @@ class ClienteInativoListView(LoginRequiredMixin, ListView):
     model = Cliente
     template_name = "cliente/cliente_list.html"
     context_object_name = "clientes"
-    paginate_by = 7
+    paginate_by = 10
 
     def get_queryset(self):
         object_list = Cliente.objects.cliente_inativo().order_by("nomerazao", )
         self.filterset = ClienteFilter(self.request.GET, queryset=object_list)
-        return object_list
+        return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

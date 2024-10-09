@@ -11,3 +11,8 @@ class ClienteFilter(django_filters.FilterSet):
             "codigosistema": ["icontains"],
 
         }
+
+    def __init__(self, *args, **kwargs):
+        super(ClienteFilter, self).__init__(*args, **kwargs)
+        self.filters["nomerazao__icontains"].label = "Razão Social"
+        self.filters["codigosistema__icontains"].label = "Código"

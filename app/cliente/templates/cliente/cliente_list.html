@@ -30,13 +30,13 @@
 
     </div>
     <div class="row">
-        <form method="get">
-            <div class="col-md-6">
-                {{ filter.form|crispy }}
+        <form class="my-1" method="get">
+            <div class="col-md-12">
+                {{ filter.form.as_table }}
             </div>
 
-            <button class="btn btn-primary mb-3" type="submit">Buscar</button>
-            <a href="{% url 'cliente:cliente_list' %}" class="btn btn-secondary mb-3" type="submit">Limpar</a>
+            <button class="btn btn-primary my-1" type="submit">Buscar</button>
+            <a href="{% url 'cliente:cliente_list' %}" class="btn btn-secondary my-1" type="submit">Limpar</a>
 
         </form>
     </div>
@@ -49,6 +49,7 @@
 
 
                             <th class="align-middle text-center">Código</th>
+                            <th class="align-middle text-center">CNPJ ou CPF</th>
                             <th class="align-middle">Razão Social</th>
                             <th class="align-middle text-center">Status</th>
 
@@ -60,6 +61,7 @@
                         {% for cliente in clientes %}
                         <tr>
                             <td class="align-middle text-center">{{cliente.get_codigosistema_formatado}}</td>
+                            <td class="align-middle text-center">{{ cliente.get_documento }}</td>
                             <td class="align-middle">{{cliente.nomerazao}}</td>
 
                             {% if cliente.situacaoentidade == 1 %}
