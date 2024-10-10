@@ -9,6 +9,7 @@ class ClienteFilter(django_filters.FilterSet):
         fields = {
             "nomerazao": ["icontains"],
             "codigosistema": ["icontains"],
+            "documento": ["icontains"],
 
         }
 
@@ -16,3 +17,4 @@ class ClienteFilter(django_filters.FilterSet):
         super(ClienteFilter, self).__init__(*args, **kwargs)
         self.filters["nomerazao__icontains"].label = "Razão Social"
         self.filters["codigosistema__icontains"].label = "Código"
+        self.filters["documento__icontains"].label = "CPF ou CNPJ"
