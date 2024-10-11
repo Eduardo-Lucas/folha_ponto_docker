@@ -1,7 +1,7 @@
 
 from django import forms
 import django_filters
-from cliente.models import Cliente, ClienteTipoSenha
+from cliente.models import Cliente, ClienteTipoSenha, TipoSenha
 
 
 class ClienteForm(forms.ModelForm):
@@ -61,6 +61,7 @@ class ClienteTipoSenhaForm(forms.ModelForm):
 
         labels = {
             'tipo_senha': 'Tipo de Senha',
+            'cliente': 'Cliente',
             'login': 'Login',
             'senha': 'Senha',
             'informacao_adicional': 'Informação Adicional',
@@ -68,7 +69,20 @@ class ClienteTipoSenhaForm(forms.ModelForm):
 
         help_texts = {
             'tipo_senha': 'Informe o tipo de senha associado ao cliente.',
+            'cliente': 'Informe o cliente associado a senha.',
             'login': 'Informe o login associado a senha.',
             'senha': 'Informe a senha associada ao cliente.',
             'informacao_adicional': 'Informe informações adicionais sobre a senha (Opcional).',
         }
+
+    def __init__(self, *args, **kwargs):
+
+        self.cliente_id = kwargs.pop('cliente_id', None)
+        super(ClienteTipoSenhaForm, self).__init__(*args, **kwargs)
+
+        if self.cliente_id:
+            self.fields['cliente'].initial = Cliente.objects.get(id=self.cliente_id)
+            # hidden field
+            self.fields['cliente'].widget = forms.HiddenInput()
+        else:
+            self.fields['cliente'].initial = None

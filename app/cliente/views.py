@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
-from .models import Cliente, ClienteTipoSenha
+from .models import Cliente, ClienteTipoSenha, TipoSenha
 from .forms import ClienteFilterForm, ClienteForm, ClienteTipoSenhaForm
 from .filters import ClienteFilter
 from django.db.models import Max
@@ -160,6 +160,11 @@ class ClienteTipoSenhaCreateView(LoginRequiredMixin, CreateView):
     template_name = "cliente/clientetiposenha_form.html"
     context_object_name = "clientetiposenha"
 
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super().get_form_kwargs()
+        kwargs["cliente_id"] = self.kwargs.get("cliente_id")
+        return kwargs
+
     def get_success_url(self):
         return reverse_lazy("cliente:cliente_tipo_senha_list", kwargs={"cliente_id": self.kwargs.get("cliente_id")})
 
@@ -172,7 +177,8 @@ class ClienteTipoSenhaCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         try:
-            form.instance.cliente = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
+            form.cliente = Cliente.objects.get(id=self.kwargs.get("cliente_id"))
+            form.tipo_senha = TipoSenha.objects.get(id=form.instance.tipo_senha.id)
             return super().form_valid(form)
         except Cliente.DoesNotExist:
             form.add_error(None, "Cliente não encontrado.")
@@ -184,6 +190,11 @@ class ClienteTipoSenhaUpdateView(LoginRequiredMixin, UpdateView):
     model = ClienteTipoSenha
     form_class = ClienteTipoSenhaForm
     template_name = "cliente/clientetiposenha_form.html"
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super().get_form_kwargs()
+        kwargs["cliente_id"] = self.kwargs.get("cliente_id")
+        return kwargs
 
     def get_success_url(self):
         return reverse_lazy("cliente:cliente_tipo_senha_list", kwargs={"cliente_id": self.kwargs.get("cliente_id")})
