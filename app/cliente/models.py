@@ -1,5 +1,5 @@
 from django.db import models
-
+import re
 
 class ClienteManager(models.Manager):
     """Manager definition for Cliente."""
@@ -141,6 +141,20 @@ class Cliente(models.Model):
     def get_documento(self):
         if self.documento is not None:
             return self.documento
+        else:
+            return "-"
+
+    @property
+    def get_documento_cpf_cnpj(self):
+        if self.documento is not None:
+            if len(str(self.documento)) <= 11:
+                return str(self.documento).zfill(11)
+            else:
+                # formatar o CNPJ
+                cnpj = str(self.documento).zfill(14)
+                cnpj_pontuado = re.sub(r'(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})', r'\1.\2.\3/\4-\5', cnpj)
+                return cnpj_pontuado
+
         else:
             return "-"
 

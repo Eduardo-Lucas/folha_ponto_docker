@@ -61,7 +61,7 @@
                         {% for cliente in clientes %}
                         <tr>
                             <td class="align-middle text-center">{{cliente.get_codigosistema_formatado}}</td>
-                            <td class="align-middle text-center">{{ cliente.get_documento }}</td>
+                            <td class="align-middle text-center">{{ cliente.get_documento_cpf_cnpj }}</td>
                             <td class="align-middle">{{cliente.nomerazao}}</td>
 
                             {% if cliente.situacaoentidade == 1 %}
