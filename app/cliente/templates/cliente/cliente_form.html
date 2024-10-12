@@ -10,20 +10,30 @@
 
         <div class="row align-items-center">
 
-            <div class="col-md-3">
+            <div class="col-md-1">
                 {{form.codigosistema|as_crispy_field}}
             </div>
-
-            <div class="col-md-3">
+            <div class="col-md-1">
+                {{form.tipodocumento|as_crispy_field}}
+            </div>
+            <div class="col-md-2">
                 {{form.documento|as_crispy_field}}
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-6">
                 {{ form.nomerazao|as_crispy_field }}
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-2">
                 {{ form.situacaoentidade|as_crispy_field }}
+            </div>
+
+        </div>
+
+        <div class="row align-items-center">
+
+            <div class="col-md-12">
+                {{ form.observacao|as_crispy_field }}
             </div>
 
         </div>

@@ -1,40 +1,48 @@
 
 from django import forms
 import django_filters
-from cliente.models import Cliente, ClienteTipoSenha, TipoSenha
+from cliente.models import Cliente, ClienteTipoSenha, SituacaoEntidadeChoices, TipoDocumentoChoices
 
 
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nomerazao', 'codigosistema', 'documento', 'situacaoentidade',
-                  'tipocertificado', 'senhacertificado', 'vencimentocertificado',
-                  ]
+        fields = ['nomerazao', 'codigosistema', 'tipodocumento', 'documento', 'situacaoentidade',
+                  'observacao']
 
         labels = {
             'nomerazao': 'Nome Completo ou Razão Social',
-            'codigosistema': 'Código no Sistema',
+            'codigosistema': 'Código',
+            'tipodocumento': 'Tipo',
             'documento': 'Documento',
-            'situacaoentidade': 'Situação do Cliente',
-            'tipocertificado': 'Tipo de Certificado',
-            'senhacertificado': 'Senha do Certificado',
-            'vencimentocertificado': 'Vencimento do Certificado',
+            'situacaoentidade': 'Situação',
+            'observacao': 'Observação',
 
         }
 
         help_texts = {
             'nomerazao': 'Entre com o nome completo ou a Razão Social.',
-            'documento': 'Entre com o CNPJ ou CPF do cliente.',
-            'codigosistema': 'Código do sistema associado ao cliente.',
-            'situacaoentidade': 'Informe a situação do Cliente: 1 = Ativo.',
-            'tipocertificado': 'Informe o tipo de certificado.',
-            'senhacertificado': 'Informe a senha do certificado.',
-            'vencimentocertificado': 'Informe a data de vencimento do certificado.',
+            'tipodocumento': 'CPF ou CNPJ',
+            'documento': 'Entre com o CNPJ ou CPF.',
+            'codigosistema': 'Código',
+            'situacaoentidade': 'Situação',
+            'observacao': 'Informe observações sobre o cliente.',
         }
 
     def __init__(self, *args, **kwargs):
         super(ClienteForm, self).__init__(*args, **kwargs)
         self.fields['situacaoentidade'].initial = 1
+        # set a widget to the field tipodocumento
+        if self.instance:
+            self.fields['tipodocumento'].initial = 1 if len(str(self.instance.documento)) == 11 else 2
+            # if len(codigo) <4 concatenate with zero in the left, else display codigo as it is
+            self.fields['codigosistema'].initial = str(self.instance.codigosistema).zfill(4) if len(self.instance.codigosistema)<4 else self.instance.codigosistema
+
+
+        self.fields['tipodocumento'].widget = forms.Select(choices=TipoDocumentoChoices.choices)
+
+        self.fields['situacaoentidade'].widget = forms.Select(choices=SituacaoEntidadeChoices.choices)
+
 
 class ClienteFilterForm(django_filters.FilterSet):
     class Meta:

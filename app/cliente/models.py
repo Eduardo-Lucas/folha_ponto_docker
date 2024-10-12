@@ -17,6 +17,26 @@ class ClienteManager(models.Manager):
         """Queryset definition for Cliente."""
         return super().get_queryset().all()
 
+class UpperCaseIntegerChoices(models.IntegerChoices):
+    """Custom IntegerChoices to render labels in uppercase."""
+
+    @classmethod
+    def choices(cls):
+        return [(key, value.upper()) for key, value in cls._member_map_.items()]
+
+class TipoDocumentoChoices(UpperCaseIntegerChoices):
+    """Choices definition for TipoDocumento."""
+
+    CPF = 1
+    CNPJ = 2
+    OUTROS = 4
+
+class SituacaoEntidadeChoices(UpperCaseIntegerChoices):
+    """Choices definition for SituacaoEntidade."""
+
+    ATIVADO = 1
+    DESATIVADO = 2
+
 
 class TipoSenha(models.Model):
     """Model definition for TipoSenha."""
@@ -40,6 +60,8 @@ class Cliente(models.Model):
     tipodocumento = models.IntegerField(
         null=True,
         blank=True,
+        choices=TipoDocumentoChoices.choices,
+        default=TipoDocumentoChoices.CPF,
     )
     documento = models.BigIntegerField(
         null=True,
@@ -70,7 +92,7 @@ class Cliente(models.Model):
         blank=True,
     )
     codigosistema = models.CharField(null=True, blank=True, max_length=10)
-    situacaoentidade = models.IntegerField(null=True, blank=True)
+    situacaoentidade = models.IntegerField(null=True, blank=True, choices=SituacaoEntidadeChoices.choices, default=SituacaoEntidadeChoices.ATIVADO)
     codigoterceiro = models.CharField(
         null=True,
         blank=True,
@@ -114,6 +136,15 @@ class Cliente(models.Model):
             return self.documento
         else:
             return "-"
+
+    @property
+    def get_tipodocumento(self):
+        # if length of documento is 11, then it is CPF, otherwise it is CNPJ
+        if self.documento is not None:
+            self.tipodocumento=1 if len(str(self.documento)) == 11 else 2
+        # save
+        self.save()
+
     class Meta:
         """Meta definition for Cliente."""
 
