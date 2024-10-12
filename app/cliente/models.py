@@ -111,10 +111,6 @@ class Cliente(models.Model):
 
     def get_documento(self):
         if self.documento is not None:
-            if self.tipodocumento == 1:
-                return f"CPF: {self.documento}"
-            elif self.tipodocumento == 2:
-                return f"CNPJ: {self.documento}"
             return self.documento
         else:
             return "-"
