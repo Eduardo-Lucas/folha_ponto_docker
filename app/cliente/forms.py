@@ -8,7 +8,9 @@ class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
         fields = ['nomerazao', 'codigosistema', 'tipodocumento', 'documento', 'situacaoentidade',
-                  'observacao']
+                  'inscricao_estadual', 'inscricao_municipal', 'inscricao_imobiliária',
+                  'tributacao_municipal', 'tributacao_estadual', 'tributacao_federal',
+                  'nire', 'observacao']
 
         labels = {
             'nomerazao': 'Nome Completo ou Razão Social',
@@ -26,7 +28,7 @@ class ClienteForm(forms.ModelForm):
             'documento': 'Entre com o CNPJ ou CPF.',
             'codigosistema': 'Código',
             'situacaoentidade': 'Situação',
-            'observacao': 'Informe observações sobre o cliente.',
+
         }
 
     def __init__(self, *args, **kwargs):

@@ -32,7 +32,43 @@
 
         <div class="row align-items-center">
 
-            <div class="col-md-12">
+            <div class="col-md-4">
+                {{ form.inscricao_estadual|as_crispy_field }}
+            </div>
+
+            <div class="col-md-4">
+                {{ form.inscricao_municipal|as_crispy_field }}
+            </div>
+
+            <div class="col-md-4">
+                {{ form.inscricao_imobiliária|as_crispy_field }}
+            </div>
+
+        </div>
+
+        <div class="row align-items-center">
+
+            <div class="col-md-4">
+                {{ form.tributacao_municipal|as_crispy_field }}
+            </div>
+
+            <div class="col-md-4">
+                {{ form.tributacao_estadual|as_crispy_field }}
+            </div>
+
+            <div class="col-md-4">
+                {{ form.tributacao_federal|as_crispy_field }}
+            </div>
+        </div>
+
+
+        <div class="row align-items-center">
+
+            <div class="col-md-4">
+                {{ form.nire|as_crispy_field }}
+            </div>
+
+            <div class="col-md-8">
                 {{ form.observacao|as_crispy_field }}
             </div>
 
