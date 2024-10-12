@@ -42,6 +42,7 @@ class TipoSenha(models.Model):
     """Model definition for TipoSenha."""
 
     descricao = models.CharField(max_length=50)
+    ativo = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return self.descricao

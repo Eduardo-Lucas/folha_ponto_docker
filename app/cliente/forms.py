@@ -1,7 +1,7 @@
 
 from django import forms
 import django_filters
-from cliente.models import Cliente, ClienteTipoSenha, SituacaoEntidadeChoices, TipoDocumentoChoices
+from cliente.models import Cliente, ClienteTipoSenha, SituacaoEntidadeChoices, TipoDocumentoChoices, TipoSenha
 
 
 class ClienteForm(forms.ModelForm):
@@ -96,3 +96,5 @@ class ClienteTipoSenhaForm(forms.ModelForm):
             self.fields['cliente'].widget = forms.HiddenInput()
         else:
             self.fields['cliente'].initial = None
+
+        self.fields['tipo_senha'].widget = forms.Select(choices=TipoSenha.objects.filter(ativo=True).values_list('id', 'descricao'))
