@@ -113,9 +113,9 @@ class Cliente(models.Model):
     inscricao_imobiliária = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Imobiliária")
     inscricao_municipal = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Municipal")
     nire = models.CharField(max_length=20, null=True, blank=True, verbose_name="NIRE")
-    tributacao_municipal = models.FloatField(max_length=20, null=True, blank=True, default=0.0, verbose_name="Tributação Municipal")
-    tributacao_estadual = models.FloatField(max_length=20, null=True, blank=True,  default=0.0, verbose_name="Tributação Estadual")
-    tributacao_federal =  models.FloatField(max_length=20, null=True, blank=True,  default=0.0, verbose_name="Tributação Federal")
+    tributacao_municipal = models.CharField(max_length=20, null=True, blank=True,  verbose_name="Tributação Municipal")
+    tributacao_estadual = models.CharField(max_length=20, null=True, blank=True,   verbose_name="Tributação Estadual")
+    tributacao_federal =  models.CharField(max_length=20, null=True, blank=True,   verbose_name="Tributação Federal")
 
 
     objects = ClienteManager()
