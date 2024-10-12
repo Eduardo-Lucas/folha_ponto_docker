@@ -165,12 +165,30 @@ class ClienteTipoSenha(models.Model):
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     tipo_senha = models.ForeignKey(TipoSenha, on_delete=models.CASCADE)
-    login = models.CharField(max_length=50)
-    senha = models.CharField(max_length=50)
+    login = models.CharField(max_length=50, null=True, blank=True)
+    senha = models.CharField(max_length=50, null=True, blank=True)
     informacao_adicional = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.tipo_senha} - {self.cliente}"
+
+    def get_login(self):
+        if self.login:
+            return self.login
+        else:
+            return "-"
+
+    def get_senha(self):
+        if self.senha:
+            return self.senha
+        else:
+            return "-"
+    def get_informacao_adicional(self):
+        if self.informacao_adicional:
+            return self.informacao_adicional
+        else:
+            return "-"
+
     class Meta:
         """Meta definition for ClienteTipoSenha."""
 
