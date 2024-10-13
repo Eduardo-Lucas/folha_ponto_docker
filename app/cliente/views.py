@@ -11,6 +11,8 @@ from .models import Cliente, ClienteTipoSenha, TipoSenha
 from .forms import ClienteFilterForm, ClienteForm, ClienteTipoSenhaForm
 from .filters import ClienteFilter
 from django.db.models import Max
+from django.db.models.functions import Length
+from django.db.models.functions import Length
 
 
 def cliente_autocomplete(request):
@@ -83,6 +85,8 @@ class ClienteListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Clientes"
         context["filter"] = self.filterset
+        context['qtd_cpf'] = Cliente.objects.filter(situacaoentidade=1, tipodocumento=1).count()
+        context['qtd_cnpj'] = Cliente.objects.filter(situacaoentidade=1, tipodocumento=2).count()
         return context
 
 
@@ -104,6 +108,9 @@ class ClienteInativoListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Clientes"
         context["filter"] = self.filterset
+        context['qtd_cpf'] = Cliente.objects.filter(tipodocumento=1).exclude(situacaoentidade=1).count()
+        context['qtd_cnpj'] = Cliente.objects.filter(tipodocumento=2).exclude(situacaoentidade=1).count()
+
         return context
 
 class ClienteUpdateView(LoginRequiredMixin, UpdateView):
