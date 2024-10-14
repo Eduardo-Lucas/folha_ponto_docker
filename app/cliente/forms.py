@@ -37,8 +37,6 @@ class ClienteForm(forms.ModelForm):
         # set a widget to the field tipodocumento
         if self.instance:
             self.fields['tipodocumento'].initial = 1 if len(str(self.instance.documento)) == 11 else 2
-            # if len(codigo) <4 concatenate with zero in the left, else display codigo as it is
-            self.fields['codigosistema'].initial = str(self.instance.codigosistema).zfill(4) if len(self.instance.codigosistema)<4 else self.instance.codigosistema
 
 
         self.fields['tipodocumento'].widget = forms.Select(choices=TipoDocumentoChoices.choices)
