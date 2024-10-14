@@ -38,8 +38,8 @@ class ClienteForm(forms.ModelForm):
         if self.instance:
             self.fields['tipodocumento'].initial = 1 if len(str(self.instance.documento)) == 11 else 2
 
-
-        self.fields['tipodocumento'].widget = forms.Select(choices=TipoDocumentoChoices.choices)
+        uppercase_choices = [(key, value.upper()) for key, value in TipoDocumentoChoices.choices]
+        self.fields['tipodocumento'].widget = forms.Select(choices=uppercase_choices)
 
         self.fields['situacaoentidade'].widget = forms.Select(choices=SituacaoEntidadeChoices.choices)
 
