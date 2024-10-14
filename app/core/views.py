@@ -27,7 +27,8 @@ def home(request):
                 day=ponto.entrada.date(), user=user
             )
             if ponto.saida:
-                last_interaction = ponto.saida
+                # last_interaction = ponto.saida
+                last_interaction = ponto.entrada
             else:
                 last_interaction = ponto.entrada
 
