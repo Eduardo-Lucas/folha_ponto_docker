@@ -30,6 +30,23 @@
 
         </div>
 
+        <div class="row">
+
+            <div class="col-md-2">
+                {{ form.logositebv|as_crispy_field }}
+            </div>
+
+            <div class="col-md-2">
+                    {{ form.iniciobv|as_crispy_field }}
+            </div>
+
+            <div class="col-md-2">
+                {{ form.codigoterceiro|as_crispy_field }}
+            </div>
+
+        </div>
+
+
         <div class="row align-items-center">
 
             <div class="col-md-4">
@@ -48,24 +65,33 @@
 
         <div class="row align-items-center">
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {{ form.tributacao_municipal|as_crispy_field }}
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {{ form.tributacao_estadual|as_crispy_field }}
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {{ form.tributacao_federal|as_crispy_field }}
             </div>
+
+            <div class="col-md-3">
+                {{ form.nire|as_crispy_field }}
+            </div>
+
         </div>
 
 
         <div class="row align-items-center">
 
-            <div class="col-md-4">
-                {{ form.nire|as_crispy_field }}
+            <div class="col-md-2">
+                {{ form.telefone|as_crispy_field }}
+            </div>
+
+            <div class="col-md-2">
+                {{ form.contato|as_crispy_field }}
             </div>
 
             <div class="col-md-8">
@@ -73,8 +99,6 @@
             </div>
 
         </div>
-
-
 
 
         <div class="row border-top border-dark">

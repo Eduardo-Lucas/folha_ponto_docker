@@ -10,7 +10,8 @@ class ClienteForm(forms.ModelForm):
         fields = ['nomerazao', 'codigosistema', 'tipodocumento', 'documento', 'situacaoentidade',
                   'inscricao_estadual', 'inscricao_municipal', 'inscricao_imobiliária',
                   'tributacao_municipal', 'tributacao_estadual', 'tributacao_federal',
-                  'nire', 'observacao']
+                  'nire', 'observacao', 'telefone', 'contato',
+                  'logositebv', 'iniciobv', 'codigoterceiro']
 
         labels = {
             'nomerazao': 'Nome Completo ou Razão Social',
@@ -19,6 +20,12 @@ class ClienteForm(forms.ModelForm):
             'documento': 'Documento',
             'situacaoentidade': 'Situação',
             'observacao': 'Observação',
+            'telefone': 'Telefone',
+            'contato': 'Contato',
+            'logositebv': 'Logo Site BV',
+            'iniciobv': 'Data de Início BV',
+            'codigoterceiro': 'Código Terceiro',
+
 
         }
 
@@ -28,6 +35,9 @@ class ClienteForm(forms.ModelForm):
             'documento': 'Entre com o CNPJ ou CPF.',
             'codigosistema': 'Código',
             'situacaoentidade': 'Situação',
+            'telefone': 'Telefone',
+            'contato': 'Contato',
+            'observacao': 'Observação',
 
         }
 

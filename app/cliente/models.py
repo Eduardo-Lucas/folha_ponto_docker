@@ -107,7 +107,9 @@ class Cliente(models.Model):
         blank=True,
         max_length=10,
     )
-    contato_id = models.IntegerField(null=True, blank=True)
+
+    telefone = models.CharField(max_length=20, null=True, blank=True)
+    contato = models.CharField(max_length=50, null=True, blank=True)
 
     inscricao_estadual = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Estadual")
     inscricao_imobiliária = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Imobiliária")
