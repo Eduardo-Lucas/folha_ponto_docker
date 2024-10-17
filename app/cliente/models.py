@@ -110,6 +110,7 @@ class Cliente(models.Model):
 
     telefone = models.CharField(max_length=20, null=True, blank=True)
     contato = models.CharField(max_length=50, null=True, blank=True)
+    data_aniversario = models.DateField(null=True, blank=True)
 
     inscricao_estadual = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Estadual")
     inscricao_imobiliária = models.CharField(max_length=20, null=True, blank=True, verbose_name="Inscrição Imobiliária")
