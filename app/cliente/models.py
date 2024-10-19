@@ -135,6 +135,7 @@ class Cliente(models.Model):
             return "{0}|{1}".format(str(self.codigosistema).zfill(4), self.nomerazao)
         return self.nomerazao
 
+    @property
     def get_codigosistema_formatado(self):
         if self.codigosistema:
             return self.codigosistema.zfill(4)
