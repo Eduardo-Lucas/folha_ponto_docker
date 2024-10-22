@@ -23,7 +23,7 @@ def cliente_autocomplete(request):
 
         if query.isdigit():
             clientes = Cliente.objects.filter(
-                codigosistema__exact=int(query), situacaoentidade=1
+                codigosistema__icontains=str(query).zfill(4), situacaoentidade=1
             )
         else:
             clientes = Cliente.objects.filter(
@@ -58,8 +58,8 @@ class ClienteCreateView(LoginRequiredMixin, CreateView):
                 return self.form_invalid(form)
 
         # check if codigosistema has length 4 and the first character is a zero, cut it off
-        if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
-            form.instance.codigosistema = form.instance.codigosistema[1:]
+        # if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
+        #     form.instance.codigosistema = form.instance.codigosistema[1:]
 
         return super().form_valid(form)
 
@@ -119,12 +119,12 @@ class ClienteUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "cliente/cliente_form.html"
     success_url = reverse_lazy("cliente:cliente_list")
 
-    def form_valid(self, form):
-        # check if codigosistema has length 4 and the first character is a zero, cut it off
-        if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
-            form.instance.codigosistema = form.instance.codigosistema[1:]
+    # def form_valid(self, form):
+    #     # check if codigosistema has length 4 and the first character is a zero, cut it off
+    #     if form.instance.codigosistema and form.instance.codigosistema[0] == "0":
+    #         form.instance.codigosistema = form.instance.codigosistema[1:]
 
-        return super().form_valid(form)
+    #     return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

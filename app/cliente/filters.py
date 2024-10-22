@@ -11,7 +11,7 @@ class ClienteFilter(django_filters.FilterSet):
 
     def filter_codigosistema(self, queryset, name, value):
         # Strip leading zeros from user input
-        value = value.lstrip("0")
+        # value = value.lstrip("0")
         # Filter queryset based on modified value
         return queryset.filter(**{name: value})
 

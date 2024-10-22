@@ -107,7 +107,7 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         # check if there is | in cliente_id
         if "|" in form.cleaned_data["cliente"]:
             instance.cliente_id = Cliente.objects.filter(
-                codigosistema=int(form.cleaned_data["cliente"].split("|")[0]),
+                codigosistema=form.cleaned_data["cliente"].split("|")[0],
                 nomerazao=form.cleaned_data["cliente"].split("|")[1],
             ).first()
         else:
