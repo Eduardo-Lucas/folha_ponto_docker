@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 
 
@@ -34,6 +35,28 @@ class FeriadoManager(models.Manager):
 
         return None
 
+    def get_how_many_holidays(self, data_inicial, data_final):
+        """Returns the number of holidays between the given dates"""
+        # Get the holidays between the given dates
+        # if it is a fixed holiday, it will be repeated every year and we can use the month and day to filter
+        fixed_holiday = self.filter(
+            dia__range=(data_inicial.day, data_final.day),
+            month__range=(data_inicial.month, data_final.month),
+            ano=data_final.year,
+        ).count()
+
+
+        # if it is not a fixed holiday, we need to filter by the year
+        non_fixed_holiday = self.filter(
+            dia__range=(data_inicial.day, data_final.day),
+            month__range=(data_inicial.month, data_final.month),
+            ano__range=(data_inicial.year, data_final.year),
+        ).count()
+
+
+        return fixed_holiday + non_fixed_holiday
+
+
 
 class Feriado(models.Model):
     """
@@ -52,7 +75,10 @@ class Feriado(models.Model):
     objects = FeriadoManager()
 
     def __str__(self) -> str:
-        return f"{str(self.id).zfill(4)}:{self.descricao}"
+        if self.fixo:
+            return f"{self.dia}/{self.month} - {str(self.id).zfill(4)}:{self.descricao}"
+        return f"{self.dia}/{self.month}/{self.ano} - {str(self.id).zfill(4)}:{self.descricao}"
+
 
     class Meta:
         """Metadata for the Feriado model."""

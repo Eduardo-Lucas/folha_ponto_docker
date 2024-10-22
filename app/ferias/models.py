@@ -4,6 +4,7 @@ import numpy as np
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from feriado.models import Feriado
 from folha_ponto.settings import FERIAS_BUSINESS_DAYS  # 20 Days
 
 
@@ -35,14 +36,21 @@ class FeriasManager(models.Manager):
             "data_inicial"
         )
 
-    def get_ferias_anteriores(self, data_inicial=None, user=None):
+    def get_ferias_anteriores(self, data_inicial=None, data_final=None, user=None):
         """Get the previous vacation period"""
         query = self.filter(
             periodo=data_inicial.year, user=user, data_inicial__lt=data_inicial
         )
         # sum dias_uteis from query
         dias_uteis = sum(ferias.get_dias_uteis for ferias in query)
-        return dias_uteis
+
+        feriados = Feriado.objects.get_how_many_holidays(
+            data_inicial, data_final
+        )
+
+        # Subtract the number of holidays from the total number of days
+        return dias_uteis - feriados
+
 
 
 class Ferias(models.Model):
@@ -70,6 +78,7 @@ class Ferias(models.Model):
         """Meta definition for Ferias."""
 
         ordering = [
+            "user",
             "periodo",
             "data_inicial",
         ]
@@ -91,16 +100,22 @@ class Ferias(models.Model):
     @property
     def get_dias_uteis(self):
         """Retorna os dias úteis de férias."""
-        dias = self.data_final - self.data_inicial
+
         dias_uteis = np.busday_count(
             self.data_inicial, self.data_final
         )
-        return dias_uteis +1
+        feriados = Feriado.objects.get_how_many_holidays(
+            self.data_inicial, self.data_final
+        )
+        print(f"Ini: {self.data_inicial} Fim: {self.data_final}- DIAS ÚTEIS: {dias_uteis+1} - FERIADOS: {feriados}")
+
+        return (dias_uteis +1) - feriados
 
     @property
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            self.data_inicial, self.user
+            self.data_inicial, self.data_final, self.user
         )
+
         return FERIAS_BUSINESS_DAYS - saldo_anterior - self.get_dias_uteis
