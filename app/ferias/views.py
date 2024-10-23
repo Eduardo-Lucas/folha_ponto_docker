@@ -93,7 +93,7 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
             data_final=form.instance.data_final,
             user=self.request.user
         )
-        if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
+        if (timedelta(days=dias_uteis) + timedelta(days=int(saldo_anterior))) > timedelta(
             days=FERIAS_BUSINESS_DAYS
         ):
             # ferias can not be more than 20 days
