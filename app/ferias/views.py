@@ -89,7 +89,9 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
         )
         dias_uteis = int(dias_uteis)
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            form.instance.data_inicial, self.request.user
+            data_inicial=form.instance.data_inicial,
+            data_final=form.instance.data_final,
+            user=self.request.user
         )
         if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
             days=FERIAS_BUSINESS_DAYS
@@ -171,7 +173,9 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
         )
         dias_uteis = int(dias_uteis)
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            form.instance.data_inicial, self.request.user
+            data_inicial=form.instance.data_inicial,
+            data_final=form.instance.data_final,
+            user=self.request.user
         )
 
         if (timedelta(days=dias_uteis) + timedelta(days=saldo_anterior)) > timedelta(
@@ -192,7 +196,9 @@ class FeriasUpdateView(LoginRequiredMixin, UpdateView):
         )
         if ferias_no_periodo.exists():
             saldo_anterior = Ferias.objects.get_ferias_anteriores(
-                form.instance.data_inicial, self.request.user
+                data_inicial=form.instance.data_inicial,
+                data_final=form.instance.data_final,
+                user=self.request.user
             )
             if saldo_anterior + form.instance.dias_uteis > FERIAS_BUSINESS_DAYS:
                 form.add_error(

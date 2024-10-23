@@ -107,7 +107,6 @@ class Ferias(models.Model):
         feriados = Feriado.objects.get_how_many_holidays(
             self.data_inicial, self.data_final
         )
-        # print(f"Ini: {self.data_inicial} Fim: {self.data_final}- DIAS ÚTEIS: {dias_uteis+1} - FERIADOS: {feriados}")
 
         return (dias_uteis +1) - feriados
 
@@ -115,7 +114,11 @@ class Ferias(models.Model):
     def saldo_dias(self):
         """Retorna o saldo de dias de férias."""
         saldo_anterior = Ferias.objects.get_ferias_anteriores(
-            self.data_inicial, self.data_final, self.user
+            data_inicial=self.data_inicial,
+            data_final=self.data_final,
+            user=self.user
         )
+        saldo = FERIAS_BUSINESS_DAYS - saldo_anterior - self.get_dias_uteis
+        print(f"Data INI: {self.data_inicial} - Data FIM: {self.data_final} - Saldo anterior: {saldo_anterior} - Dias úteis: {self.get_dias_uteis} - Saldo: {saldo}")
 
-        return FERIAS_BUSINESS_DAYS - saldo_anterior - self.get_dias_uteis
+        return saldo

@@ -37,22 +37,21 @@ class FeriadoManager(models.Manager):
 
     def get_how_many_holidays(self, data_inicial, data_final):
         """Returns the number of holidays between the given dates"""
-        # Get the holidays between the given dates
         # if it is a fixed holiday, it will be repeated every year and we can use the month and day to filter
         fixed_holiday = self.filter(
-            dia__range=(data_inicial.day, data_final.day),
+            fixo=True,
             month__range=(data_inicial.month, data_final.month),
-            ano=data_final.year,
-        ).count()
+            dia__range=(data_inicial.day, data_final.day),
 
+        ).count()
 
         # if it is not a fixed holiday, we need to filter by the year
         non_fixed_holiday = self.filter(
-            dia__range=(data_inicial.day, data_final.day),
-            month__range=(data_inicial.month, data_final.month),
+            fixo=False,
             ano__range=(data_inicial.year, data_final.year),
+            month__range=(data_inicial.month, data_final.month),
+            dia__range=(data_inicial.day, data_final.day),
         ).count()
-
 
         return fixed_holiday + non_fixed_holiday
 
