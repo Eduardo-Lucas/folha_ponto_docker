@@ -107,7 +107,7 @@ class Ferias(models.Model):
         feriados = Feriado.objects.get_how_many_holidays(
             self.data_inicial, self.data_final
         )
-        print(f"Ini: {self.data_inicial} Fim: {self.data_final}- DIAS ÚTEIS: {dias_uteis+1} - FERIADOS: {feriados}")
+        # print(f"Ini: {self.data_inicial} Fim: {self.data_final}- DIAS ÚTEIS: {dias_uteis+1} - FERIADOS: {feriados}")
 
         return (dias_uteis +1) - feriados
 

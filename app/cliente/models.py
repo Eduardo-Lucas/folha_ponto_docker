@@ -144,7 +144,9 @@ class Cliente(models.Model):
 
     def get_documento(self):
         if self.documento is not None:
-            return self.documento
+            if self.tipodocumento == 1:
+                return str(self.documento).zfill(11)
+            return str(self.documento).zfill(14)
         else:
             return "-"
 
