@@ -44,12 +44,8 @@ class FeriasManager(models.Manager):
         # sum dias_uteis from query
         dias_uteis = sum(ferias.get_dias_uteis for ferias in query)
 
-        feriados = Feriado.objects.get_how_many_holidays(
-            data_inicial, data_final
-        )
-
         # Subtract the number of holidays from the total number of days
-        return dias_uteis - feriados
+        return dias_uteis
 
 
 
@@ -119,6 +115,5 @@ class Ferias(models.Model):
             user=self.user
         )
         saldo = FERIAS_BUSINESS_DAYS - saldo_anterior - self.get_dias_uteis
-        print(f"Data INI: {self.data_inicial} - Data FIM: {self.data_final} - Saldo anterior: {saldo_anterior} - Dias úteis: {self.get_dias_uteis} - Saldo: {saldo}")
 
         return saldo
