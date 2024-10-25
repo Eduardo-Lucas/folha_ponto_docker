@@ -24,17 +24,35 @@ class PontoAdmin(ImportExportModelAdmin):
     )
     search_fields = ["usuario__username"]
 
-class TipoReceitaResource(resources.ModelResource):
-    """Resource class for TipoReceita."""
 
+class TipoReceitaResource(resources.ModelResource):
     class Meta:
-        """Meta class for TipoReceitaResource."""
         model = TipoReceita
 
-class TipoReceitaAdmin(ImportExportModelAdmin):
-    """Admin class for TipoReceita."""
+
+@admin.register(TipoReceita)
+class TipoReceitaAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_classes = [TipoReceitaResource]
+    list_display = (
+        "id",
+        "descricao",
+        "recibo",
+        "status",
+        "registra_ponto",
+    )
+
+
+# class TipoReceitaResource(resources.ModelResource):
+#     """Resource class for TipoReceita."""
+
+#     class Meta:
+#         """Meta class for TipoReceitaResource."""
+#         model = TipoReceita
+
+# class TipoReceitaAdmin(ImportExportModelAdmin):
+#     """Admin class for TipoReceita."""
+#     resource_classes = [TipoReceitaResource]
 
 
 admin.site.register(Ponto, PontoAdmin)
-admin.site.register(TipoReceita, TipoReceitaAdmin)
+# admin.site.register(TipoReceita, TipoReceitaAdmin)

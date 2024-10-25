@@ -29,6 +29,10 @@ class TipoReceita(models.Model):
         ("Sim", "Sim"),
         ("Não", "Não"),
     )
+    REGISTRA_PONTO_CHOICES = (
+        ("Sim", "Sim"),
+        ("Não", "Não"),
+    )
     STATUS_CHOICES = (
         ("Ativo", "Ativo"),
         ("Inativo", "Inativo"),
@@ -44,6 +48,12 @@ class TipoReceita(models.Model):
         choices=STATUS_CHOICES,
         default="Ativo",
         max_length=10,
+    )
+
+    registra_ponto = models.CharField(
+        choices=REGISTRA_PONTO_CHOICES,
+        default="Sim",
+        max_length=3,
     )
 
     objects = TipoReceitaManager()
