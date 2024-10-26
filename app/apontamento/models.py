@@ -21,7 +21,7 @@ class TipoReceitaManager(models.Manager):
         """
         Returns all active TipoReceita objects.
         """
-        return self.filter(status="Ativo")
+        return self.filter(status="Ativo", registra_ponto="Sim")
 
 
 class TipoReceita(models.Model):
