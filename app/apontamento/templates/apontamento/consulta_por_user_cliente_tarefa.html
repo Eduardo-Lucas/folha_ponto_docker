@@ -101,6 +101,13 @@ load static %} {% load timedelta_filters %} {% block content %}
       </tr>
       {% endfor %}
     </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6" class="text-center">
+          <span class="text-info">Total de Horas: {{ total_trabalhado|format_timedelta }}</span>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 
 

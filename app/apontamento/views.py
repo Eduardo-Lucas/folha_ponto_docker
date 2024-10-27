@@ -464,6 +464,10 @@ class ConsultaUsuarioClienteTarefa(LoginRequiredMixin, ListView):
             # messages.error(self.request, "No active users found.")
         context["client_choices"] = Cliente.objects.filter(situacaoentidade=1).order_by("nomerazao")
         context["tipo_receita_choices"] = TipoReceita.objects.filter(status="Ativo", registra_ponto="Sim").order_by("descricao")
+        # get me the total of hours worked
+        context["total_trabalhado"] = self.filterset.qs.aggregate(
+            total=Sum(F("saida") - F("entrada"), output_field=DurationField())
+        )["total"]
         context["filter"] = self.filterset
         return context
 
