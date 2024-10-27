@@ -8,13 +8,13 @@ from .views import (
     AppointmentDetailView,
     AppointmentListView,
     AppointmentUpdateView,
+    ConsultaUsuarioClienteTarefa,
     HistoricoListView,
     MudarTarefaUpdateView,
     ajuste_ponto,
     apontamento_list,
     autoriza_ajuste,
     autoriza_todos_ajustes,
-    consulta_por_user_cliente_tarefa,
     recusa_ajuste,
     recusa_todos_ajustes,
     fecha_tarefa,
@@ -135,7 +135,7 @@ urlpatterns = [
     ),
     path(
         "consulta_por_user_cliente_tarefa/",
-        consulta_por_user_cliente_tarefa,
+        ConsultaUsuarioClienteTarefa.as_view(),
         name="consulta_por_user_cliente_tarefa",
     ),
 ]

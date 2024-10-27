@@ -3,6 +3,7 @@ from typing import Any
 
 from apontamento.forms import AjustePontoForm, AppointmentCreateForm, FolhaPontoForm, ConsultaClienteTarefaForm
 from apontamento.models import Ponto, TipoReceita
+from apontamento.filters import PontoFilter
 from cliente.models import Cliente
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -442,8 +443,29 @@ def consulta_por_user_cliente_tarefa(request):
 
     return render(request, "apontamento/consulta_por_user_cliente_tarefa.html", context)
 
+class ConsultaUsuarioClienteTarefa(LoginRequiredMixin, ListView):
+    model = Ponto
+    template_name = "apontamento/consulta_por_user_cliente_tarefa.html"
+    context_object_name = "pontos"
+    paginate_by = 10
 
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by("-entrada")
+        self.filterset = PontoFilter(self.request.GET, queryset=queryset)
+        return self.filterset.qs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Consulta por Usuário, Cliente e Tarefa"
+        try:
+            context["user_choices"] = User.objects.filter(is_active=True).exclude(username="Admin").order_by("username")
+        except User.DoesNotExist:
+            context["user_choices"] = []
+            # messages.error(self.request, "No active users found.")
+        context["client_choices"] = Cliente.objects.filter(situacaoentidade=1).order_by("nomerazao")
+        context["tipo_receita_choices"] = TipoReceita.objects.filter(status="Ativo", registra_ponto="Sim").order_by("descricao")
+        context["filter"] = self.filterset
+        return context
 
 
 
