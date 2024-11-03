@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container mt-1">
+  <h3 class="text-center text-info">
+    Refeições do mês de {{nome_final}} de {{ano}}
+  </h3>
+  <h3 class="text-center text-info">
+    Total de dias: {{number_of_days}} - Usuários que almoçam:
+    {{usuarios_que_almocam}} - Total de refeições: {{total_refeicoes}}
+  </h3>
+  <h3 class="text-center text-primary">
+    {{usuarios_que_NAO_almocam}} Usuários não almoçam
+  </h3>
+
+  <!-- Table with activity data -->
+  <div class="table-responsive">
+    <!-- Render the DataFrame HTML table from the view -->
+    {{ pivot_table_html|safe }}
+  </div>
+</div>
+
+{% endblock content %}

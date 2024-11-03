@@ -2,13 +2,14 @@ import csv
 from django.core.management.base import BaseCommand
 from cliente.models import Cliente, ClienteTipoSenha
 from django.db.models import Max
+from django.db import models
 
 class Command(BaseCommand):
     help = 'Update cliente field in CSV file with database IDs'
 
     def handle(self, *args, **kwargs):
-        input_file = '/home/edu/Projetos/folha_ponto_docker/app/cliente/management/commands/Cliente tipo senha-2024-10-17.csv'
-        output_file = '/home/edu/Projetos/folha_ponto_docker/app/cliente/management/commands/Updated_Cliente tipo senha-2024-10-17.csv'
+        input_file = '/home/edu/Projetos/folha_ponto_docker/app/cliente/management/commands/Cliente tipo senha (3).csv'
+        output_file = '/home/edu/Projetos/folha_ponto_docker/app/cliente/management/commands/Updated_Cliente tipo senha (3).csv'
 
         with open(input_file, mode='r', encoding='utf-8') as infile, open(output_file, mode='w', encoding='utf-8', newline='') as outfile:
             reader = csv.DictReader(infile)
@@ -39,26 +40,23 @@ class Command(BaseCommand):
                 documento = row['CNPJ']
 
                 # if documento[0] == '0': remove it
-                if documento[0] == '0':
-                    documento = documento[1:]
+                #if documento[0] == '0':
+                #    documento = documento[1:]
 
                 # this field is going to be used to search the client in the database, in case the document is not found
                 nomerazao = row['nomerazao']
 
-                # First search by document
+                # First search by document to see if client already exists
                 try:
                     cliente = Cliente.objects.filter(documento=documento).first()
+                    print("Cliente: ", cliente)
                     row['cliente'] = cliente.id
                 except Cliente.DoesNotExist:
-                    pass
-
-                # If not found, search by nomerazao
-                if not cliente:
-                    try:
-                        cliente = Cliente.objects.filter(nomerazao=nomerazao).first()
-                        row['cliente'] = cliente.id
-                    except Cliente.DoesNotExist:
-                        self.stdout.write(self.style.WARNING(f'Cliente with Documento: {documento} not found.'))
+                    # if not found, create a new client
+                    cliente_id = Cliente.objects.all().aggregate(models.Max("id"))["id__max"] + 1
+                    cliente = Cliente.objects.create(id=cliente_id, documento=documento, nome=nomerazao,situacaoentidade=1)
+                    print("Cliente CRIADO: ", cliente.id)
+                    row['cliente'] = cliente.id
 
                 writer.writerow(row)
 

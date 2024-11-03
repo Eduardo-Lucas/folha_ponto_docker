@@ -69,7 +69,7 @@ class Refeicao(models.Model):
 
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     data_refeicao = models.DateField()
-    consumo = models.BooleanField(default=False)
+    consumo = models.BooleanField(default=True)
     observacao = models.TextField(blank=True)
 
     objects = RefeicaoManager()
