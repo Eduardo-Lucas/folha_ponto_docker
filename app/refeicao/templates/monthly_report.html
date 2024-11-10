@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Monthly Report{% endblock %}
+
+{% block content %}
+
+<table class="table table-sm table-striped table-bordered table-hover">
+  <thead>
+    <tr>
+      <th>Grupo/Usuário</th>
+      {% for day in business_days %}
+        <th>{{ day }}</th>
+      {% endfor %}
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for group, group_data in data_by_group|dictsort:"0" %}
+      <tr class="table-secondary">
+        <th colspan="{{ business_days_length_plus_one }}">{{ group }}</th>
+      </tr>
+
+      {% for user in group_data.users %}
+        <tr>
+          <td>&nbsp;&nbsp;{{ user.name }}</td>
+          {% for value in user.days %}
+            <td>{{ value }}</td>
+          {% endfor %}
+          <td>{{ user.days|sum_list }}</td>
+        </tr>
+      {% endfor %}
+
+      <!-- Subtotal row for the group -->
+      <tr class="table-active">
+        <td>Subtotal</td>
+        {% for subtotal in group_data.subtotal %}
+          <td>{{ subtotal }}</td>
+        {% endfor %}
+        {% with group_totals|get_item:group as group_total %}
+          <td>{{ group_total }}</td>
+        {% endwith %}
+      </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr class="table-primary">
+      <th>Grand Total</th>
+      {% for total in grand_total %}
+        <th>{{ total }}</th>
+      {% endfor %}
+      <th>{{ grand_total_sim }}</th>
+    </tr>
+  </tfoot>
+</table>
+
+{% endblock %}

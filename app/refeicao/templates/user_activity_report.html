@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}User Activity Report{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>User Activity Report for November</h1>
+  <div>{{ pivot_html|safe }}</div>
+</div>
+{% endblock %}

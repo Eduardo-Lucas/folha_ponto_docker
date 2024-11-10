@@ -25,8 +25,14 @@ urlpatterns = [
         name="refeicao_detail",
     ),
     path(
-        "search_refeicao_results/",
-        views.SearchRefeicaoResultsView.as_view(),
-        name="search_refeicao_results",
+        "user_activity_report/",
+        views.user_activity_report,
+        name="user_activity_report",
     ),
+    path(
+        "monthly_report_view/",
+        views.MonthlyReportView.as_view(),
+        name="monthly_report_view",
+    ),
+
 ]
