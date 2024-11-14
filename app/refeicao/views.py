@@ -10,6 +10,8 @@ from django.urls import reverse_lazy
 from datetime import datetime, date, timedelta
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render
+
+from apontamento.models import Ponto
 from .models import Refeicao
 
 from django.views.generic import (
@@ -126,12 +128,15 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     if start_date is not None:
         start_date = date.fromisoformat(start_date)
     else:
-        start_date = date(2024, 11, 1)
+        # first day of the current month
+        start_date = datetime.now().replace(day=1).date()
+
 
     if end_date is not None:
         end_date = date.fromisoformat(end_date)
     else:
-        end_date = date(2024, 11, 30)
+        # last day of the current month
+        end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
     users = User.objects.filter(is_active=True).exclude(username='Admin').order_by("username")
@@ -152,15 +157,20 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         groups = user.groups.all()  # Get all groups for the user
         group_names = ', '.join(group.name for group in groups)  # Join group names into a single string
         for day in dates:
+
+            #FIXME verificar se o usuário marcou ponto aquele dia
+            # faltou = True if not Ponto.objects.filter(usuario=user, entrada=date(year, month, day)).exists() else False
+
+
             data.append({
                 'Grupo': group_names,
                 'Usuário': user.username,
                 'Dia do Mês': day,
-                'value': 'Sim' if user.userprofile.almoco == 'TODO DIA' or \
+                'value': 'X' if user.userprofile.almoco == 'TODO DIA' or \
                     Refeicao.objects.filter(usuario=user,
                                             data_refeicao__year=year,
                                             data_refeicao__month=month,
-                                            data_refeicao__day=day).exists() else 'Não'
+                                            data_refeicao__day=day).exists() else ''
             })
 
     # Convert the data to a DataFrame
@@ -171,12 +181,12 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         values='value',
         index=['Grupo', 'Usuário'],
         columns='Dia do Mês',
-        aggfunc=lambda x: 'Sim' if 'Sim' in x.values else 'Não',
-        fill_value='Não'
+        aggfunc=lambda x: 'X' if 'X' in x.values else '',
+        fill_value=''
     )
 
     # Calculate subtotal for each group
-    group_totals = pivot_table.applymap(lambda x: 1 if x == 'Sim' else 0).groupby(level='Grupo').sum()
+    group_totals = pivot_table.applymap(lambda x: 1 if x == 'X' else 0).groupby(level='Grupo').sum()
     group_totals['Total'] = group_totals.sum(axis=1)
 
     # Convert group_totals to integers
@@ -207,7 +217,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     nome_do_mes = calendar.month_name[month]
     nome_final = dict_meses[nome_do_mes]
 
-    total_refeicoes = df.applymap(lambda x: 1 if x == 'Sim' else 0).sum().sum()
+    total_refeicoes = df.applymap(lambda x: 1 if x == 'X' else 0).sum().sum()
 
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
