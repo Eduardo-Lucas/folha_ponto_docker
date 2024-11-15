@@ -146,7 +146,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     # Get the number of days between start_date and end_date without the weekends
     year, month = start_date.year, start_date.month
     _, num_days = calendar.monthrange(year, month)
-    dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 5]
+    dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 6]
     number_of_days = len(dates)
 
     # Create an empty list to store user activity data
@@ -161,16 +161,27 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
             #FIXME verificar se o usuário marcou ponto aquele dia
             # faltou = True if not Ponto.objects.filter(usuario=user, entrada=date(year, month, day)).exists() else False
 
+            # if date(year, month, day).weekday() < 6
+            #FIXME THIS EXCLUDES THE SUNDAYS
 
             data.append({
                 'Grupo': group_names,
                 'Usuário': user.username,
                 'Dia do Mês': day,
-                'value': 'X' if user.userprofile.almoco == 'TODO DIA' or \
-                    Refeicao.objects.filter(usuario=user,
-                                            data_refeicao__year=year,
-                                            data_refeicao__month=month,
-                                            data_refeicao__day=day).exists() else ''
+                'value': 'X' if (user.userprofile.almoco == 'TODO DIA' and
+                                 # APARECE COMO NÃO ALMOÇO NO SÁBADO
+                                 date(year, month, day).weekday() < 5) or
+                                 Refeicao.objects.filter(usuario=user,
+                                                         data_refeicao__year=year,
+                                                         data_refeicao__month=month,
+                                                         data_refeicao__day=day,
+                                                         consumo=True).exists()
+                                else '' if Refeicao.objects.filter(usuario=user,
+                                                                   data_refeicao__year=year,
+                                                                   data_refeicao__month=month,
+                                                                   data_refeicao__day=day,
+                                                                   consumo=False).exists()
+                                else ''
             })
 
     # Convert the data to a DataFrame
