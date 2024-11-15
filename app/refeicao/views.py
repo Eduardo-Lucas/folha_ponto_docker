@@ -197,7 +197,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     )
 
     # Calculate subtotal for each group
-    group_totals = pivot_table.applymap(lambda x: 1 if x == 'X' else 0).groupby(level='Grupo').sum()
+    group_totals = pivot_table.apply(lambda x: x.map(lambda y: int(1) if y == 'X' else int(0))).groupby(level='Grupo').sum()
     group_totals['Total'] = group_totals.sum(axis=1)
 
     # Convert group_totals to integers
@@ -217,7 +217,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     pivot_table = pd.concat([pivot_table, pd.DataFrame(grand_total).T])
 
     # Convert pivot table to HTML for display
-    pivot_table_html = pivot_table.to_html(classes="table table-bordered table-striped", na_rep="", justify="justify-all")
+    pivot_table_html = pivot_table.to_html(classes="table table-bordered table-striped", na_rep="", justify="justify-all", decimal=',', float_format='%.0f')
 
     # Get the name of the month in Brazilian Portuguese
     dict_meses = {
@@ -228,7 +228,10 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     nome_do_mes = calendar.month_name[month]
     nome_final = dict_meses[nome_do_mes]
 
-    total_refeicoes = df.applymap(lambda x: 1 if x == 'X' else 0).sum().sum()
+    total_refeicoes = df.apply(lambda x: x.map(lambda y: int(1) if y == 'X' else int(0))).sum().sum()
+    total_refeicoes = int(total_refeicoes)
+
+    print("GRAND TOTALS TYPE ==>", grand_total.dtypes)
 
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
