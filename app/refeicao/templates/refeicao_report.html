@@ -1,22 +1,46 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="container mt-1">
-  <h3 class="text-center text-info">
-    Refeições do mês de {{nome_final}} de {{ano}}
-  </h3>
-  <h3 class="text-center text-info">
-    Total de dias: {{number_of_days}} - Usuários que almoçam:
-    {{usuarios_que_almocam}} - Total de refeições: {{total_refeicoes}}
-  </h3>
-  <h3 class="text-center text-primary">
-    {{usuarios_que_NAO_almocam}} Usuários não almoçam
-  </h3>
+<div class="container mt-1 border border-black">
+
+  <div class="row">
+    <h5 class="text-center text-info">
+      Refeições do mês de {{nome_final}} de {{ano}}
+    </h5>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-md-12">
+      <h5 class="text-center text-info">
+        Total de dias: {{number_of_days}} - Total de refeições: {{total_refeicoes}}
+      </h5>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <h5 class="text-center text-primary">
+      Usuários que almoçam: {{usuarios_que_almocam}} -
+      Usuários que NÃO almoçam: {{usuarios_que_NAO_almocam}}
+    </h5>
+  </div>
+
+  <div class="row text-center">
+
+    <div class="col-md-12">
+      <a href="{% url 'refeicao:refeicao_cadastrada' %}" class="btn btn-primary">Listar Refeições</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="container mt-1 border border-black">
 
   <!-- Table with activity data -->
   <div class="table-responsive">
     <!-- Render the DataFrame HTML table from the view -->
     {{ pivot_table_html|safe }}
   </div>
+
 </div>
 
 {% endblock content %}

@@ -7,10 +7,13 @@
         {% csrf_token %}
 
         <div class="row align-items-center">
+            <div class="col-md-3">
+                {{ form.usuario|as_crispy_field }}
+            </div>
             <div class="col-md-3 align-items-center">
                 {{ form.data_refeicao|as_crispy_field }}
             </div>
-            <div class="col-md-3 align-items-center">
+            <div class="col-md-3 align-items-center align-middle">
                 {{ form.consumo|as_crispy_field }}
             </div>
             <div class="col-md-3 align-items-center">

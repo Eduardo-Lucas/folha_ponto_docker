@@ -231,7 +231,6 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     total_refeicoes = df.apply(lambda x: x.map(lambda y: int(1) if y == 'X' else int(0))).sum().sum()
     total_refeicoes = int(total_refeicoes)
 
-    print("GRAND TOTALS TYPE ==>", grand_total.dtypes)
 
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
@@ -289,7 +288,7 @@ class RefeicaoListView(LoginRequiredMixin, ListView):
     """ "Lista de refeições"""
 
     model = Refeicao
-    template_name = "refeicao_list.html"
+    template_name = "refeicao_cadastrada.html"
     context_object_name = "refeicoes"
     paginate_by = 10
 

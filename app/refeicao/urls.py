@@ -6,6 +6,7 @@ app_name = "refeicao"
 
 urlpatterns = [
     path("refeicao_list/", views.refeicao_listview, name="refeicao_list"),
+    path("refeicao_cadastrada", views.RefeicaoListView.as_view(), name="refeicao_cadastrada"),
     path(
         "refeicao_create/", views.RefeicaoCreateView.as_view(), name="refeicao_create"
     ),

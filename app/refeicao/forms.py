@@ -16,6 +16,7 @@ class RefeicaoForm(forms.ModelForm):
 
         model = Refeicao
         fields = [
+            "usuario",
             "data_refeicao",
             "consumo",
             "observacao",
@@ -28,6 +29,12 @@ class RefeicaoForm(forms.ModelForm):
     # data_refeicao initial value is current day
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # get activer Users from User to populate a select field
+        self.fields["usuario"].queryset = self.fields["usuario"].queryset.filter(
+            is_active=True
+        ).exclude(username='Admin').order_by("username")
+
         self.fields["data_refeicao"].initial = datetime.now().date()
         self.fields["observacao"].required = False
         self.fields["consumo"].initial = True

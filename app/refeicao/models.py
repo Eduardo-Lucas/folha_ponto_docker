@@ -90,3 +90,7 @@ class Refeicao(models.Model):
         db_table = "refeicao"
         verbose_name = "Refeição"
         verbose_name_plural = "Refeições"
+
+    def get_consumo_display(self):
+        """Retorna consumo"""
+        return "Sim" if self.consumo else "Não"
