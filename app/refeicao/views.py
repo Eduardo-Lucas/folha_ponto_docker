@@ -309,7 +309,6 @@ class RefeicaoCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("refeicao:refeicao_list")
 
     def form_valid(self, form):
-        form.instance.usuario = self.request.user
 
         query = Refeicao.objects.get_queryset_usuario_data(
             self.request.user, form.instance.data_refeicao
