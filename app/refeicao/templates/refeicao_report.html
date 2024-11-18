@@ -1,46 +1,68 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
 
-<div class="container mt-1 border border-black">
+{% load crispy_forms_tags %}
 
-  <div class="row">
-    <h5 class="text-center text-info">
-      Refeições do mês de {{nome_final}} de {{ano}}
-    </h5>
+{% block content %}
+
+
+
+  <div class="container border border-dark mt-1 ">
+      <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-2 mt-2">
+              {{ form.data_inicial|as_crispy_field }}
+            </div>
+            <div class="col-md-2 mt-2">
+              {{ form.data_final|as_crispy_field }}
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-primary mt-4">Buscar</button>
+            </div>
+        </div>
+      </form>
   </div>
 
-  <div class="row text-center">
-    <div class="col-md-12">
-      <h5 class="text-center text-info">
-        Total de dias: {{number_of_days}} - Total de refeições: {{total_refeicoes}}
-      </h5>
-    </div>
 
-  </div>
 
-  <div class="row">
-    <h5 class="text-center text-primary">
-      Usuários que almoçam: {{usuarios_que_almocam}} -
-      Usuários que NÃO almoçam: {{usuarios_que_NAO_almocam}}
-    </h5>
-  </div>
+<div class="container border border-dark">
+  {% if pivot_table_html %}
+      <div class="row">
+        <h5 class="text-center text-info mt-1">
+          Refeições do mês de {{nome_final}} de {{ano}}
+        </h5>
+      </div>
 
-  <div class="row text-center">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h5 class="text-center text-info">
+            Total de dias: {{number_of_days}} - Total de refeições: {{total_refeicoes}}
+          </h5>
+        </div>
 
-    <div class="col-md-12">
-      <a href="{% url 'refeicao:refeicao_cadastrada' %}" class="btn btn-primary">Listar Refeições</a>
-    </div>
-  </div>
+      </div>
 
+      <div class="row">
+        <h5 class="text-center text-primary">
+          Usuários que almoçam: {{usuarios_que_almocam}} -
+          Usuários que NÃO almoçam: {{usuarios_que_NAO_almocam}}
+        </h5>
+      </div>
+
+      <div class="row text-center">
+
+        <div class="col-md-12">
+          <a href="{% url 'refeicao:refeicao_cadastrada' %}" class="btn btn-primary mb-1">Listar Refeições</a>
+        </div>
+      </div>
+  {% endif %}
 </div>
 
-<div class="container mt-1 border border-black">
-
-  <!-- Table with activity data -->
-  <div class="table-responsive">
-    <!-- Render the DataFrame HTML table from the view -->
-    {{ pivot_table_html|safe }}
-  </div>
-
+<div class="container border border-dark">
+      <!-- Table with activity data -->
+      <div class="table-responsive">
+        <!-- Render the DataFrame HTML table from the view -->
+        {{ pivot_table_html|safe }}
+      </div>
 </div>
-
 {% endblock content %}

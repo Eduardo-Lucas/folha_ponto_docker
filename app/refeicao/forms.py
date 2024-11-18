@@ -38,3 +38,16 @@ class RefeicaoForm(forms.ModelForm):
         self.fields["data_refeicao"].initial = datetime.now().date()
         self.fields["observacao"].required = False
         self.fields["consumo"].initial = True
+
+
+class RefeicaoListForm(forms.Form):
+    """Formulário para escolher, via select, o período inicial e final para listar as refeições"""
+
+    data_inicial = forms.DateField(widget=DateInput(format="%Y-%m-%d"))
+    data_final = forms.DateField(widget=DateInput(format="%Y-%m-%d"))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["data_inicial"].initial = datetime.now().replace(day=1).date()
+        self.fields["data_final"].initial = datetime.now().date()

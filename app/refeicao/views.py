@@ -21,7 +21,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from refeicao.forms import RefeicaoForm
+from refeicao.forms import RefeicaoForm, RefeicaoListForm
 
 from django.views.generic import TemplateView
 from django.utils import timezone
@@ -124,19 +124,42 @@ def get_user_data_for_day(self, user, day, year, month):
                                         data_refeicao__day=day).exists() else 'Não'
 
 def refeicao_listview(request, start_date: str = None, end_date: str = None):
-    # Convert start_date and end_date to date objects if they are strings
-    if start_date is not None:
-        start_date = date.fromisoformat(start_date)
-    else:
-        # first day of the current month
-        start_date = datetime.now().replace(day=1).date()
+    if request.method == 'POST':
+        form = RefeicaoListForm(request.POST)
 
+        if form.is_valid():
+            start_date = form.cleaned_data['data_inicial']
+            end_date = form.cleaned_data['data_final']
 
-    if end_date is not None:
-        end_date = date.fromisoformat(end_date)
+            # check if start_date is from march 2024 on
+            if start_date.year < 2024 or start_date.month < 3:
+                messages.error(request, 'Selecione uma data a partir de março de 2024.')
+                return render(request, 'refeicao_report.html', {'form': form})
+
+            # check if start_date is greater than end_date
+            if  start_date > end_date:
+                messages.error(request, 'Data inicial não pode ser maior que a data final.')
+                return render(request, 'refeicao_report.html', {'form': form})
+
+            # check if start and end date are in the same month
+            if start_date.month != end_date.month:
+                messages.error(request, 'Selecione um período que esteja no mesmo mês.')
+                return render(request, 'refeicao_report.html', {'form': form})
+
     else:
-        # last day of the current month
-        end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
+        form = RefeicaoListForm()
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+
+        if start_date is not None:
+            start_date = date.fromisoformat(start_date)
+        else:
+            start_date = datetime.now().replace(day=1).date()
+
+        if end_date is not None:
+            end_date = date.fromisoformat(end_date)
+        else:
+            end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
     users = User.objects.filter(is_active=True).exclude(username='Admin').order_by("username")
@@ -145,7 +168,8 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
 
     # Get the number of days between start_date and end_date without the weekends
     year, month = start_date.year, start_date.month
-    _, num_days = calendar.monthrange(year, month)
+    # _, num_days = calendar.monthrange(year, month)
+    num_days = (end_date - start_date).days + 1
     dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 6]
     number_of_days = len(dates)
 
@@ -157,19 +181,11 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         groups = user.groups.all()  # Get all groups for the user
         group_names = ', '.join(group.name for group in groups)  # Join group names into a single string
         for day in dates:
-
-            #FIXME verificar se o usuário marcou ponto aquele dia
-            # faltou = True if not Ponto.objects.filter(usuario=user, entrada=date(year, month, day)).exists() else False
-
-            # if date(year, month, day).weekday() < 6
-            #FIXME THIS EXCLUDES THE SUNDAYS
-
             data.append({
                 'Grupo': group_names,
                 'Usuário': user.username,
                 'Dia do Mês': day,
                 'value': 'X' if (user.userprofile.almoco == 'TODO DIA' and
-                                 # APARECE COMO NÃO ALMOÇO NO SÁBADO
                                  date(year, month, day).weekday() < 5) or
                                  Refeicao.objects.filter(usuario=user,
                                                          data_refeicao__year=year,
@@ -203,14 +219,12 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     # Convert group_totals to integers
     group_totals = group_totals.astype(int)
 
-
     # Calculate grand total
     grand_total = group_totals.sum(axis=0)
     grand_total.name = 'Total Geral'
 
     # Convert grand_total to integers
     grand_total = grand_total.astype(int)
-
 
     # Append the totals to the pivot table using pd.concat
     pivot_table = pd.concat([pivot_table, group_totals])
@@ -231,14 +245,13 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     total_refeicoes = df.apply(lambda x: x.map(lambda y: int(1) if y == 'X' else int(0))).sum().sum()
     total_refeicoes = int(total_refeicoes)
 
-
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
                                                     'usuarios_que_almocam': usuarios_que_almocam,
                                                     'usuarios_que_NAO_almocam': usuarios_que_NAO_almocam,
                                                     'number_of_days': number_of_days,
                                                     'total_refeicoes': total_refeicoes,
-                                                    })
+                                                    'form': form})
 
 def user_activity_report(request):
     # Get all active users and their related groups
