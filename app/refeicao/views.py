@@ -323,6 +323,15 @@ class RefeicaoCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
 
+
+        # cannot create a refeicao if it is a Sunday
+        if form.instance.data_refeicao.weekday() == 6:
+            messages.error(
+                self.request,
+                "Não é possível cadastrar refeição no Domingo!",
+            )
+            return super().form_invalid(form)
+
         query = Refeicao.objects.get_queryset_usuario_data(
             self.request.user, form.instance.data_refeicao
         )
