@@ -25,7 +25,7 @@
 
 
 
-<div class="container border border-dark">
+<div class="container border border-dark border-top-0">
   {% if pivot_table_html %}
       <div class="row">
         <h5 class="text-center text-info mt-1">
@@ -44,8 +44,7 @@
 
       <div class="row">
         <h5 class="text-center text-primary">
-          Usuários que almoçam: {{usuarios_que_almocam}} -
-          Usuários que NÃO almoçam: {{usuarios_que_NAO_almocam}}
+          Usuários que almoçam: {{usuarios_que_almocam}}
         </h5>
       </div>
 
@@ -58,7 +57,7 @@
   {% endif %}
 </div>
 
-<div class="container border border-dark">
+<div class="container border border-dark border-top-0">
       <!-- Table with activity data -->
       <div class="table-responsive">
         <!-- Render the DataFrame HTML table from the view -->

@@ -162,9 +162,9 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
             end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
-    users = User.objects.filter(is_active=True).exclude(username='Admin').order_by("username")
-    usuarios_que_almocam = sum(1 for user in users if user.userprofile.almoco == 'TODO DIA')
-    usuarios_que_NAO_almocam = sum(1 for user in users if user.userprofile.almoco != 'TODO DIA')
+    users = User.objects.filter(is_active=True, userprofile__almoco='TODO DIA').exclude(username='Admin').order_by("username")
+    usuarios_que_almocam = len(users) # sum(1 for user in users if user.userprofile.almoco == 'TODO DIA')
+    # usuarios_que_NAO_almocam = sum(1 for user in users if user.userprofile.almoco != 'TODO DIA')
 
     # Get the number of days between start_date and end_date without the weekends
     year, month = start_date.year, start_date.month
@@ -248,7 +248,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
                                                     'usuarios_que_almocam': usuarios_que_almocam,
-                                                    'usuarios_que_NAO_almocam': usuarios_que_NAO_almocam,
+                                                    # 'usuarios_que_NAO_almocam': usuarios_que_NAO_almocam,
                                                     'number_of_days': number_of_days,
                                                     'total_refeicoes': total_refeicoes,
                                                     'form': form})
