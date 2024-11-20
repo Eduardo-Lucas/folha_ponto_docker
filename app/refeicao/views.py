@@ -200,6 +200,9 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
                                 else ''
             })
 
+    # Remove users who did not have any activity in the date range
+    data = [row for row in data if row['value']]
+
     # Convert the data to a DataFrame
     df = pd.DataFrame(data)
 
