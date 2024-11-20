@@ -162,7 +162,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
             end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
-    users = User.objects.filter(is_active=True, userprofile__almoco='TODO DIA').exclude(username='Admin').order_by("username")
+    users = User.objects.filter(is_active=True, userprofile__almoco__in=['TODO DIA', 'EVENTUAL']).exclude(username='Admin').order_by("username")
     usuarios_que_almocam = len(users) # sum(1 for user in users if user.userprofile.almoco == 'TODO DIA')
     # usuarios_que_NAO_almocam = sum(1 for user in users if user.userprofile.almoco != 'TODO DIA')
 
