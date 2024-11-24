@@ -55,6 +55,15 @@ class FeriadoManager(models.Manager):
 
         return fixed_holiday + non_fixed_holiday
 
+    def get_lista_dias_uteis(self, data_inicial, data_final):
+        """Returns a list with the business days between the given dates"""
+        dias_uteis = []
+        data = data_inicial
+        while data <= data_final:
+            if data.weekday() < 5 and not self.is_holiday(data.year, data.month, data.day):
+                dias_uteis.append(data)
+            data += timedelta(days=1)
+        return dias_uteis
 
 
 class Feriado(models.Model):

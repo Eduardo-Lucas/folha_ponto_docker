@@ -12,6 +12,8 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import render
 
 from apontamento.models import Ponto
+from feriado.models import Feriado
+
 from .models import Refeicao
 
 from django.views.generic import (
@@ -33,6 +35,7 @@ import holidays
 from django.db.models import Prefetch
 
 country_holidays = holidays.BR()
+
 
 
 
@@ -127,9 +130,13 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     if request.method == 'POST':
         form = RefeicaoListForm(request.POST)
 
+
         if form.is_valid():
             start_date = form.cleaned_data['data_inicial']
             end_date = form.cleaned_data['data_final']
+
+            # pega a lista de dias uteis do mês, para poder comparar com as datas selecionadas
+            dias_uteis = Feriado.objects.get_lista_dias_uteis(start_date, end_date)
 
             # check if start_date is from march 2024 on
             if start_date.year < 2024 or start_date.month < 3:
@@ -170,7 +177,9 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     year, month = start_date.year, start_date.month
     # _, num_days = calendar.monthrange(year, month)
     num_days = (end_date - start_date).days + 1
+    # dates from Monday to Saturday
     dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 6]
+
     number_of_days = len(dates)
 
     # Create an empty list to store user activity data
@@ -186,7 +195,13 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
                 'Usuário': user.username,
                 'Dia do Mês': day,
                 'value': 'X' if (user.userprofile.almoco == 'TODO DIA' and
-                                 date(year, month, day).weekday() < 5) or
+                                 date(year, month, day).weekday() != 5 and
+                                 not Refeicao.objects.filter(usuario=user,
+                                                         data_refeicao__year=year,
+                                                         data_refeicao__month=month,
+                                                         data_refeicao__day=day,
+                                                         consumo=False).exists())
+                                  or
                                  Refeicao.objects.filter(usuario=user,
                                                          data_refeicao__year=year,
                                                          data_refeicao__month=month,
@@ -201,7 +216,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
             })
 
     # Remove users who did not have any activity in the date range
-    data = [row for row in data if row['value']]
+    # data = [row for row in data if row['value']]
 
     # Convert the data to a DataFrame
     df = pd.DataFrame(data)
@@ -234,7 +249,8 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     pivot_table = pd.concat([pivot_table, pd.DataFrame(grand_total).T])
 
     # Convert pivot table to HTML for display
-    pivot_table_html = pivot_table.to_html(classes="table table-bordered table-striped", na_rep="", justify="justify-all", decimal=',', float_format='%.0f')
+    pivot_table_html = pivot_table.to_html(classes="table table-bordered table-striped table-hover table-sm", na_rep="",
+                                           justify="justify", decimal=',', float_format='%.0f', col_space=25, border=0)
 
     # Get the name of the month in Brazilian Portuguese
     dict_meses = {
