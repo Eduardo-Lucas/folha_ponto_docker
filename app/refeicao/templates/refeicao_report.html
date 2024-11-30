@@ -54,14 +54,14 @@
           <a href="{% url 'refeicao:refeicao_cadastrada' %}" class="btn btn-primary mb-1">Listar Refeições</a>
         </div>
       </div>
+
+      <div class="row text-center">
+        <div class="col-md-12">
+            {{ pivot_table_html|safe }}
+        </div>
+    </div>
   {% endif %}
 </div>
 
-<div class="container border border-dark border-top-0">
-      <!-- Table with activity data -->
-      <div class="table-responsive">
-        <!-- Render the DataFrame HTML table from the view -->
-        {{ pivot_table_html|safe }}
-      </div>
-</div>
+
 {% endblock content %}

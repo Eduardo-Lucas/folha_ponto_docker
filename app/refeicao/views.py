@@ -252,7 +252,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
 
     # Convert pivot table to HTML for display
     pivot_table_html = pivot_table.to_html(classes="table table-bordered table-striped table-hover table-sm", na_rep="",
-                                           justify="justify", decimal=',', float_format='%.0f', col_space=25, border=0)
+                                           justify="center", decimal=',', float_format='%.0f', col_space=25, border=0)
 
     # Get the name of the month in Brazilian Portuguese
     dict_meses = {
