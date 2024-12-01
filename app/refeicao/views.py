@@ -130,27 +130,11 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     if request.method == 'POST':
         form = RefeicaoListForm(request.POST)
 
-
         if form.is_valid():
             start_date = form.cleaned_data['data_inicial']
             end_date = form.cleaned_data['data_final']
-
-            # pega a lista de dias uteis do mês, para poder comparar com as datas selecionadas
-            dias_uteis = Feriado.objects.get_lista_dias_uteis(start_date, end_date)
-
-            # check if start_date is from march 2024 on
-            if start_date.year < 2024 or start_date.month < 3:
-                messages.error(request, 'Selecione uma data a partir de março de 2024.')
-                return render(request, 'refeicao_report.html', {'form': form})
-
-            # check if start_date is greater than end_date
-            if  start_date > end_date:
+            if start_date > end_date:
                 messages.error(request, 'Data inicial não pode ser maior que a data final.')
-                return render(request, 'refeicao_report.html', {'form': form})
-
-            # check if start and end date are in the same month
-            if start_date.month != end_date.month:
-                messages.error(request, 'Selecione um período que esteja no mesmo mês.')
                 return render(request, 'refeicao_report.html', {'form': form})
 
     else:
@@ -166,22 +150,17 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         if end_date is not None:
             end_date = date.fromisoformat(end_date)
         else:
-            # end_date is equal to the current day
-            end_date = datetime.now().date()
-            # end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
+            end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
     users = User.objects.filter(is_active=True, userprofile__almoco__in=['TODO DIA', 'EVENTUAL']).exclude(username='Admin').order_by("username")
-    usuarios_que_almocam = len(users) # sum(1 for user in users if user.userprofile.almoco == 'TODO DIA')
+    usuarios_que_almocam = len(users)  # sum(1 for user in users if user.userprofile.almoco == 'TODO DIA')
     # usuarios_que_NAO_almocam = sum(1 for user in users if user.userprofile.almoco != 'TODO DIA')
 
     # Get the number of days between start_date and end_date without the weekends
     year, month = start_date.year, start_date.month
-    # _, num_days = calendar.monthrange(year, month)
     num_days = (end_date - start_date).days + 1
-    # dates from Monday to Saturday
-    dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 6]
-
+    dates = [day for day in range(1, num_days + 1) ]
     number_of_days = len(dates)
 
     # Create an empty list to store user activity data
@@ -192,36 +171,37 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         groups = user.groups.all()  # Get all groups for the user
         group_names = ', '.join(group.name for group in groups)  # Join group names into a single string
         for day in dates:
+            value = 'X' if (user.userprofile.almoco == 'TODO DIA' and
+                            date(year, month, day).weekday() != 5 and
+                            date(year, month, day).weekday() != 6 and
+                            not Refeicao.objects.filter(usuario=user,
+                                                        data_refeicao__year=year,
+                                                        data_refeicao__month=month,
+                                                        data_refeicao__day=day,
+                                                        consumo=False).exists()) or \
+                           Refeicao.objects.filter(usuario=user,
+                                                   data_refeicao__year=year,
+                                                   data_refeicao__month=month,
+                                                   data_refeicao__day=day,
+                                                   consumo=True).exists() else \
+                    '' if Refeicao.objects.filter(usuario=user,
+                                                  data_refeicao__year=year,
+                                                  data_refeicao__month=month,
+                                                  data_refeicao__day=day,
+                                                  consumo=False).exists() else ''
             data.append({
                 'Grupo': group_names,
                 'Usuário': user.username,
                 'Dia do Mês': day,
-                'value': 'X' if (user.userprofile.almoco == 'TODO DIA' and
-                                 date(year, month, day).weekday() != 5 and
-                                 not Refeicao.objects.filter(usuario=user,
-                                                         data_refeicao__year=year,
-                                                         data_refeicao__month=month,
-                                                         data_refeicao__day=day,
-                                                         consumo=False).exists())
-                                  or
-                                 Refeicao.objects.filter(usuario=user,
-                                                         data_refeicao__year=year,
-                                                         data_refeicao__month=month,
-                                                         data_refeicao__day=day,
-                                                         consumo=True).exists()
-                                else '' if Refeicao.objects.filter(usuario=user,
-                                                                   data_refeicao__year=year,
-                                                                   data_refeicao__month=month,
-                                                                   data_refeicao__day=day,
-                                                                   consumo=False).exists()
-                                else ''
+                'value': value
             })
-
-    # Remove users who did not have any activity in the date range
-    # data = [row for row in data if row['value']]
 
     # Convert the data to a DataFrame
     df = pd.DataFrame(data)
+
+    # Ensure the DataFrame contains the 'value' column
+    if 'value' not in df.columns:
+        raise KeyError("The DataFrame does not contain the 'value' column")
 
     # Create pivot table: Users and Groups on Y-axis, Days of the month on X-axis
     pivot_table = df.pivot_table(
@@ -269,11 +249,9 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     return render(request, 'refeicao_report.html', {'pivot_table_html': pivot_table_html,
                                                     'nome_final': nome_final, 'ano': year,
                                                     'usuarios_que_almocam': usuarios_que_almocam,
-                                                    # 'usuarios_que_NAO_almocam': usuarios_que_NAO_almocam,
                                                     'number_of_days': number_of_days,
                                                     'total_refeicoes': total_refeicoes,
                                                     'form': form})
-
 def user_activity_report(request):
     # Get all active users and their related groups
     users = User.objects.filter(is_active=True).exclude(username='Admin').order_by("username")
