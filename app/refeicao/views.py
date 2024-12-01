@@ -150,7 +150,7 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         if end_date is not None:
             end_date = date.fromisoformat(end_date)
         else:
-            end_date = datetime.now().replace(day=calendar.monthrange(datetime.now().year, datetime.now().month)[1]).date()
+            end_date = datetime.now().date()
 
     # Get all Users which is_active=True and related to UserProfile which have almoco = 'TODO DIA'
     users = User.objects.filter(is_active=True, userprofile__almoco__in=['TODO DIA', 'EVENTUAL']).exclude(username='Admin').order_by("username")
