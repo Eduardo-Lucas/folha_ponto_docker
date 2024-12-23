@@ -117,6 +117,7 @@ class FeriasCreateView(LoginRequiredMixin, CreateView):
                 )
                 return self.form_invalid(form)
 
+        form.instance.periodo = form.instance.data_inicial.year
         form.instance.user = self.request.user
         form.instance.dias_uteis = dias_uteis
 

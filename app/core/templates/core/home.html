@@ -227,7 +227,7 @@
                             </td>
                             <td>{{ ponto.data_inicial|date:"d/m/Y" }}</td>
                             <td>{{ ponto.data_final|date:"d/m/Y" }}</td>
-                            <td>{{ ponto.dias_uteis }}</td>
+                            <td>{{ ponto.get_dias_uteis }}</td>
                             <td>{{ ponto.saldo_dias }}</td>
                         </tr>
                         {% empty %}
