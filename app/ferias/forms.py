@@ -54,6 +54,8 @@ class FeriasForm(forms.ModelForm):
         )
         self.fields["periodo"].initial = datetime.now().year
         self.fields["periodo"].widget.attrs["readonly"] = True
+        self.fields["periodo"].widget.attrs["hidden"] = True
+        self.fields["periodo"].label = "" # Hide the label
         self.fields["dias_uteis"].initial = 1
         self.fields["dias_uteis"].widget.attrs["hidden"] = True
         self.fields["dias_uteis"].label = ""  # Hide the label
