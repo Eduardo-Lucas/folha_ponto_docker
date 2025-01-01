@@ -160,8 +160,39 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
     # Get the number of days between start_date and end_date without the weekends
     year, month = start_date.year, start_date.month
     num_days = (end_date - start_date).days + 1
-    dates = [day for day in range(1, num_days + 1) ]
+
+    # Query the Feriado model to get the list of holidays within the date range
+    feriados_fixos = list(Feriado.objects.filter(
+        month__range=[start_date.month, end_date.month],
+        dia__range=[start_date.day, end_date.day]
+    ).values_list('month', 'dia'))
+
+    # add the year to the fixed holidays
+    feriados_fixos = [(year, mes, dia) for dia, mes in feriados_fixos]
+    feriados_fixos = [date(*t) for t in feriados_fixos]
+    print("FERIADOS FIXOS=> ", feriados_fixos)
+
+
+    feriados_nao_fixos = list(Feriado.objects.filter(
+        dia__range=[start_date.day, end_date.day],
+        month__range=[start_date.month, end_date.month],
+        ano__range=[start_date.year, end_date.year]
+    ).values_list('ano', 'month', 'dia'))
+
+    feriados_nao_fixos = [(ano, mes, dia) for dia, mes, ano in feriados_nao_fixos]
+    feriados_nao_fixos = [date(*t) for t in feriados_nao_fixos]
+
+    feriados = feriados_fixos + feriados_nao_fixos
+
+    # Create a list of dates excluding weekends and holidays
+    dates = [day for day in range(1, num_days + 1) if date(year, month, day).weekday() < 6 and date(year, month, day) not in feriados]
     number_of_days = len(dates)
+
+    # raise a warning message if there are no business days in the date range
+    if number_of_days == 0:
+        messages.warning(request, 'Não há dias úteis no intervalo de datas fornecido.')
+        return render(request, 'refeicao_report.html', {'form': form})
+
 
     # Create an empty list to store user activity data
     data = []
@@ -172,8 +203,8 @@ def refeicao_listview(request, start_date: str = None, end_date: str = None):
         group_names = ', '.join(group.name for group in groups)  # Join group names into a single string
         for day in dates:
             value = 'X' if (user.userprofile.almoco == 'TODO DIA' and
-                            date(year, month, day).weekday() != 5 and
-                            date(year, month, day).weekday() != 6 and
+
+
                             not Refeicao.objects.filter(usuario=user,
                                                         data_refeicao__year=year,
                                                         data_refeicao__month=month,
