@@ -2,7 +2,7 @@
  Cadastro pare registro de Férias
 """
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import numpy as np
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,10 +25,12 @@ class FeriasListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Retorna o queryset de férias do usuário logado."""
+        # take the current year
+        current_year = datetime.now().year
         # if superuser, return all vacations
         if self.request.user.is_superuser:
-            return Ferias.objects.all()
-        return Ferias.objects.filter(user=self.request.user)
+            return Ferias.objects.filter(periodo__icontains=current_year)
+        return Ferias.objects.filter(user=self.request.user, periodo__icontains=current_year)
 
 
 class FeriasCreateView(LoginRequiredMixin, CreateView):
@@ -264,10 +266,12 @@ class SearchFeriasResultsView(ListView):
     context_object_name = "search_ferias"
 
     def get_queryset(self):  # new
+        # take the current year
+        current_year = datetime.now().year
         if self.request.GET.get("q") is not None:
             query = self.request.GET.get("q")
-            search_ferias = Ferias.objects.filter(Q(user__username__icontains=query))
+            search_ferias = Ferias.objects.filter(Q(user__username__icontains=query) & Q(periodo__icontains=current_year))
         else:  # pragma: no cover
-            search_ferias = Ferias.objects.all()
+            search_ferias = Ferias.objects.filter(periodo__icontains=current_year)
 
         return search_ferias
