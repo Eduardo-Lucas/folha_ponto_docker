@@ -34,8 +34,9 @@ class TipoDocumentoChoices(UpperCaseIntegerChoices):
 class SituacaoEntidadeChoices(UpperCaseIntegerChoices):
     """Choices definition for SituacaoEntidade."""
 
+    DESATIVADO = 0
     ATIVADO = 1
-    DESATIVADO = 2
+    # DESATIVADO = 2
 
 
 class TipoSenha(models.Model):
